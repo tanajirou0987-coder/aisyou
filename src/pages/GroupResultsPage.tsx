@@ -141,7 +141,14 @@ export function GroupResultsPage() {
                   {typeInfo.description}
                 </p>
                 <button
-                  onClick={() => navigate('/drinking-details')}
+                  onClick={() => {
+                    const participant = state.groupParticipants[0]
+                    if (participant) {
+                      navigate(`/pair-details?maleId=${participant.userId}&femaleId=${participant.userId}`)
+                    } else {
+                      navigate('/group-results')
+                    }
+                  }}
                   className="px-6 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors"
                 >
                   詳細分析を見る

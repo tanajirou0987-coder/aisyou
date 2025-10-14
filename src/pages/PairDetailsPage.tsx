@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
 import { ArrowLeft, Heart, Wine, Users, Sparkles, TrendingUp, MessageCircle, Clock, Star, Lightbulb, AlertTriangle, Smile, Tag } from 'lucide-react'
@@ -19,8 +20,10 @@ export function PairDetailsPage() {
 
   const maleId = searchParams.get('maleId')
   const femaleId = searchParams.get('femaleId')
+  const maleNameParam = searchParams.get('maleName')
+  const femaleNameParam = searchParams.get('femaleName')
 
-  if (!maleId || !femaleId) {
+  if ((!maleId || !femaleId) && (!maleNameParam || !femaleNameParam)) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -38,8 +41,12 @@ export function PairDetailsPage() {
     )
   }
 
-  const maleParticipant = state.groupParticipants.find(p => p.userId === maleId)
-  const femaleParticipant = state.groupParticipants.find(p => p.userId === femaleId)
+  let maleParticipant = state.groupParticipants.find(p => p.userId === maleId)
+  let femaleParticipant = state.groupParticipants.find(p => p.userId === femaleId)
+  if ((!maleParticipant || !femaleParticipant) && (maleNameParam || femaleNameParam)) {
+    maleParticipant = maleParticipant || state.groupParticipants.find(p => p.userName === maleNameParam && p.gender === 'male')
+    femaleParticipant = femaleParticipant || state.groupParticipants.find(p => p.userName === femaleNameParam && p.gender === 'female')
+  }
 
   if (!maleParticipant || !femaleParticipant) {
     return (
