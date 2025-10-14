@@ -63,11 +63,11 @@ export function GroupParticipantRegistrationPage() {
         <div className="rounded-lg md:rounded-xl p-3 md:p-6 mb-3 md:mb-6 border-2 md:border-4 border-black" style={{background: '#FFFFFF', boxShadow: '4px 4px 0 #000000'}}>
           <div className="flex items-center justify-center gap-2 md:gap-3 mb-2 md:mb-4">
             <Users className="w-5 h-5 md:w-8 md:h-8 text-purple-500" />
-            <span className="text-base md:text-2xl font-bold text-gray-800">
+            <span className="text-base md:text-2xl font-black text-black" style={{fontFamily: 'Bangers, sans-serif'}}>
               {state.groupParticipants.length}人登録済み
             </span>
           </div>
-          <div className="text-center text-gray-600 text-xs md:text-base mb-2 md:mb-4">
+          <div className="text-center text-gray-800 font-bold text-xs md:text-base mb-2 md:mb-4">
             {state.groupParticipants.length < 1 
               ? '最低1人以上登録してください' 
               : state.groupParticipants.length === 1
@@ -148,7 +148,7 @@ export function GroupParticipantRegistrationPage() {
             <button
               onClick={handleAddParticipant}
               disabled={!participantName.trim() || !selectedGender || state.groupParticipants.length >= 10}
-              className="w-full px-4 md:px-6 py-2 md:py-3 text-sm md:text-lg font-extrabold disabled:opacity-50 flex items-center justify-center border-2 md:border-3 border-black text-black bg-white hover:bg-yellow-100"
+              className="w-full px-4 md:px-6 py-2 md:py-3 text-sm md:text-lg font-extrabold disabled:opacity-50 flex items-center justify-center border-2 md:border-3 border-black text-white bg-gradient-to-r from-purple-500 to-pink-500"
               style={{ boxShadow: '3px 3px 0 #000000' }}
             >
               <Plus className="w-4 h-4 md:w-5 md:h-5 mr-1 md:mr-2" />
@@ -237,8 +237,8 @@ export function GroupParticipantRegistrationPage() {
           </div>
         )}
 
-        {/* 使い方説明（カード化） */}
-        <div className="rounded-lg p-3 md:p-6 mt-3 md:mt-8 border-2 md:border-4 border-black" style={{background: '#DBEAFE', boxShadow: '4px 4px 0 #000000'}}>
+        {/* 使い方説明（カード化・モバイル非表示） */}
+        <div className="hidden md:block rounded-lg p-3 md:p-6 mt-3 md:mt-8 border-2 md:border-4 border-black" style={{background: '#DBEAFE', boxShadow: '4px 4px 0 #000000'}}>
           <h3 className="text-sm md:text-lg font-extrabold text-blue-900 mb-2 md:mb-3">
             📱 使い方
           </h3>
