@@ -101,6 +101,34 @@ export function PairDetailsPage() {
     return calculateCompatibilityScore(maleProfile, femaleProfile)
   }
 
+  // レーダーチャート計測用（レスポンシブでぐちゃつかないように実寸から中心・半径を算出）
+  const chartRef = useRef<HTMLDivElement | null>(null)
+  const [chartSize, setChartSize] = useState<{ width: number; height: number }>({ width: 0, height: 0 })
+
+  useEffect(() => {
+    const el = chartRef.current
+    if (!el) return
+
+    const update = () => {
+      const rect = el.getBoundingClientRect()
+      setChartSize({ width: rect.width, height: rect.height })
+    }
+
+    update()
+
+    let ro: ResizeObserver | null = null
+    if ('ResizeObserver' in window) {
+      ro = new ResizeObserver(() => update())
+      ro.observe(el)
+    } else {
+      window.addEventListener('resize', update)
+    }
+    return () => {
+      if (ro) ro.disconnect()
+      else window.removeEventListener('resize', update)
+    }
+  }, [])
+
   const scientificScore = calculateScientificCompatibility()
 
   // ペア相性の詳細分析を生成（個人診断の詳細データをベースに）
@@ -701,7 +729,7 @@ export function PairDetailsPage() {
           {/* レーダーチャート風の表示（モバイルは小型・太線/文字縮小） */}
           <div className="mb-4 md:mb-8">
             <div className="flex justify-center">
-              <div className="relative w-56 h-56 md:w-80 md:h-80 rounded-lg md:rounded-xl border-2 md:border-4 border-black" style={{background: '#FFFFFF', boxShadow: '2px 2px 0 #000000, 4px 4px 0 #000000'}}>
+              <div ref={chartRef} className="relative w-56 h-56 md:w-80 md:h-80 rounded-lg md:rounded-xl border-2 md:border-4 border-black" style={{background: '#FFFFFF', boxShadow: '2px 2px 0 #000000, 4px 4px 0 #000000'}}>
                 {/* 背景の円 */}
                 <div className="absolute inset-0 border border-gray-300 md:border-2 rounded-full"></div>
                 <div className="absolute inset-3 md:inset-4 border border-gray-400 md:border-2 rounded-full"></div>
@@ -715,9 +743,10 @@ export function PairDetailsPage() {
                 {Object.entries(analysis.detailedScores).map(([category, score], index) => {
                   const angle = (index * 360) / Object.keys(analysis.detailedScores).length
                   const radians = (angle * Math.PI) / 180
-                  const base = 128 // モバイル基準中心
-                  const radius = window.innerWidth < 768 ? 90 : 120
-                  const center = window.innerWidth < 768 ? base : 160
+                  const width = chartSize.width || 224 // fallback w-56
+                  const height = chartSize.height || 224
+                  const center = Math.min(width, height) / 2
+                  const radius = center - (width < 320 ? 20 : 28)
                   const x = center + radius * Math.cos(radians - Math.PI / 2)
                   const y = center + radius * Math.sin(radians - Math.PI / 2)
                   
@@ -766,16 +795,18 @@ export function PairDetailsPage() {
                     points={Object.entries(analysis.detailedScores).map(([category, score], index) => {
                       const angle = (index * 360) / Object.keys(analysis.detailedScores).length
                       const radians = (angle * Math.PI) / 180
-                      const maxR = window.innerWidth < 768 ? 90 : 120
-                      const r = (score / 100) * maxR
-                      const c = window.innerWidth < 768 ? 128 : 160
-                      const x = c + r * Math.cos(radians - Math.PI / 2)
-                      const y = c + r * Math.sin(radians - Math.PI / 2)
+                      const width = chartSize.width || 224
+                      const height = chartSize.height || 224
+                      const center = Math.min(width, height) / 2
+                      const radius = center - (width < 320 ? 20 : 28)
+                      const r = (score / 100) * radius
+                      const x = center + r * Math.cos(radians - Math.PI / 2)
+                      const y = center + r * Math.sin(radians - Math.PI / 2)
                       return `${x},${y}`
                     }).join(' ')}
                     fill="rgba(255, 0, 0, 0.25)"
                     stroke="rgb(255, 0, 0)"
-                    strokeWidth={window.innerWidth < 768 ? 2 : 3}
+                    strokeWidth={chartSize.width && chartSize.width < 320 ? 2 : 3}
                   />
                 </svg>
               </div>
