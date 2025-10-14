@@ -286,43 +286,58 @@ export function GroupResultsPage() {
   }
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen p-3 sm:p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
-        {/* ヘッダー - ポップアート風 */}
-        <div className="text-center mb-8 card" style={{background: '#FFD700', transform: 'rotate(-2deg)'}}>
-          <div className="mb-4">
+        {/* ヘッダー - スマホ版はコンパクト、PC版はポップアート風 */}
+        <div className="text-center mb-3 md:mb-8 card p-2 md:p-6" style={{background: '#FFD700', transform: 'rotate(0deg) md:rotate(-2deg)'}}>
+          <div className="mb-2 md:mb-4 hidden md:block">
             <span className="sound-effect pop-red absolute top-4 left-4" style={{transform: 'rotate(-15deg)'}}>POW!</span>
             <span className="sound-effect pop-blue absolute top-4 right-4" style={{transform: 'rotate(15deg)'}}>BANG!</span>
           </div>
-          <div className="flex justify-center items-center gap-6 mb-4 mt-8">
+          {/* スマホ版タイトル */}
+          <div className="md:hidden">
+            <h1 className="text-xl font-bold mb-1">
+              酒癖診断結果
+            </h1>
+            <p className="text-xs font-bold">
+              🍺 結果を楽しもう！ 🍶
+            </p>
+          </div>
+          {/* PC版タイトル */}
+          <div className="hidden md:flex justify-center items-center gap-6 mb-4 mt-8">
             <span className="text-7xl" style={{transform: 'rotate(-10deg)'}}>🍺</span>
             <h1 className="heading-primary text-7xl md:text-8xl">
               酒癖診断結果
             </h1>
             <span className="text-7xl" style={{transform: 'rotate(10deg)'}}>🍶</span>
           </div>
-          <p className="text-xl font-black text-black" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
+          <p className="text-xl font-black text-black hidden md:block" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
             ★ みんなで端末を囲んで結果を楽しみましょう！ ★
           </p>
         </div>
 
         {/* グループ全体の恋愛傾向サマリー */}
-        <div className="card mb-6" style={{background: '#FFFFFF'}}>
-          <div className="text-center mb-6">
-            <div className="flex justify-center mb-4">
-              <div className="relative p-4 bg-blue-500 rounded-full border-4 border-black" style={{boxShadow: '5px 5px 0 #000000'}}>
-                <Users className="w-12 h-12 text-white" />
-                <Heart className="w-6 h-6 text-red-500 absolute -top-1 -right-1 animate-pulse" style={{filter: 'drop-shadow(2px 2px 0 #000000)'}} />
+        <div className="card mb-3 md:mb-6 p-3 md:p-6" style={{background: '#FFFFFF'}}>
+          <div className="text-center mb-3 md:mb-6">
+            <div className="flex justify-center mb-2 md:mb-4">
+              <div className="relative p-2 md:p-4 bg-blue-500 rounded-full border-2 md:border-4 border-black" style={{boxShadow: '2px 2px 0 #000000, 5px 5px 0 #000000'}}>
+                <Users className="w-6 h-6 md:w-12 md:h-12 text-white" />
+                <Heart className="w-3 h-3 md:w-6 md:h-6 text-red-500 absolute -top-1 -right-1 animate-pulse" style={{filter: 'drop-shadow(1px 1px 0 #000000)'}} />
               </div>
             </div>
-            <h2 className="heading-secondary">
+            {/* スマホ版タイトル */}
+            <h2 className="text-base font-bold mb-2 md:hidden">
+              🍻 今夜のメンバー 🍻
+            </h2>
+            {/* PC版タイトル */}
+            <h2 className="heading-secondary hidden md:block">
               <span style={{fontSize: '2rem'}}>🍻</span> 今夜の診断メンバー <span style={{fontSize: '2rem'}}>🍻</span>
             </h2>
-            <div className="text-lg font-bold text-black mb-4" style={{fontFamily: 'Noto Sans JP, sans-serif'}}>
-              <div className="mb-2">
+            <div className="text-xs md:text-lg font-bold text-black mb-2 md:mb-4" style={{fontFamily: 'Noto Sans JP, sans-serif'}}>
+              <div className="mb-1 md:mb-2">
                 男性: {summary.maleNames.map((name, index) => (
                   <span key={name}>
-                    <span className="inline-block px-3 py-1 bg-blue-500 text-white rounded-lg border-3 border-black" style={{boxShadow: '2px 2px 0 #000000', fontWeight: '900'}}>♂ {name}</span>
+                    <span className="inline-block px-1 md:px-3 py-0.5 md:py-1 bg-blue-500 text-white rounded md:rounded-lg border md:border-3 border-black text-xs md:text-base" style={{boxShadow: '1px 1px 0 #000000, 2px 2px 0 #000000', fontWeight: '900'}}>♂ {name}</span>
                     {index < summary.maleNames.length - 1 && ' '}
                   </span>
                 ))}（{summary.maleCount}名）
@@ -330,14 +345,14 @@ export function GroupResultsPage() {
               <div>
                 女性: {summary.femaleNames.map((name, index) => (
                   <span key={name}>
-                    <span className="inline-block px-3 py-1 bg-pink-500 text-white rounded-lg border-3 border-black" style={{boxShadow: '2px 2px 0 #000000', fontWeight: '900'}}>♀ {name}</span>
+                    <span className="inline-block px-1 md:px-3 py-0.5 md:py-1 bg-pink-500 text-white rounded md:rounded-lg border md:border-3 border-black text-xs md:text-base" style={{boxShadow: '1px 1px 0 #000000, 2px 2px 0 #000000', fontWeight: '900'}}>♀ {name}</span>
                     {index < summary.femaleNames.length - 1 && ' '}
                   </span>
                 ))}（{summary.femaleCount}名）
               </div>
             </div>
-            <div className="text-base font-black text-black mb-4" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
-              異性間の組み合わせ: 全<span className="text-3xl pop-yellow">{summary.totalCombinations}</span>通り
+            <div className="text-xs md:text-base font-black text-black mb-2 md:mb-4" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
+              異性間の組み合わせ: 全<span className="text-lg md:text-3xl pop-yellow">{summary.totalCombinations}</span>通り
             </div>
           </div>
 
