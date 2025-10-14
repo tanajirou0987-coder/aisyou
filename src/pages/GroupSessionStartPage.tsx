@@ -26,11 +26,11 @@ export function GroupSessionStartPage() {
   }
 
   return (
-    <div className="min-h-screen p-3 sm:p-4 md:p-8">
+    <div className="min-h-screen p-2 sm:p-3 md:p-8">
       <div className="max-w-4xl mx-auto">
         {/* ヘッダー */}
-        <div className="text-center mb-3 md:mb-12">
-          <div className="mb-2 md:mb-6">
+        <div className="text-center mb-2 md:mb-12">
+          <div className="mb-1.5 md:mb-6">
             <button
               onClick={() => navigate('/')}
               className="btn-secondary text-xs md:text-base flex items-center gap-1 md:gap-2 mx-auto"
@@ -43,11 +43,11 @@ export function GroupSessionStartPage() {
             </button>
           </div>
           {/* スマホ版ヘッダー */}
-          <div className="card p-2 md:hidden" style={{background: '#FF0000'}}>
-            <h1 className="text-lg font-bold text-white mb-1">
+          <div className="card p-1.5 md:hidden" style={{background: '#FF0000'}}>
+            <h1 className="text-base font-bold text-white mb-0.5">
               酒癖診断
             </h1>
-            <p className="text-xs font-bold text-white">
+            <p className="text-[11px] font-bold text-white">
               飲み会での相性を科学的に分析
             </p>
           </div>
@@ -65,16 +65,16 @@ export function GroupSessionStartPage() {
         </div>
 
         {/* メインコンテンツ */}
-        <div className="card mb-3 md:mb-8 p-2 md:p-6" style={{background: '#FFFFFF'}}>
+        <div className="card mb-2 md:mb-8 p-2 md:p-6" style={{background: '#FFFFFF'}}>
           {/* スマホ版アイコン */}
-          <div className="text-center mb-2 md:mb-8 md:hidden">
+          <div className="text-center mb-1.5 md:mb-8 md:hidden">
             <div className="flex justify-center mb-2">
-              <div className="relative p-2 bg-purple-500 rounded-full border-2 border-black">
-                <Wine className="w-6 h-6 text-white" />
-                <Sparkles className="w-3 h-3 text-yellow-300 absolute -top-1 -right-1" />
+              <div className="relative p-1.5 bg-purple-500 rounded-full border border-black">
+                <Wine className="w-5 h-5 text-white" />
+                <Sparkles className="w-2.5 h-2.5 text-yellow-300 absolute -top-1 -right-1" />
               </div>
             </div>
-            <h2 className="text-sm font-bold">診断方法を選択</h2>
+            <h2 className="text-[13px] font-bold">診断方法を選択</h2>
           </div>
 
           {/* PC版アイコン */}
@@ -94,25 +94,25 @@ export function GroupSessionStartPage() {
           </div>
 
           {/* 診断方法の選択 */}
-          <div className="grid grid-cols-2 md:grid-cols-2 gap-2 md:gap-6 mb-2 md:mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-2 gap-1.5 md:gap-6 mb-2 md:mb-8">
             {/* 1台で回す */}
             <button 
               onClick={() => setSessionMode('single')}
-              className={`p-2 md:p-6 rounded md:rounded-xl border-2 md:border-4 border-black transition-all ${
+              className={`p-1.5 md:p-6 rounded md:rounded-xl border md:border-4 border-black transition-all ${
                 sessionMode === 'single' 
                   ? 'bg-blue-500 md:transform md:scale-105' 
                   : 'bg-white hover:bg-blue-100'
               }`}
-              style={{boxShadow: sessionMode === 'single' ? '2px 2px 0 #000000 , 8px 8px 0 #000000' : '2px 2px 0 #000000, 4px 4px 0 #000000'}}
+              style={{boxShadow: sessionMode === 'single' ? '1px 1px 0 #000000 , 8px 8px 0 #000000' : '1px 1px 0 #000000, 4px 4px 0 #000000'}}
             >
               <div className="text-center">
                 <div className="flex justify-center mb-1 md:mb-4">
-                  <Smartphone className={`w-6 h-6 md:w-16 md:h-16 ${sessionMode === 'single' ? 'text-white' : 'text-blue-500'}`} style={{filter: window.innerWidth >= 768 ? 'drop-shadow(2px 2px 0 #000000)' : 'none'}} />
+                  <Smartphone className={`w-5 h-5 md:w-16 md:h-16 ${sessionMode === 'single' ? 'text-white' : 'text-blue-500'}`} style={{filter: window.innerWidth >= 768 ? 'drop-shadow(2px 2px 0 #000000)' : 'none'}} />
                 </div>
-                <h3 className={`text-xs md:text-2xl font-bold md:font-black mb-1 md:mb-3 ${sessionMode === 'single' ? 'text-white' : 'text-black'}`} style={{fontFamily: window.innerWidth >= 768 ? 'M PLUS Rounded 1c, sans-serif' : 'inherit'}}>
+                <h3 className={`text-[12px] md:text-2xl font-bold md:font-black mb-0.5 md:mb-3 ${sessionMode === 'single' ? 'text-white' : 'text-black'}`} style={{fontFamily: window.innerWidth >= 768 ? 'M PLUS Rounded 1c, sans-serif' : 'inherit'}}>
                   📱 1台で回す
                 </h3>
-                <p className={`text-xs md:text-base md:font-bold ${sessionMode === 'single' ? 'text-white' : 'text-gray-700'}`}>
+                <p className={`text-[11px] md:text-base md:font-bold ${sessionMode === 'single' ? 'text-white' : 'text-gray-700'}`}>
                   <span className="md:hidden">順番に診断</span>
                   <span className="hidden md:inline">1台の端末をみんなで回しながら順番に診断</span>
                 </p>
@@ -126,21 +126,21 @@ export function GroupSessionStartPage() {
             {/* 複数端末でやる */}
             <button 
               onClick={() => setSessionMode('multi')}
-              className={`p-2 md:p-6 rounded md:rounded-xl border-2 md:border-4 border-black transition-all ${
+              className={`p-1.5 md:p-6 rounded md:rounded-xl border md:border-4 border-black transition-all ${
                 sessionMode === 'multi' 
                   ? 'bg-green-500 md:transform md:scale-105' 
                   : 'bg-white hover:bg-green-100'
               }`}
-              style={{boxShadow: sessionMode === 'multi' ? '2px 2px 0 #000000, 8px 8px 0 #000000' : '2px 2px 0 #000000, 4px 4px 0 #000000'}}
+              style={{boxShadow: sessionMode === 'multi' ? '1px 1px 0 #000000, 8px 8px 0 #000000' : '1px 1px 0 #000000, 4px 4px 0 #000000'}}
             >
               <div className="text-center">
                 <div className="flex justify-center mb-1 md:mb-4">
-                  <QrCode className={`w-6 h-6 md:w-16 md:h-16 ${sessionMode === 'multi' ? 'text-white' : 'text-green-600'}`} style={{filter: window.innerWidth >= 768 ? 'drop-shadow(2px 2px 0 #000000)' : 'none'}} />
+                  <QrCode className={`w-5 h-5 md:w-16 md:h-16 ${sessionMode === 'multi' ? 'text-white' : 'text-green-600'}`} style={{filter: window.innerWidth >= 768 ? 'drop-shadow(2px 2px 0 #000000)' : 'none'}} />
                 </div>
-                <h3 className={`text-xs md:text-2xl font-bold md:font-black mb-1 md:mb-3 ${sessionMode === 'multi' ? 'text-white' : 'text-black'}`} style={{fontFamily: window.innerWidth >= 768 ? 'M PLUS Rounded 1c, sans-serif' : 'inherit'}}>
+                <h3 className={`text-[12px] md:text-2xl font-bold md:font-black mb-0.5 md:mb-3 ${sessionMode === 'multi' ? 'text-white' : 'text-black'}`} style={{fontFamily: window.innerWidth >= 768 ? 'M PLUS Rounded 1c, sans-serif' : 'inherit'}}>
                   📲 複数端末
                 </h3>
-                <p className={`text-xs md:text-base md:font-bold ${sessionMode === 'multi' ? 'text-white' : 'text-gray-700'}`}>
+                <p className={`text-[11px] md:text-base md:font-bold ${sessionMode === 'multi' ? 'text-white' : 'text-gray-700'}`}>
                   <span className="md:hidden">同時に診断</span>
                   <span className="hidden md:inline">QRコードで各自のスマホから参加</span>
                 </p>
@@ -164,7 +164,7 @@ export function GroupSessionStartPage() {
               onChange={(e) => setGroupName(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="例：10/10金曜"
-              className="w-full input-field text-sm md:text-lg"
+              className="w-full input-field text-[13px] md:text-lg"
               maxLength={30}
             />
             <p className="text-xs md:text-sm text-gray-500 mt-1 md:mt-2 hidden md:block">
@@ -228,7 +228,7 @@ export function GroupSessionStartPage() {
             <div className="text-center">
               <button
                 onClick={sessionMode === 'single' ? handleStartSingleDevice : handleStartMultiDevice}
-                className="btn-primary w-full md:w-auto px-4 md:px-16 py-2 md:py-5 text-sm md:text-2xl"
+                className="btn-primary w-full md:w-auto px-3 md:px-16 py-2 md:py-5 text-sm md:text-2xl"
               >
                 <span className="md:hidden">{sessionMode === 'single' ? '診断を始める' : 'QRコード作成'}</span>
                 <span className="hidden md:inline">{sessionMode === 'single' ? '🍺 1台で診断を始める 🍺' : '📲 QRコードを作成 📲'}</span>

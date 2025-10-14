@@ -120,11 +120,11 @@ export function GroupDiagnosisPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 p-3 sm:p-4 md:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 p-2 sm:p-3 md:p-8">
       <div className="max-w-4xl mx-auto">
         {/* ヘッダー */}
-        <div className="text-center mb-3 md:mb-8">
-          <h1 className="text-lg md:text-4xl font-bold text-gray-800 mb-1 md:mb-2">
+        <div className="text-center mb-2 md:mb-8">
+          <h1 className="text-base md:text-4xl font-bold text-gray-800 mb-1 md:mb-2">
             酒癖診断
           </h1>
           <p className="text-sm md:text-lg text-gray-600">
@@ -135,7 +135,7 @@ export function GroupDiagnosisPage() {
         </div>
 
         {/* プログレスバー */}
-        <div className="bg-white rounded-lg md:rounded-xl shadow-lg p-3 md:p-6 mb-3 md:mb-6">
+        <div className="bg-white rounded-lg md:rounded-xl shadow-lg p-2.5 md:p-6 mb-2.5 md:mb-6">
           <div className="flex items-center justify-between mb-2 md:mb-4">
             <div className="flex items-center gap-2 md:gap-3">
               <Users className="w-4 h-4 md:w-6 md:h-6 text-purple-500" />
@@ -147,9 +147,9 @@ export function GroupDiagnosisPage() {
               {currentQuestionIndex + 1}/{state.questions.length}問目
             </div>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2 md:h-3">
+          <div className="w-full bg-gray-200 rounded-full h-1.5 md:h-3">
             <div 
-              className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 md:h-3 rounded-full transition-all duration-300"
+              className="bg-gradient-to-r from-purple-500 to-pink-500 h-1.5 md:h-3 rounded-full transition-all duration-300"
               style={{ 
                 width: `${((currentUserIndex * state.questions.length + currentQuestionIndex + 1) / (state.groupParticipants.length * state.questions.length)) * 100}%` 
               }}
@@ -169,21 +169,21 @@ export function GroupDiagnosisPage() {
         </div>
 
         {/* 質問カード */}
-        <div className="bg-white rounded-lg md:rounded-xl shadow-lg p-4 md:p-8 mb-3 md:mb-6">
+        <div className="bg-white rounded-lg md:rounded-xl shadow-lg p-3 md:p-8 mb-2.5 md:mb-6">
           <div className="text-center mb-3 md:mb-6">
-            <h2 className="text-base md:text-2xl font-bold text-gray-800 mb-2 md:mb-4">
+            <h2 className="text-sm md:text-2xl font-bold text-gray-800 mb-2 md:mb-4">
               {currentQuestion.text}
             </h2>
           </div>
 
           {/* 回答選択肢 */}
-          <div className="space-y-2 md:space-y-4">
+          <div className="space-y-1.5 md:space-y-4">
             {currentQuestion.options.map((option) => (
               <button
                 key={option.id}
                 onClick={() => handleAnswerSelect(option.id)}
                 disabled={isAnswerVisible}
-                className={`w-full p-2 md:p-4 rounded-lg text-sm md:text-lg font-semibold transition-all ${
+                className={`w-full p-2 md:p-4 rounded-lg text-[13px] md:text-lg font-semibold transition-all ${
                   selectedAnswer === option.id
                     ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
                     : isAnswerVisible
@@ -198,12 +198,12 @@ export function GroupDiagnosisPage() {
 
           {/* 回答後の表示 */}
           {isAnswerVisible && (
-            <div className="mt-3 md:mt-6 p-2 md:p-4 bg-green-50 border border-green-200 rounded-lg">
+            <div className="mt-2.5 md:mt-6 p-2 md:p-4 bg-green-50 border border-green-200 rounded-lg">
               <div className="flex items-center gap-1 md:gap-2 text-green-800 mb-1 md:mb-2">
                 <CheckCircle className="w-4 h-4 md:w-5 md:h-5" />
-                <span className="font-semibold text-sm md:text-base">回答完了！</span>
+                <span className="font-semibold text-[13px] md:text-base">回答完了！</span>
               </div>
-              <p className="text-green-700 text-xs md:text-sm hidden md:block">
+              <p className="text-green-700 text-[12px] md:text-sm hidden md:block">
                 選択した回答: <strong>{currentQuestion.options.find(opt => opt.id === selectedAnswer)?.text}</strong>
               </p>
             </div>
@@ -240,7 +240,7 @@ export function GroupDiagnosisPage() {
               )}
             </button>
           ) : (
-            <div className="text-gray-500 text-xs md:text-base">
+            <div className="text-gray-500 text-[12px] md:text-base">
               回答を選択してください
             </div>
           )}
