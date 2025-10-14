@@ -596,33 +596,34 @@ export function GroupResultsPage() {
 
         {/* ワーストカップル（5組以上の時のみ表示） - ポップアート風 */}
         {worstCouple && worstCouple.maleId && worstCouple.femaleId && summary.totalCombinations >= 5 && (
-          <div className="card mb-6" style={{background: '#FF0000', transform: 'rotate(-1deg)'}}>
-            <div className="text-center mb-6">
-              <div className="flex justify-center mb-4">
-                <div className="p-4 bg-red-600 rounded-full border-5 border-black animate-pulse" style={{boxShadow: '6px 6px 0 #000000'}}>
-                  <AlertTriangle className="w-12 h-12 text-white" style={{filter: 'drop-shadow(2px 2px 0 #000000)'}} />
+          <div className="card mb-4 md:mb-6 p-3 md:p-6" style={{background: '#FF0000', transform: 'rotate(-1deg)'}}>
+            <div className="text-center mb-3 md:mb-6">
+              <div className="flex justify-center mb-2 md:mb-4">
+                <div className="p-2 md:p-4 bg-red-600 rounded-full border-2 md:border-5 border-black animate-pulse" style={{boxShadow: '2px 2px 0 #000000, 6px 6px 0 #000000'}}>
+                  <AlertTriangle className="w-6 h-6 md:w-12 md:h-12 text-white" />
                 </div>
               </div>
-              <h2 className="heading-secondary" style={{color: '#FFFFFF', WebkitTextStroke: '2px #000000', textShadow: '4px 4px 0 #FF6600'}}>
-                ⚠️ 絶対くっつかないカップル ⚠️
+              <h2 className="text-base font-extrabold text-white md:heading-secondary" style={{WebkitTextStroke: '0 md:2px #000000', textShadow: '0 0 0 #FF6600, 4px 4px 0 #FF6600'}}>
+                <span className="md:hidden">⚠️ ワーストカップル ⚠️</span>
+                <span className="hidden md:inline">⚠️ 絶対くっつかないカップル ⚠️</span>
               </h2>
-              <p className="text-lg font-black text-white mt-2" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
+              <p className="hidden md:block text-lg font-black text-white mt-2" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
                 ★ この組み合わせは要注意！ ★
               </p>
             </div>
 
-            <div className="p-6 rounded-xl border-5 border-black" style={{background: '#FFE4E4', boxShadow: '8px 8px 0 #000000'}}>
+            <div className="p-3 md:p-6 rounded-lg md:rounded-xl border-2 md:border-5 border-black" style={{background: '#FFE4E4', boxShadow: '3px 3px 0 #000000, 8px 8px 0 #000000'}}>
               <div className="text-center">
-                <div className="text-2xl font-black text-black mb-3" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
-                  <span className="inline-block px-3 py-1 bg-blue-500 text-white rounded border-2 border-black mr-1">♂ {worstCouple.maleName}</span>
-                  <span className="mx-2">×</span>
-                  <span className="inline-block px-3 py-1 bg-pink-500 text-white rounded border-2 border-black">♀ {worstCouple.femaleName}</span>
+                <div className="text-sm md:text-2xl font-black text-black mb-2 md:mb-3" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
+                  <span className="inline-block px-2 md:px-3 py-0.5 md:py-1 bg-blue-500 text-white rounded border border-black md:border-2 mr-1">♂ {worstCouple.maleName}</span>
+                  <span className="mx-1 md:mx-2">×</span>
+                  <span className="inline-block px-2 md:px-3 py-0.5 md:py-1 bg-pink-500 text-white rounded border border-black md:border-2">♀ {worstCouple.femaleName}</span>
                 </div>
-                <div className="text-5xl font-black text-red-700 mb-4" style={{fontFamily: 'Bangers, sans-serif', WebkitTextStroke: '2px #000000'}}>
+                <div className="text-2xl md:text-5xl font-black text-red-700 mb-2 md:mb-4" style={{fontFamily: 'Bangers, sans-serif', WebkitTextStroke: '1px md:2px #000000'}}>
                   {worstCouple.romanticScore}点 💔
                 </div>
-                <div className="p-4 bg-white rounded-lg border-3 border-black" style={{boxShadow: '3px 3px 0 #000000'}}>
-                  <p className="text-black font-bold leading-relaxed" style={{fontFamily: 'Noto Sans JP, sans-serif'}}>
+                <div className="p-2 md:p-4 bg-white rounded border-2 md:rounded-lg md:border-3 border-black" style={{boxShadow: '2px 2px 0 #000000, 3px 3px 0 #000000'}}>
+                  <p className="text-xs md:text-base text-black font-bold leading-snug md:leading-relaxed" style={{fontFamily: 'Noto Sans JP, sans-serif'}}>
                     {worstCouple.humorousComment}
                   </p>
                 </div>
