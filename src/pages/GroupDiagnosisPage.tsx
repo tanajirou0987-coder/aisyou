@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
 import { getRandomDrinkingQuestions } from '../data/drinkingQuestions'
@@ -19,13 +19,40 @@ export function GroupDiagnosisPage() {
   const [isAnswerVisible, setIsAnswerVisible] = useState(false)
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null)
 
-  const currentUser = state.groupParticipants[currentUserIndex]
-  const currentQuestion = state.questions[currentQuestionIndex]
+  const participants = state.groupParticipants
+  const cacheKey = useMemo(() => {
+    const ids = (participants || []).map(p => p.userId).join(',')
+    return `drinking:questions:v1:${ids}`
+  }, [participants])
+
+  // 同期的にキャッシュ→生成の順に候補を用意
+  const derivedQuestions = useMemo(() => {
+    try {
+      const cached = sessionStorage.getItem(cacheKey)
+      if (cached) return JSON.parse(cached)
+    } catch {}
+    return getRandomDrinkingQuestions('drinking')
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cacheKey])
+
+  // グローバル未設定なら即座に設定（非破壊）＋キャッシュ保存
+  useEffect(() => {
+    if (state.questions.length === 0 && derivedQuestions.length > 0) {
+      setQuestions(derivedQuestions)
+      try {
+        sessionStorage.setItem(cacheKey, JSON.stringify(derivedQuestions))
+      } catch {}
+    }
+  }, [cacheKey, derivedQuestions, setQuestions, state.questions.length])
+
+  const questionsForRender = state.questions.length > 0 ? state.questions : derivedQuestions
+  const currentUser = participants[currentUserIndex]
+  const currentQuestion = questionsForRender[currentQuestionIndex]
   const isLastQuestion = currentQuestionIndex === state.questions.length - 1
   const isLastUser = currentUserIndex === state.groupParticipants.length - 1
 
-  // 質問が読み込まれていない場合はローディング表示
-  if (!currentQuestion || !currentUser) {
+  // 参加者が未用意 or 質問候補が空の場合のみローディング
+  if (!currentUser || !currentQuestion) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 flex items-center justify-center">
         <div className="text-center">
@@ -36,13 +63,7 @@ export function GroupDiagnosisPage() {
     )
   }
 
-  useEffect(() => {
-    // 酒癖診断の質問を設定（一度だけ実行）
-    if (state.questions.length === 0) {
-      const questions = getRandomDrinkingQuestions('drinking')
-      setQuestions(questions)
-    }
-  }, [setQuestions, state.questions.length])
+  // 既存の遅延読み込みは上の同期候補設定に置き換え済み
 
   const handleAnswerSelect = (optionId: string) => {
     setSelectedAnswer(optionId)
