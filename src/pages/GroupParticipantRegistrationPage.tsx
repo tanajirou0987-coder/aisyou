@@ -59,8 +59,8 @@ export function GroupParticipantRegistrationPage() {
           </div>
         </div>
 
-        {/* 現在の参加者数表示 */}
-        <div className="bg-white rounded-lg md:rounded-xl shadow-lg p-3 md:p-6 mb-3 md:mb-6">
+        {/* 現在の参加者数表示（カード化） */}
+        <div className="rounded-lg md:rounded-xl p-3 md:p-6 mb-3 md:mb-6 border-2 md:border-4 border-black" style={{background: '#FFFFFF', boxShadow: '4px 4px 0 #000000'}}>
           <div className="flex items-center justify-center gap-2 md:gap-3 mb-2 md:mb-4">
             <Users className="w-5 h-5 md:w-8 md:h-8 text-purple-500" />
             <span className="text-base md:text-2xl font-bold text-gray-800">
@@ -97,9 +97,9 @@ export function GroupParticipantRegistrationPage() {
           )}
         </div>
 
-        {/* 参加者追加フォーム */}
-        <div className="bg-white rounded-lg md:rounded-xl shadow-lg p-3 md:p-8 mb-3 md:mb-6">
-          <h2 className="text-base md:text-2xl font-bold text-gray-800 mb-3 md:mb-6 text-center">
+        {/* 参加者追加フォーム（カード化） */}
+        <div className="rounded-lg md:rounded-xl p-3 md:p-8 mb-3 md:mb-6 border-2 md:border-4 border-black" style={{background: '#FFFFFF', boxShadow: '5px 5px 0 #000000'}}>
+          <h2 className="text-base md:text-2xl font-black text-black mb-3 md:mb-6 text-center" style={{fontFamily: 'Bangers, sans-serif'}}>
             新しい参加者を追加
           </h2>
           
@@ -110,7 +110,7 @@ export function GroupParticipantRegistrationPage() {
               onChange={(e) => setParticipantName(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="参加者の名前を入力"
-              className="w-full input-field text-sm md:text-lg"
+              className="w-full text-sm md:text-lg rounded-lg border-2 md:border-3 border-black px-3 py-2 md:px-4 md:py-3 focus:outline-none focus:ring-0"
               maxLength={20}
             />
             
@@ -127,7 +127,7 @@ export function GroupParticipantRegistrationPage() {
                     value="male"
                     checked={selectedGender === 'male'}
                     onChange={(e) => setSelectedGender(e.target.value as 'male')}
-                    className="w-4 h-4 md:w-5 md:h-5 text-blue-600"
+                    className="w-4 h-4 md:w-5 md:h-5 text-blue-600 accent-blue-600 border-2 border-black"
                   />
                   <span className="text-sm md:text-lg">♂ 男性</span>
                 </label>
@@ -138,7 +138,7 @@ export function GroupParticipantRegistrationPage() {
                     value="female"
                     checked={selectedGender === 'female'}
                     onChange={(e) => setSelectedGender(e.target.value as 'female')}
-                    className="w-4 h-4 md:w-5 md:h-5 text-pink-600"
+                    className="w-4 h-4 md:w-5 md:h-5 text-pink-600 accent-pink-600 border-2 border-black"
                   />
                   <span className="text-sm md:text-lg">♀ 女性</span>
                 </label>
@@ -148,7 +148,8 @@ export function GroupParticipantRegistrationPage() {
             <button
               onClick={handleAddParticipant}
               disabled={!participantName.trim() || !selectedGender || state.groupParticipants.length >= 10}
-              className="w-full btn-primary px-4 md:px-6 py-2 md:py-3 text-sm md:text-lg disabled:opacity-50 flex items-center justify-center"
+              className="w-full px-4 md:px-6 py-2 md:py-3 text-sm md:text-lg font-extrabold disabled:opacity-50 flex items-center justify-center border-2 md:border-3 border-black text-black bg-white hover:bg-yellow-100"
+              style={{ boxShadow: '3px 3px 0 #000000' }}
             >
               <Plus className="w-4 h-4 md:w-5 md:h-5 mr-1 md:mr-2" />
               追加
@@ -160,20 +161,21 @@ export function GroupParticipantRegistrationPage() {
           </div>
         </div>
 
-        {/* 参加者リスト */}
+        {/* 参加者リスト（カード化） */}
         {state.groupParticipants.length > 0 && (
-          <div className="bg-white rounded-lg md:rounded-xl shadow-lg p-3 md:p-8 mb-3 md:mb-6">
-            <h3 className="text-sm md:text-xl font-semibold text-gray-700 mb-3 md:mb-6 text-center">
+          <div className="rounded-lg md:rounded-xl p-3 md:p-8 mb-3 md:mb-6 border-2 md:border-4 border-black" style={{background: '#FFFFFF', boxShadow: '5px 5px 0 #000000'}}>
+            <h3 className="text-sm md:text-xl font-black text-black mb-3 md:mb-6 text-center" style={{fontFamily: 'Bangers, sans-serif'}}>
               登録済み参加者一覧
             </h3>
             <div className="space-y-2 md:space-y-3">
               {state.groupParticipants.map((participant, index) => (
                 <div
                   key={participant.userId}
-                  className="flex items-center justify-between bg-gray-50 p-2 md:p-4 rounded-lg"
+                  className="flex items-center justify-between bg-gray-50 p-2 md:p-4 rounded-lg border-2 border-black"
+                  style={{ boxShadow: '3px 3px 0 #000000' }}
                 >
                   <div className="flex items-center gap-2 md:gap-3">
-                    <span className="bg-purple-500 text-white rounded-full w-6 h-6 md:w-8 md:h-8 flex items-center justify-center text-xs md:text-sm font-bold">
+                    <span className="bg-purple-500 text-white rounded-full w-6 h-6 md:w-8 md:h-8 flex items-center justify-center text-xs md:text-sm font-bold border-2 border-black" style={{boxShadow: '2px 2px 0 #000000'}}>
                       {participant.registrationOrder}
                     </span>
                     <span className={`text-sm md:text-lg font-bold ${participant.gender === 'male' ? 'text-blue-600' : 'text-pink-600'}`}>
@@ -182,7 +184,8 @@ export function GroupParticipantRegistrationPage() {
                   </div>
                   <button
                     onClick={() => removeGroupParticipant(participant.userId)}
-                    className="text-red-500 hover:text-red-700 p-1 md:p-2"
+                    className="text-red-600 hover:text-red-700 p-1 md:p-2 border-2 border-black rounded-md bg-white"
+                    style={{ boxShadow: '2px 2px 0 #000000' }}
                     title="削除"
                   >
                     <Trash2 className="w-4 h-4 md:w-5 md:h-5" />
@@ -193,16 +196,17 @@ export function GroupParticipantRegistrationPage() {
           </div>
         )}
 
-        {/* 診断開始ボタン */}
+        {/* 診断開始ボタン（ボタン強調） */}
         <div className="text-center">
           <button
             onClick={handleStartDiagnosis}
             disabled={!canStartDiagnosis}
-            className={`px-6 md:px-12 py-3 md:py-4 text-sm md:text-xl font-bold rounded-xl transition-all flex items-center gap-2 md:gap-3 mx-auto ${
+            className={`px-6 md:px-12 py-3 md:py-4 text-sm md:text-xl font-extrabold rounded-xl transition-all flex items-center gap-2 md:gap-3 mx-auto border-2 md:border-3 border-black ${
               canStartDiagnosis
-                ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg hover:shadow-xl transform hover:scale-105'
+                ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
+            style={{ boxShadow: '4px 4px 0 #000000' }}
           >
             {canStartDiagnosis ? (
               <>
@@ -218,27 +222,27 @@ export function GroupParticipantRegistrationPage() {
           </button>
         </div>
 
-        {/* 性別バランス警告 */}
+        {/* 性別バランス警告（カード化） */}
         {state.groupParticipants.length > 0 && !genderBalance.isBalanced && (
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 md:p-6 mt-3 md:mt-8">
-            <div className="flex items-center gap-2 text-yellow-800 mb-2 md:mb-3">
+          <div className="rounded-lg p-3 md:p-6 mt-3 md:mt-8 border-2 md:border-4 border-black" style={{background: '#FFF3BF', boxShadow: '4px 4px 0 #000000'}}>
+            <div className="flex items-center gap-2 text-yellow-900 mb-2 md:mb-3">
               <AlertTriangle className="w-4 h-4 md:w-5 md:h-5" />
-              <h3 className="text-sm md:text-lg font-semibold">
+              <h3 className="text-sm md:text-lg font-extrabold">
                 性別バランスの注意
               </h3>
             </div>
-            <p className="text-xs md:text-base text-yellow-700">
+            <p className="text-xs md:text-base text-yellow-900 font-bold">
               {genderBalance.warningMessage}
             </p>
           </div>
         )}
 
-        {/* 使い方説明 */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 md:p-6 mt-3 md:mt-8">
-          <h3 className="text-sm md:text-lg font-semibold text-blue-800 mb-2 md:mb-3">
+        {/* 使い方説明（カード化） */}
+        <div className="rounded-lg p-3 md:p-6 mt-3 md:mt-8 border-2 md:border-4 border-black" style={{background: '#DBEAFE', boxShadow: '4px 4px 0 #000000'}}>
+          <h3 className="text-sm md:text-lg font-extrabold text-blue-900 mb-2 md:mb-3">
             📱 使い方
           </h3>
-          <div className="text-blue-700 space-y-1 md:space-y-2 text-xs md:text-base">
+          <div className="text-blue-900 font-bold space-y-1 md:space-y-2 text-xs md:text-base">
             <p>1. 最初の人が自分の名前と性別を入力して「追加」ボタンを押す</p>
             <p>2. 「次の人へ」と言いながら端末を次の人に渡す</p>
             <p>3. 全員の名前と性別を登録したら「診断を開始する」ボタンを押す</p>
