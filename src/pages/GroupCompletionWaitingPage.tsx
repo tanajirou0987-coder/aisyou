@@ -24,19 +24,27 @@ export function GroupCompletionWaitingPage() {
   const allCompleted = completedCount === totalCount
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 p-3 sm:p-4 md:p-8">
       <div className="max-w-4xl mx-auto">
-        {/* ヘッダー */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">
-            {allCompleted ? '全員の診断が完了しました！' : '診断完了待機中'}
-          </h1>
-          <p className="text-lg text-gray-600">
-            {allCompleted 
-              ? '結果を計算しています...' 
-              : '全員の診断が終わるまでお待ちください'
-            }
-          </p>
+        {/* ヘッダー（診断結果画面テイスト） */}
+        <div className="text-center mb-3 md:mb-8">
+          <div className="card p-2 md:hidden relative" style={{background: '#FFD700'}}>
+            <div className="absolute top-1 left-2 text-xs" style={{transform: 'rotate(-15deg)'}}>POW!</div>
+            <div className="absolute top-1 right-2 text-xs" style={{transform: 'rotate(15deg)'}}>BANG!</div>
+            <h1 className="text-lg font-black text-black" style={{fontFamily: 'Bangers, sans-serif'}}>
+              {allCompleted ? '全員完了！' : '診断待機中'}
+            </h1>
+            <p className="text-[12px] font-black text-black" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
+              {allCompleted ? '結果計算中…' : '全員の診断完了を待っています'}
+            </p>
+          </div>
+          <div className="hidden md:flex justify-center items-center gap-6 mb-2">
+            <span className="text-5xl" style={{transform: 'rotate(-10deg)'}}>🍺</span>
+            <h1 className="heading-secondary text-5xl" style={{color: '#FF0000', WebkitTextStroke: '2px #000000', textShadow: '3px 3px 0 #FFFFFF'}}>
+              {allCompleted ? '全員の診断が完了しました！' : '診断完了待機中'}
+            </h1>
+            <span className="text-5xl" style={{transform: 'rotate(10deg)'}}>🍶</span>
+          </div>
         </div>
 
         {/* 完了状況表示 */}
