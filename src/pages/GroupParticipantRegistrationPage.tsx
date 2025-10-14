@@ -120,7 +120,7 @@ export function GroupParticipantRegistrationPage() {
                 性別を選択してください
               </label>
               <div className="flex gap-3 md:gap-4">
-                <label className="flex items-center gap-1 md:gap-2 cursor-pointer">
+                <label className="flex items-center gap-1 md:gap-2 cursor-pointer px-2 md:px-3 py-1 md:py-1.5 rounded-md border-2 border-black bg-white" style={{boxShadow: '2px 2px 0 #000000'}}>
                   <input
                     type="radio"
                     name="gender"
@@ -131,7 +131,7 @@ export function GroupParticipantRegistrationPage() {
                   />
                   <span className="text-sm md:text-lg">♂ 男性</span>
                 </label>
-                <label className="flex items-center gap-1 md:gap-2 cursor-pointer">
+                <label className="flex items-center gap-1 md:gap-2 cursor-pointer px-2 md:px-3 py-1 md:py-1.5 rounded-md border-2 border-black bg-white" style={{boxShadow: '2px 2px 0 #000000'}}>
                   <input
                     type="radio"
                     name="gender"
@@ -250,11 +250,12 @@ export function GroupParticipantRegistrationPage() {
           </div>
         </div>
 
-        {/* 戻るボタン */}
+        {/* 戻るボタン（カード風） */}
         <div className="text-center mt-3 md:mt-6">
           <button
             onClick={() => navigate('/group-session-start')}
-            className="text-gray-500 hover:text-gray-700 text-xs md:text-sm"
+            className="text-xs md:text-sm font-extrabold border-2 md:border-3 border-black px-3 md:px-4 py-1.5 md:py-2 bg-white hover:bg-yellow-100"
+            style={{boxShadow: '3px 3px 0 #000000'}}
           >
             酒癖診断開始に戻る
           </button>
