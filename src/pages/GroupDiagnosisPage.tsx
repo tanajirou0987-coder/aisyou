@@ -124,7 +124,7 @@ export function GroupDiagnosisPage() {
       <div className="max-w-4xl mx-auto">
         {/* ヘッダー（診断結果画面と同テイスト） */}
         <div className="text-center mb-2 md:mb-8">
-          <div className="card p-2 md:hidden relative" style={{background: '#FFD700'}}>
+          <div className="card p-2 lg:hidden relative" style={{background: '#FFD700'}}>
             <div className="absolute top-1 left-2 text-xs" style={{transform: 'rotate(-15deg)'}}>POW!</div>
             <div className="absolute top-1 right-2 text-xs" style={{transform: 'rotate(15deg)'}}>BANG!</div>
             <h1 className="text-lg font-black text-black" style={{fontFamily: 'Bangers, sans-serif'}}>酒癖診断</h1>
@@ -168,7 +168,7 @@ export function GroupDiagnosisPage() {
             <EyeOff className="w-4 h-4 md:w-5 md:h-5" />
             <span className="font-extrabold text-xs md:text-base" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>プライバシーにご注意ください</span>
           </div>
-          <p className="text-yellow-900 text-[12px] md:text-sm mt-1 hidden md:block font-bold">
+          <p className="text-yellow-900 text-[12px] md:text-sm mt-1 hidden lg:block font-bold">
             診断中は他の人に回答が見えないよう、画面を隠して回答してください
           </p>
         </div>
@@ -209,7 +209,7 @@ export function GroupDiagnosisPage() {
                 <CheckCircle className="w-4 h-4 md:w-5 md:h-5" />
                 <span className="font-semibold text-[13px] md:text-base">回答完了！</span>
               </div>
-              <p className="text-green-700 text-[12px] md:text-sm hidden md:block">
+              <p className="text-green-700 text-[12px] md:text-sm hidden lg:block">
                 選択した回答: <strong>{currentQuestion.options.find(opt => opt.id === selectedAnswer)?.text}</strong>
               </p>
             </div>
@@ -227,19 +227,19 @@ export function GroupDiagnosisPage() {
                 isLastUser ? (
                   <>
                     <CheckCircle className="w-4 h-4 md:w-5 md:h-5" />
-                    <span className="md:hidden">完了</span>
+                    <span className="lg:hidden">完了</span>
                     <span className="hidden md:inline">診断完了</span>
                   </>
                 ) : (
                   <>
-                    <span className="md:hidden">次へ</span>
+                    <span className="lg:hidden">次へ</span>
                     <span className="hidden md:inline">次の人へ</span>
                     <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
                   </>
                 )
               ) : (
                 <>
-                  <span className="md:hidden">次へ</span>
+                  <span className="lg:hidden">次へ</span>
                   <span className="hidden md:inline">次の質問へ</span>
                   <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
                 </>
@@ -253,7 +253,7 @@ export function GroupDiagnosisPage() {
         </div>
 
         {/* 画面を暗くするボタン - PC版のみ */}
-        <div className="text-center mt-3 md:mt-6 hidden md:block">
+        <div className="text-center mt-3 md:mt-6 hidden lg:block">
           <button
             onClick={() => setIsAnswerVisible(!isAnswerVisible)}
             className="text-gray-500 hover:text-gray-700 text-sm flex items-center gap-1 mx-auto"

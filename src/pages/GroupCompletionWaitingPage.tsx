@@ -28,7 +28,7 @@ export function GroupCompletionWaitingPage() {
       <div className="max-w-4xl mx-auto">
         {/* ヘッダー（診断結果画面テイスト） */}
         <div className="text-center mb-3 md:mb-8">
-          <div className="card p-2 md:hidden relative" style={{background: '#FFD700'}}>
+          <div className="card p-2 lg:hidden relative" style={{background: '#FFD700'}}>
             <div className="absolute top-1 left-2 text-xs" style={{transform: 'rotate(-15deg)'}}>POW!</div>
             <div className="absolute top-1 right-2 text-xs" style={{transform: 'rotate(15deg)'}}>BANG!</div>
             <h1 className="text-lg font-black text-black" style={{fontFamily: 'Bangers, sans-serif'}}>

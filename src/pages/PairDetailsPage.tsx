@@ -617,16 +617,16 @@ export function PairDetailsPage() {
             className="btn-secondary text-xs md:text-sm flex items-center gap-1 md:gap-2 mx-auto mb-2 md:mb-6"
           >
             <ArrowLeft className="w-3 h-3 md:w-5 md:h-5" />
-            <span className="md:hidden">戻る</span>
+            <span className="lg:hidden">戻る</span>
             <span className="hidden md:inline">結果に戻る</span>
           </button>
           {/* モバイルタイトル */}
-          <div className="card p-2 md:hidden" style={{background: '#0066FF'}}>
+          <div className="card p-2 lg:hidden" style={{background: '#0066FF'}}>
             <h1 className="text-lg font-bold text-white mb-1">ペア相性詳細分析</h1>
             <p className="text-xs font-bold text-white">二人の相性をコンパクト表示</p>
           </div>
           {/* PCタイトル */}
-          <div className="hidden md:block card relative" style={{background: '#0066FF', transform: 'rotate(-2deg)'}}>
+          <div className="hidden lg:block card relative" style={{background: '#0066FF', transform: 'rotate(-2deg)'}}>
             <span className="sound-effect pop-yellow absolute top-2 left-4" style={{transform: 'rotate(-15deg)', fontSize: '1.5rem'}}>💘</span>
             <span className="sound-effect pop-pink absolute top-2 right-4" style={{transform: 'rotate(15deg)', fontSize: '1.5rem'}}>LOVE!</span>
             <h1 className="heading-primary text-6xl mb-3" style={{color: '#FF69B4', WebkitTextStroke: '3px #000000', textShadow: '5px 5px 0 #FFD700'}}>
@@ -648,7 +648,7 @@ export function PairDetailsPage() {
               </div>
             </div>
             <h2 className="text-sm font-bold md:heading-secondary mb-2 md:mb-6">
-              <span className="md:hidden">このペアの相性</span>
+              <span className="lg:hidden">このペアの相性</span>
               <span className="hidden md:inline">💥 このペアの酒癖相性分析 💥</span>
             </h2>
             <div className="flex justify-center items-center gap-2 md:gap-6 mb-3 md:mb-6">
@@ -696,7 +696,7 @@ export function PairDetailsPage() {
                     boxShadow: '3px 3px 0 #000000, 6px 6px 0 #000000'
                   }}>
                     {/* 吹き出しの三角形（PCのみ） */}
-                    <div className="hidden md:block absolute left-0 top-8 transform -translate-x-4">
+                    <div className="hidden lg:block absolute left-0 top-8 transform -translate-x-4">
                       <div className="w-0 h-0" style={{
                         borderTop: '15px solid transparent',
                         borderRight: '15px solid #FFFFFF',
@@ -797,7 +797,7 @@ export function PairDetailsPage() {
         <div className="card mb-4 md:mb-6 p-3 md:p-6" style={{background: '#FFFFFF'}}>
           <h3 className="text-sm md:heading-secondary font-extrabold mb-2 md:mb-4 flex items-center gap-1 md:gap-2">
             <Tag className="w-4 h-4 md:w-7 md:h-7 text-yellow-500" style={{filter: 'drop-shadow(1px 1px 0 #000000)'}} />
-            <span className="md:hidden">🏷️ 30キーワード</span>
+            <span className="lg:hidden">🏷️ 30キーワード</span>
             <span className="hidden md:inline">🏷️ 二人の組み合わせを表す30のキーワード 🏷️</span>
           </h3>
           <p className="text-xs md:text-lg text-black font-black mb-2 md:mb-6" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>

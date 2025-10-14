@@ -44,13 +44,13 @@ export function GroupParticipantRegistrationPage() {
       <div className="max-w-4xl mx-auto">
         {/* ヘッダー（診断結果画面テイスト） */}
         <div className="text-center mb-2 md:mb-8">
-          <div className="card p-2 md:hidden relative" style={{background: '#FFD700'}}>
+          <div className="card p-2 lg:hidden relative" style={{background: '#FFD700'}}>
             <div className="absolute top-1 left-2 text-xs" style={{transform: 'rotate(-15deg)'}}>POW!</div>
             <div className="absolute top-1 right-2 text-xs" style={{transform: 'rotate(15deg)'}}>BANG!</div>
             <h1 className="text-lg font-black text-black" style={{fontFamily: 'Bangers, sans-serif'}}>参加者登録</h1>
             <p className="text-[12px] font-black text-black" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>名前と性別を入力して追加！</p>
           </div>
-          <div className="hidden md:flex justify-center items-center gap-6 mb-2">
+          <div className="hidden lg:flex justify-center items-center gap-6 mb-2">
             <span className="text-5xl" style={{transform: 'rotate(-10deg)'}}>🍺</span>
             <h1 className="heading-secondary text-5xl" style={{color: '#FF0000', WebkitTextStroke: '2px #000000', textShadow: '3px 3px 0 #FFFFFF'}}>
               参加者登録
@@ -238,7 +238,7 @@ export function GroupParticipantRegistrationPage() {
         )}
 
         {/* 使い方説明（カード化・モバイル非表示） */}
-        <div className="hidden md:block rounded-lg p-3 md:p-6 mt-3 md:mt-8 border-2 md:border-4 border-black" style={{background: '#DBEAFE', boxShadow: '4px 4px 0 #000000'}}>
+        <div className="hidden lg:block rounded-lg p-3 md:p-6 mt-3 md:mt-8 border-2 md:border-4 border-black" style={{background: '#DBEAFE', boxShadow: '4px 4px 0 #000000'}}>
           <h3 className="text-sm md:text-lg font-extrabold text-blue-900 mb-2 md:mb-3">
             📱 使い方
           </h3>
@@ -246,7 +246,7 @@ export function GroupParticipantRegistrationPage() {
             <p>1. 最初の人が自分の名前と性別を入力して「追加」ボタンを押す</p>
             <p>2. 「次の人へ」と言いながら端末を次の人に渡す</p>
             <p>3. 全員の名前と性別を登録したら「診断を開始する」ボタンを押す</p>
-            <p className="hidden md:block">4. 恋愛相性診断には男性と女性の両方が必要です</p>
+            <p className="hidden lg:block">4. 恋愛相性診断には男性と女性の両方が必要です</p>
           </div>
         </div>
 

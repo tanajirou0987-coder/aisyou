@@ -297,12 +297,12 @@ export function GroupResultsPage() {
       <div className="max-w-6xl mx-auto">
         {/* ヘッダー - スマホ版はコンパクト、PC版はポップアート風 */}
         <div className="text-center mb-3 md:mb-8 card p-2 md:p-6" style={{background: '#FFD700', transform: 'rotate(0deg) md:rotate(-2deg)'}}>
-          <div className="mb-2 md:mb-4 hidden md:block">
+          <div className="mb-2 md:mb-4 hidden lg:block">
             <span className="sound-effect pop-red absolute top-4 left-4" style={{transform: 'rotate(-15deg)'}}>POW!</span>
             <span className="sound-effect pop-blue absolute top-4 right-4" style={{transform: 'rotate(15deg)'}}>BANG!</span>
           </div>
           {/* スマホ版タイトル */}
-          <div className="md:hidden">
+          <div className="lg:hidden">
             <h1 className="text-xl font-bold mb-1">
               酒癖診断結果
             </h1>
@@ -318,7 +318,7 @@ export function GroupResultsPage() {
             </h1>
             <span className="text-7xl" style={{transform: 'rotate(10deg)'}}>🍶</span>
           </div>
-          <p className="text-xl font-black text-black hidden md:block" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
+          <p className="text-xl font-black text-black hidden lg:block" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
             ★ みんなで端末を囲んで結果を楽しみましょう！ ★
           </p>
         </div>
@@ -333,11 +333,11 @@ export function GroupResultsPage() {
               </div>
             </div>
             {/* スマホ版タイトル */}
-            <h2 className="text-base font-bold mb-2 md:hidden">
+            <h2 className="text-base font-bold mb-2 lg:hidden">
               🍻 今夜のメンバー 🍻
             </h2>
             {/* PC版タイトル */}
-            <h2 className="heading-secondary hidden md:block">
+            <h2 className="heading-secondary hidden lg:block">
               <span style={{fontSize: '2rem'}}>🍻</span> 今夜の診断メンバー <span style={{fontSize: '2rem'}}>🍻</span>
             </h2>
             <div className="text-xs md:text-lg font-bold text-black mb-2 md:mb-4" style={{fontFamily: 'Noto Sans JP, sans-serif'}}>
@@ -427,7 +427,7 @@ export function GroupResultsPage() {
                   boxShadow: '3px 3px 0 #000000, 6px 6px 0 #000000'
                 }}>
                   {/* 吹き出しの三角形 - PC版のみ表示 */}
-                  <div className="hidden md:block absolute left-0 top-8 transform -translate-x-4">
+                  <div className="hidden lg:block absolute left-0 top-8 transform -translate-x-4">
                     <div className="w-0 h-0" style={{
                       borderTop: '15px solid transparent',
                       borderRight: '15px solid #FFFFFF',
@@ -443,7 +443,7 @@ export function GroupResultsPage() {
                   <div className="flex items-start gap-1 md:gap-2 mb-2 md:mb-3">
                     <Sparkles className="w-4 h-4 md:w-6 md:h-6 text-yellow-500 flex-shrink-0 mt-0.5 md:mt-1" style={{filter: 'drop-shadow(1px 1px 0 #000000)'}} />
                     <h3 className="text-xs md:text-xl font-black text-black" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
-                      <span className="md:hidden">💥 今夜の分析 💥</span>
+                      <span className="lg:hidden">💥 今夜の分析 💥</span>
                       <span className="hidden md:inline">💥 今夜の飲み会、俺が分析したるわ！ 💥</span>
                     </h3>
                   </div>
@@ -611,7 +611,7 @@ export function GroupResultsPage() {
                 </div>
               </div>
               <h2 className="text-base font-extrabold text-white md:heading-secondary" style={{WebkitTextStroke: '0 md:2px #000000', textShadow: '0 0 0 #FF6600, 4px 4px 0 #FF6600'}}>
-                <span className="md:hidden">⚠️ ワーストカップル ⚠️</span>
+                <span className="lg:hidden">⚠️ ワーストカップル ⚠️</span>
                 <span className="hidden md:inline">⚠️ 絶対くっつかないカップル ⚠️</span>
               </h2>
               <p className="hidden md:block text-lg font-black text-white mt-2" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
