@@ -1,0 +1,280 @@
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Fredoka+One&family=M+PLUS+Rounded+1c:wght@700;800;900&family=Noto+Sans+JP:wght@500;700;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Noto Sans JP', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: #FFFFFF;
+    background-image: 
+      radial-gradient(circle, #000000 1px, transparent 1px),
+      radial-gradient(circle, #000000 1px, transparent 1px);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+    color: #000000;
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  /* ポップアートカラースタイル */
+  .pop-red {
+    color: #FF0000;
+    -webkit-text-stroke: 2px #000000;
+    text-shadow: 3px 3px 0 #FFD700;
+  }
+  
+  .pop-blue {
+    color: #0066FF;
+    -webkit-text-stroke: 2px #000000;
+    text-shadow: 3px 3px 0 #FF0000;
+  }
+  
+  .pop-yellow {
+    color: #FFD700;
+    -webkit-text-stroke: 2px #000000;
+    text-shadow: 3px 3px 0 #0066FF;
+  }
+  
+  .pop-green {
+    color: #00CC44;
+    -webkit-text-stroke: 2px #000000;
+    text-shadow: 3px 3px 0 #FF0000;
+  }
+  
+  .pop-pink {
+    color: #FF69B4;
+    -webkit-text-stroke: 2px #000000;
+    text-shadow: 3px 3px 0 #0066FF;
+  }
+  
+  .pop-orange {
+    color: #FF6600;
+    -webkit-text-stroke: 2px #000000;
+    text-shadow: 3px 3px 0 #FFD700;
+  }
+  
+  /* ボタンスタイル - ポップアート風 */
+  .btn-primary {
+    @apply font-extrabold py-4 px-10 rounded-xl transition-all duration-200;
+    font-family: 'Bangers', 'M PLUS Rounded 1c', sans-serif;
+    font-size: 1.5rem;
+    background: #FF0000;
+    border: 4px solid #000000;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    box-shadow: 6px 6px 0 #000000;
+  }
+  
+  .btn-primary:hover {
+    transform: translate(2px, 2px);
+    box-shadow: 4px 4px 0 #000000;
+  }
+  
+  .btn-secondary {
+    @apply font-extrabold py-4 px-10 rounded-xl transition-all duration-200;
+    font-family: 'Bangers', 'M PLUS Rounded 1c', sans-serif;
+    font-size: 1.5rem;
+    background: #0066FF;
+    border: 4px solid #000000;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    box-shadow: 6px 6px 0 #000000;
+  }
+  
+  .btn-secondary:hover {
+    transform: translate(2px, 2px);
+    box-shadow: 4px 4px 0 #000000;
+  }
+  
+  /* カードスタイル - ポップアート風 */
+  .card {
+    @apply rounded-xl p-8;
+    background: #FFFFFF;
+    border: 6px solid #000000;
+    box-shadow: 8px 8px 0 #000000;
+    transform: rotate(1deg);
+    animation: pop-in 0.6s ease;
+  }
+  
+  .card-dark {
+    @apply rounded-xl p-8;
+    background: #FFD700;
+    border: 6px solid #000000;
+    box-shadow: 8px 8px 0 #000000;
+    transform: rotate(-1deg);
+  }
+  
+  /* 入力フィールド - ポップアート風 */
+  .input-field {
+    @apply w-full px-4 py-3 rounded-lg bg-white;
+    border: 3px solid #000000;
+    box-shadow: 3px 3px 0 #000000;
+    font-weight: 700;
+    color: #000000;
+  }
+  
+  .input-field:focus {
+    outline: none;
+    border-color: #FF0000;
+    box-shadow: 5px 5px 0 #FF0000;
+  }
+  
+  /* キーワードタグ - ポップアート風 */
+  .keyword-tag {
+    @apply inline-block px-5 py-2 rounded-full text-sm font-extrabold transition-all duration-200 cursor-default;
+    font-family: 'M PLUS Rounded 1c', 'Noto Sans JP', sans-serif;
+    background: #FFD700;
+    border: 3px solid #000000;
+    color: #000000;
+    box-shadow: 3px 3px 0 #000000;
+  }
+  
+  .keyword-tag:hover {
+    transform: scale(1.1) rotate(-3deg);
+    box-shadow: 5px 5px 0 #000000;
+  }
+  
+  /* 相性スコア表示 - ポップアート風 */
+  .compatibility-score {
+    @apply text-9xl font-black;
+    font-family: 'Bangers', sans-serif;
+    color: #FF0000;
+    -webkit-text-stroke: 4px #000000;
+    text-shadow: 5px 5px 0 #FFD700;
+    animation: countUp 1s ease, pop-pulse 1.5s infinite;
+  }
+  
+  /* 見出しスタイル - ポップアート風 */
+  .heading-primary {
+    @apply text-6xl font-black mb-6;
+    font-family: 'Bangers', 'M PLUS Rounded 1c', sans-serif;
+    color: #FF0000;
+    -webkit-text-stroke: 3px #000000;
+    text-shadow: 4px 4px 0 #FFD700;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    animation: pop-bounce 2s infinite;
+  }
+  
+  .heading-secondary {
+    @apply text-4xl font-black mb-4;
+    font-family: 'Fredoka One', 'M PLUS Rounded 1c', sans-serif;
+    color: #0066FF;
+    -webkit-text-stroke: 2px #000000;
+    text-shadow: 3px 3px 0 #FF69B4;
+    text-transform: uppercase;
+  }
+  
+  /* アニメーション */
+  @keyframes pop-in {
+    0% {
+      transform: scale(0) rotate(-180deg);
+      opacity: 0;
+    }
+    70% {
+      transform: scale(1.1) rotate(5deg);
+    }
+    100% {
+      transform: scale(1) rotate(1deg);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes countUp {
+    from {
+      opacity: 0;
+      transform: scale(0.3) rotate(-15deg);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
+    }
+  }
+  
+  @keyframes pop-bounce {
+    0%, 100% {
+      transform: translateY(0) rotate(-2deg);
+    }
+    50% {
+      transform: translateY(-10px) rotate(2deg);
+    }
+  }
+  
+  @keyframes pop-pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+  
+  @keyframes blink {
+    0%, 50%, 100% {
+      opacity: 1;
+    }
+    25%, 75% {
+      opacity: 0.5;
+    }
+  }
+  
+  @keyframes shake {
+    0%, 100% {
+      transform: rotate(0deg);
+    }
+    25% {
+      transform: rotate(-3deg);
+    }
+    75% {
+      transform: rotate(3deg);
+    }
+  }
+  
+  @keyframes slideIn {
+    from {
+      transform: translateX(-100%) rotate(-10deg);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0) rotate(0deg);
+      opacity: 1;
+    }
+  }
+  
+  /* 効果音テキスト用 */
+  .sound-effect {
+    @apply font-black text-4xl;
+    font-family: 'Bangers', sans-serif;
+    -webkit-text-stroke: 2px #000000;
+    animation: blink 1s infinite, shake 0.5s infinite;
+  }
+
+  /* フェードインアニメーション */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease-out;
+  }
+}
