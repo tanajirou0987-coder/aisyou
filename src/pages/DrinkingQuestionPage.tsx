@@ -68,45 +68,45 @@ export function DrinkingQuestionPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 p-4 sm:p-6 md:p-8">
       <div className="max-w-4xl mx-auto">
         {/* ヘッダー */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">酒癖診断</h1>
-          <p className="text-lg text-gray-600 mb-2">
+        <div className="text-center mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-3 sm:mb-4">酒癖診断</h1>
+          <p className="text-base sm:text-lg text-gray-600 mb-2">
             {currentParticipant.name}さんの番です
           </p>
-          <p className="text-sm text-gray-500">
+          <p className="text-xs sm:text-sm text-gray-500">
             質問 {currentQuestionIndex + 1} / {questions.length} | 
             参加者 {currentParticipantIndex + 1} / {state.participants.length}
           </p>
         </div>
 
         {/* 質問カード */}
-        <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">
+        <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 md:p-8 mb-6 sm:mb-8">
+          <div className="text-center mb-6 sm:mb-8">
+            <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 mb-3 sm:mb-4 px-2">
               {currentQuestion.text}
             </h2>
-            <p className="text-gray-600">
+            <p className="text-sm sm:text-base text-gray-600 px-2">
               あなたの酒癖に最も近い選択肢を選んでください
             </p>
           </div>
 
           {/* 回答選択肢 */}
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {currentQuestion.options.map((option) => (
               <button
                 key={option.id}
                 onClick={() => handleAnswerChange(currentQuestion.id, currentParticipant.id, option.id)}
-                className={`w-full p-6 text-left rounded-xl border-2 transition-all ${
+                className={`w-full p-4 sm:p-5 md:p-6 text-left rounded-xl border-2 transition-all ${
                   answers[currentQuestion.id]?.[currentParticipant.id] === option.id
                     ? 'border-purple-500 bg-purple-50 text-purple-800'
                     : 'border-gray-200 hover:border-purple-300 hover:bg-purple-25'
                 }`}
               >
-                <div className="flex items-center gap-4">
-                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
                     answers[currentQuestion.id]?.[currentParticipant.id] === option.id
                       ? 'border-purple-500 bg-purple-500'
                       : 'border-gray-300'
@@ -115,7 +115,7 @@ export function DrinkingQuestionPage() {
                       <div className="w-2 h-2 bg-white rounded-full"></div>
                     )}
                   </div>
-                  <span className="text-lg font-medium">{option.text}</span>
+                  <span className="text-sm sm:text-base md:text-lg font-medium">{option.text}</span>
                 </div>
               </button>
             ))}
@@ -123,9 +123,9 @@ export function DrinkingQuestionPage() {
         </div>
 
         {/* 参加者リスト */}
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
-          <h3 className="text-lg font-semibold text-gray-800 mb-4">参加者一覧</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 mb-6 sm:mb-8">
+          <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-3 sm:mb-4">参加者一覧</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3">
             {state.participants.map((participant, index) => {
               const isCurrentParticipant = index === currentParticipantIndex
               const hasAnswered = answers[currentQuestion.id]?.[participant.id]
@@ -133,7 +133,7 @@ export function DrinkingQuestionPage() {
               return (
                 <div
                   key={participant.id}
-                  className={`p-3 rounded-lg text-center ${
+                  className={`p-2 sm:p-3 rounded-lg text-center ${
                     isCurrentParticipant
                       ? 'bg-purple-100 text-purple-800 border-2 border-purple-500'
                       : hasAnswered
@@ -141,8 +141,8 @@ export function DrinkingQuestionPage() {
                       : 'bg-gray-50 text-gray-600'
                   }`}
                 >
-                  <div className="font-medium">{participant.name}</div>
-                  <div className="text-sm">
+                  <div className="font-medium text-sm sm:text-base truncate">{participant.name}</div>
+                  <div className="text-xs sm:text-sm">
                     {isCurrentParticipant ? '回答中' : hasAnswered ? '完了' : '待機中'}
                   </div>
                 </div>
@@ -156,7 +156,7 @@ export function DrinkingQuestionPage() {
           <button
             onClick={handleSubmit}
             disabled={!answers[currentQuestion.id]?.[currentParticipant.id]}
-            className={`px-12 py-4 text-xl font-bold rounded-xl transition-all ${
+            className={`w-full sm:w-auto px-8 sm:px-10 md:px-12 py-3 sm:py-4 text-base sm:text-lg md:text-xl font-bold rounded-xl transition-all ${
               answers[currentQuestion.id]?.[currentParticipant.id]
                 ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg hover:shadow-xl transform hover:scale-105'
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
