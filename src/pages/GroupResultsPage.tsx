@@ -356,41 +356,41 @@ export function GroupResultsPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <div className="p-6 rounded-xl text-center transition-all duration-200 hover:transform hover:scale-105 hover:rotate-2" style={{
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-6 mb-3 md:mb-6">
+            <div className="p-3 md:p-6 rounded-lg md:rounded-xl text-center transition-all duration-200 hover:transform hover:scale-105 hover:rotate-2" style={{
               background: '#0066FF',
-              border: '5px solid #000000',
-              boxShadow: '6px 6px 0 #000000'
+              border: '2px md:border-5 solid #000000',
+              boxShadow: '2px 2px 0 #000000, 6px 6px 0 #000000'
             }}>
-              <TrendingUp className="w-10 h-10 text-white mx-auto mb-2" />
-              <div className="text-5xl font-black text-white" style={{fontFamily: 'Bangers, sans-serif', WebkitTextStroke: '2px #000000'}}>
+              <TrendingUp className="w-6 h-6 md:w-10 md:h-10 text-white mx-auto mb-1 md:mb-2" />
+              <div className="text-2xl md:text-5xl font-black text-white" style={{fontFamily: 'Bangers, sans-serif', WebkitTextStroke: '1px md:2px #000000'}}>
                 {summary.averageScore}点
               </div>
-              <div className="text-sm text-white font-black" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>平均相性スコア</div>
+              <div className="text-xs md:text-sm text-white font-black" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>平均相性スコア</div>
             </div>
             
-            <div className="p-6 rounded-xl text-center transition-all duration-200 hover:transform hover:scale-105 hover:rotate-2" style={{
+            <div className="p-3 md:p-6 rounded-lg md:rounded-xl text-center transition-all duration-200 hover:transform hover:scale-105 hover:rotate-2" style={{
               background: '#FFD700',
-              border: '5px solid #000000',
-              boxShadow: '6px 6px 0 #000000'
+              border: '2px md:border-5 solid #000000',
+              boxShadow: '2px 2px 0 #000000, 6px 6px 0 #000000'
             }}>
-              <Trophy className="w-10 h-10 text-red-600 mx-auto mb-2 animate-bounce" style={{filter: 'drop-shadow(2px 2px 0 #000000)'}} />
-              <div className="text-base font-black text-black" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
-                <span className="px-2 py-1 bg-blue-500 text-white rounded">♂ {summary.maxScore.maleName}</span> × <span className="px-2 py-1 bg-pink-500 text-white rounded">♀ {summary.maxScore.femaleName}</span>
+              <Trophy className="w-6 h-6 md:w-10 md:h-10 text-red-600 mx-auto mb-1 md:mb-2 animate-bounce" style={{filter: 'drop-shadow(1px 1px 0 #000000)'}} />
+              <div className="text-xs md:text-base font-black text-black" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
+                <span className="px-1 md:px-2 py-0.5 md:py-1 bg-blue-500 text-white rounded text-xs md:text-base">♂ {summary.maxScore.maleName}</span> × <span className="px-1 md:px-2 py-0.5 md:py-1 bg-pink-500 text-white rounded text-xs md:text-base">♀ {summary.maxScore.femaleName}</span>
               </div>
-              <div className="text-3xl font-black text-red-600 mt-2" style={{fontFamily: 'Bangers, sans-serif', WebkitTextStroke: '1px #000000'}}>{summary.maxScore.score}点 🏆</div>
+              <div className="text-xl md:text-3xl font-black text-red-600 mt-1 md:mt-2" style={{fontFamily: 'Bangers, sans-serif', WebkitTextStroke: '0.5px md:1px #000000'}}>{summary.maxScore.score}点 🏆</div>
             </div>
             
-            <div className="p-6 rounded-xl text-center transition-all duration-200 hover:transform hover:scale-105 hover:rotate-2" style={{
+            <div className="p-3 md:p-6 rounded-lg md:rounded-xl text-center transition-all duration-200 hover:transform hover:scale-105 hover:rotate-2" style={{
               background: '#FF6600',
-              border: '5px solid #000000',
-              boxShadow: '6px 6px 0 #000000'
+              border: '2px md:border-5 solid #000000',
+              boxShadow: '2px 2px 0 #000000, 6px 6px 0 #000000'
             }}>
-              <TrendingDown className="w-10 h-10 text-white mx-auto mb-2" />
-              <div className="text-base font-black text-white" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
-                <span className="px-2 py-1 bg-blue-900 text-white rounded">♂ {summary.minScore.maleName}</span> × <span className="px-2 py-1 bg-pink-900 text-white rounded">♀ {summary.minScore.femaleName}</span>
+              <TrendingDown className="w-6 h-6 md:w-10 md:h-10 text-white mx-auto mb-1 md:mb-2" />
+              <div className="text-xs md:text-base font-black text-white" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
+                <span className="px-1 md:px-2 py-0.5 md:py-1 bg-blue-900 text-white rounded text-xs md:text-base">♂ {summary.minScore.maleName}</span> × <span className="px-1 md:px-2 py-0.5 md:py-1 bg-pink-900 text-white rounded text-xs md:text-base">♀ {summary.minScore.femaleName}</span>
               </div>
-              <div className="text-3xl font-black text-white mt-2" style={{fontFamily: 'Bangers, sans-serif', WebkitTextStroke: '1px #000000'}}>{summary.minScore.score}点</div>
+              <div className="text-xl md:text-3xl font-black text-white mt-1 md:mt-2" style={{fontFamily: 'Bangers, sans-serif', WebkitTextStroke: '0.5px md:1px #000000'}}>{summary.minScore.score}点</div>
             </div>
           </div>
 
