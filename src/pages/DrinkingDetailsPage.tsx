@@ -253,85 +253,85 @@ export function DrinkingDetailsPage() {
   const analysis = getDetailedAnalysis(drinkingType)
 
   return (
-    <div className="min-h-screen p-4 sm:p-6 md:p-8">
+    <div className="min-h-screen p-3 sm:p-4 md:p-6">
       <div className="max-w-4xl mx-auto">
         {/* ヘッダー - ポップアート風 */}
-        <div className="text-center mb-6 sm:mb-8">
+        <div className="text-center mb-4 sm:mb-6">
           <button
             onClick={() => navigate('/group-results')}
-            className="btn-secondary text-xs sm:text-sm flex items-center gap-2 mx-auto mb-4 sm:mb-6"
+            className="btn-secondary text-xs flex items-center gap-1 mx-auto mb-3 sm:mb-4"
           >
-            <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+            <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4" />
             結果に戻る
           </button>
           <div className="card" style={{background: '#FF69B4', transform: 'rotate(-1deg)'}}>
-            <h1 className="heading-primary text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-3 sm:mb-4">
+            <h1 className="heading-primary text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-2 sm:mb-3">
               酒癖診断詳細分析
             </h1>
-            <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-black text-black px-2" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
+            <p className="text-sm sm:text-base md:text-lg font-black text-black px-2" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
               ★ {participant.userName}さんの酒癖タイプを詳しく分析しました ★
             </p>
           </div>
         </div>
 
         {/* 基本情報 - ポップアート風 */}
-        <div className="card mb-4 sm:mb-6" style={{background: '#FFFFFF'}}>
-          <div className="text-center mb-4 sm:mb-6">
-            <div className="flex justify-center mb-3 sm:mb-4">
-              <div className="relative p-3 sm:p-4 bg-yellow-400 rounded-full border-4 sm:border-5 border-black" style={{boxShadow: '4px 4px 0 #000000'}}>
-                <Wine className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-red-600" style={{filter: 'drop-shadow(2px 2px 0 #000000)'}} />
-                <Heart className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-pink-500 absolute -top-1 -right-1 animate-pulse" style={{filter: 'drop-shadow(2px 2px 0 #000000)'}} />
+        <div className="card mb-3 sm:mb-4" style={{background: '#FFFFFF'}}>
+          <div className="text-center mb-3 sm:mb-4">
+            <div className="flex justify-center mb-2 sm:mb-3">
+              <div className="relative p-2 sm:p-3 bg-yellow-400 rounded-full border-3 sm:border-4 border-black" style={{boxShadow: '3px 3px 0 #000000'}}>
+                <Wine className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 text-red-600" style={{filter: 'drop-shadow(2px 2px 0 #000000)'}} />
+                <Heart className="w-4 h-4 sm:w-5 sm:h-5 text-pink-500 absolute -top-1 -right-1 animate-pulse" style={{filter: 'drop-shadow(1px 1px 0 #000000)'}} />
               </div>
             </div>
-            <h2 className="heading-secondary mb-3 sm:mb-4 text-xl sm:text-2xl md:text-3xl">
+            <h2 className="heading-secondary mb-2 sm:mb-3 text-base sm:text-lg md:text-xl">
               💥 あなたの酒癖タイプ 💥
             </h2>
-            <div className="text-base sm:text-lg mb-3 sm:mb-4">
-              <span className={`inline-block px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 rounded-xl font-black text-white border-3 sm:border-4 border-black ${participant.gender === 'male' ? 'bg-blue-500' : 'bg-pink-500'}`} style={{boxShadow: '3px 3px 0 #000000', fontFamily: 'M PLUS Rounded 1c, sans-serif', fontSize: 'clamp(1rem, 4vw, 1.5rem)'}}>
+            <div className="text-sm sm:text-base mb-2 sm:mb-3">
+              <span className={`inline-block px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg font-black text-white border-2 sm:border-3 border-black ${participant.gender === 'male' ? 'bg-blue-500' : 'bg-pink-500'}`} style={{boxShadow: '2px 2px 0 #000000', fontFamily: 'M PLUS Rounded 1c, sans-serif', fontSize: 'clamp(0.875rem, 3vw, 1.25rem)'}}>
                 {participant.gender === 'male' ? '♂' : '♀'} {participant.userName}
               </span>
             </div>
           </div>
 
-          <div className="p-4 sm:p-5 md:p-6 rounded-xl border-4 sm:border-5 border-black" style={{background: '#FFD700', boxShadow: '4px 4px 0 #000000'}}>
-            <h3 className="text-xl sm:text-2xl md:text-3xl font-black text-red-600 mb-2 sm:mb-3 text-center" style={{fontFamily: 'Bangers, sans-serif', WebkitTextStroke: '1px #000000'}}>
+          <div className="p-3 sm:p-4 rounded-lg border-3 sm:border-4 border-black" style={{background: '#FFD700', boxShadow: '3px 3px 0 #000000'}}>
+            <h3 className="text-base sm:text-lg md:text-xl font-black text-red-600 mb-1.5 sm:mb-2 text-center" style={{fontFamily: 'Bangers, sans-serif', WebkitTextStroke: '0.5px #000000'}}>
               {analysis.title}
             </h3>
-            <p className="text-black leading-relaxed text-center font-bold text-sm sm:text-base md:text-lg px-2" style={{fontFamily: 'Noto Sans JP, sans-serif'}}>
+            <p className="text-black leading-snug text-center font-bold text-xs sm:text-sm px-2" style={{fontFamily: 'Noto Sans JP, sans-serif'}}>
               {analysis.description}
             </p>
           </div>
         </div>
 
         {/* 詳細分析 - ポップアート風 */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 sm:gap-3 mb-3 sm:mb-4">
           {/* 長所 */}
           <div className="card" style={{background: '#00CC44', transform: 'rotate(1deg)'}}>
-            <h3 className="text-lg sm:text-xl md:text-2xl font-black text-white mb-3 sm:mb-4 flex items-center gap-2" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif', WebkitTextStroke: '1px #000000'}}>
-              <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-300" style={{filter: 'drop-shadow(2px 2px 0 #000000)'}} />
+            <h3 className="text-sm sm:text-base md:text-lg font-black text-white mb-2 sm:mb-3 flex items-center gap-1.5" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif', WebkitTextStroke: '0.5px #000000'}}>
+              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-300" style={{filter: 'drop-shadow(1px 1px 0 #000000)'}} />
               ★ あなたの長所 ★
             </h3>
-            <ul className="space-y-2 sm:space-y-3">
+            <ul className="space-y-1 sm:space-y-1.5">
               {analysis.strengths.map((strength: string, index: number) => (
-                <li key={index} className="flex items-start gap-2">
-                  <span className="text-xl sm:text-2xl text-yellow-300 flex-shrink-0">★</span>
-                  <span className="text-white font-bold text-sm sm:text-base md:text-lg">{strength}</span>
+                <li key={index} className="flex items-start gap-1.5">
+                  <span className="text-base sm:text-lg text-yellow-300 flex-shrink-0">★</span>
+                  <span className="text-white font-bold text-xs sm:text-sm">{strength}</span>
                 </li>
               ))}
             </ul>
         </div>
 
           {/* 注意点 */}
-          <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6">
-            <h3 className="text-base sm:text-lg md:text-xl font-bold text-orange-700 mb-3 sm:mb-4 flex items-center gap-2">
-              <Users className="w-4 h-4 sm:w-5 sm:h-5" />
+          <div className="bg-white rounded-lg shadow-lg p-3 sm:p-4">
+            <h3 className="text-sm sm:text-base font-bold text-orange-700 mb-2 sm:mb-3 flex items-center gap-1.5">
+              <Users className="w-3 h-3 sm:w-4 sm:h-4" />
               注意点
             </h3>
-            <ul className="space-y-2">
+            <ul className="space-y-1 sm:space-y-1.5">
               {analysis.challenges.map((challenge: string, index: number) => (
-                <li key={index} className="flex items-start gap-2">
-                  <span className="text-orange-500 mt-1 flex-shrink-0">⚠</span>
-                  <span className="text-gray-700 text-sm sm:text-base">{challenge}</span>
+                <li key={index} className="flex items-start gap-1.5">
+                  <span className="text-orange-500 mt-0.5 flex-shrink-0 text-sm">⚠</span>
+                  <span className="text-gray-700 text-xs sm:text-sm leading-snug">{challenge}</span>
                 </li>
               ))}
             </ul>
@@ -339,67 +339,67 @@ export function DrinkingDetailsPage() {
         </div>
 
         {/* アドバイス */}
-        <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-6">
-          <h3 className="text-base sm:text-lg md:text-xl font-bold text-blue-700 mb-3 sm:mb-4 flex items-center gap-2">
-            <Heart className="w-4 h-4 sm:w-5 sm:h-5" />
+        <div className="bg-white rounded-lg shadow-lg p-3 sm:p-4 mb-3 sm:mb-4">
+          <h3 className="text-sm sm:text-base font-bold text-blue-700 mb-2 sm:mb-3 flex items-center gap-1.5">
+            <Heart className="w-3 h-3 sm:w-4 sm:h-4" />
             恋愛でのアドバイス
           </h3>
-          <ul className="space-y-2">
+          <ul className="space-y-1 sm:space-y-1.5">
             {analysis.advice.map((tip: string, index: number) => (
-              <li key={index} className="flex items-start gap-2">
-                <span className="text-blue-500 mt-1 flex-shrink-0">💡</span>
-                <span className="text-gray-700 text-sm sm:text-base">{tip}</span>
+              <li key={index} className="flex items-start gap-1.5">
+                <span className="text-blue-500 mt-0.5 flex-shrink-0 text-sm">💡</span>
+                <span className="text-gray-700 text-xs sm:text-sm leading-snug">{tip}</span>
               </li>
             ))}
           </ul>
         </div>
 
         {/* デートアイデア */}
-        <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-6">
-          <h3 className="text-base sm:text-lg md:text-xl font-bold text-pink-700 mb-3 sm:mb-4 flex items-center gap-2">
-            <Wine className="w-4 h-4 sm:w-5 sm:h-5" />
+        <div className="bg-white rounded-lg shadow-lg p-3 sm:p-4 mb-3 sm:mb-4">
+          <h3 className="text-sm sm:text-base font-bold text-pink-700 mb-2 sm:mb-3 flex items-center gap-1.5">
+            <Wine className="w-3 h-3 sm:w-4 sm:h-4" />
             おすすめデートアイデア
             </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             {analysis.dateIdeas.map((idea: string, index: number) => (
-              <div key={index} className="bg-pink-50 p-2.5 sm:p-3 rounded-lg">
-                <span className="text-pink-600 font-semibold">💕</span>
-                <span className="text-gray-700 ml-2 text-sm sm:text-base">{idea}</span>
+              <div key={index} className="bg-pink-50 p-2 rounded-lg">
+                <span className="text-pink-600 font-semibold text-sm">💕</span>
+                <span className="text-gray-700 ml-1.5 text-xs sm:text-sm">{idea}</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* コミュニケーションのコツ */}
-        <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-6">
-          <h3 className="text-base sm:text-lg md:text-xl font-bold text-purple-700 mb-3 sm:mb-4 flex items-center gap-2">
-            <Users className="w-4 h-4 sm:w-5 sm:h-5" />
+        <div className="bg-white rounded-lg shadow-lg p-3 sm:p-4 mb-3 sm:mb-4">
+          <h3 className="text-sm sm:text-base font-bold text-purple-700 mb-2 sm:mb-3 flex items-center gap-1.5">
+            <Users className="w-3 h-3 sm:w-4 sm:h-4" />
             コミュニケーションのコツ
           </h3>
-          <ul className="space-y-2">
+          <ul className="space-y-1 sm:space-y-1.5">
             {analysis.communicationTips.map((tip: string, index: number) => (
-              <li key={index} className="flex items-start gap-2">
-                <span className="text-purple-500 mt-1 flex-shrink-0">🗣</span>
-                <span className="text-gray-700 text-sm sm:text-base">{tip}</span>
+              <li key={index} className="flex items-start gap-1.5">
+                <span className="text-purple-500 mt-0.5 flex-shrink-0 text-sm">🗣</span>
+                <span className="text-gray-700 text-xs sm:text-sm leading-snug">{tip}</span>
               </li>
             ))}
           </ul>
         </div>
 
         {/* あなたを表す30のキーワード */}
-        <div className="card mb-4 sm:mb-6">
-          <h3 className="text-lg sm:text-xl md:text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-amber-700 mb-3 sm:mb-4 flex items-center gap-2">
-            <Tag className="w-5 h-5 sm:w-6 sm:h-6 text-orange-600" />
+        <div className="card mb-3 sm:mb-4">
+          <h3 className="text-sm sm:text-base md:text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-amber-700 mb-2 sm:mb-3 flex items-center gap-1.5">
+            <Tag className="w-4 h-4 sm:w-5 sm:h-5 text-orange-600" />
             🏷️ あなたを表す30のキーワード
           </h3>
-          <p className="text-sm sm:text-base text-amber-900 font-semibold mb-3 sm:mb-4">
+          <p className="text-xs sm:text-sm text-amber-900 font-semibold mb-2 sm:mb-3">
             科学的根拠に基づいた、あなたの酒癖タイプの特徴的なキーワードです 🍺
           </p>
-          <div className="flex flex-wrap gap-2 sm:gap-3">
+          <div className="flex flex-wrap gap-1.5 sm:gap-2">
             {typeKeywords.map((keyword: string, index: number) => (
               <span
                 key={index}
-                className="keyword-tag text-xs sm:text-sm"
+                className="keyword-tag text-xs"
               >
                 {keyword}
               </span>
@@ -408,10 +408,10 @@ export function DrinkingDetailsPage() {
         </div>
 
         {/* アクションボタン */}
-        <div className="text-center space-y-3 sm:space-y-4">
+        <div className="text-center space-y-2 sm:space-y-3">
           <button
             onClick={() => navigate('/group-session-start')}
-            className="w-full sm:w-auto px-6 sm:px-8 py-2.5 sm:py-3 text-base sm:text-lg font-semibold rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
+            className="w-full sm:w-auto px-5 sm:px-6 py-2 sm:py-2.5 text-sm sm:text-base font-semibold rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
           >
             新しい酒癖診断を始める
           </button>
@@ -419,7 +419,7 @@ export function DrinkingDetailsPage() {
           <div>
             <button
               onClick={() => navigate('/')}
-              className="text-gray-500 hover:text-gray-700 text-xs sm:text-sm"
+              className="text-gray-500 hover:text-gray-700 text-xs"
             >
               ミチノワトップに戻る
             </button>
