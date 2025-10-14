@@ -830,20 +830,21 @@ export function PairDetailsPage() {
           </div>
         )}
 
-        {/* 二人を表す30のキーワード - ポップアート風 */}
-        <div className="card mb-6" style={{background: '#FFFFFF'}}>
-          <h3 className="heading-secondary mb-4 flex items-center gap-2">
-            <Tag className="w-7 h-7 text-yellow-500" style={{filter: 'drop-shadow(2px 2px 0 #000000)'}} />
-            🏷️ 二人の組み合わせを表す30のキーワード 🏷️
+        {/* 二人を表す30のキーワード - ポップアート風（モバイルは極小タグ） */}
+        <div className="card mb-4 md:mb-6 p-3 md:p-6" style={{background: '#FFFFFF'}}>
+          <h3 className="text-sm md:heading-secondary font-extrabold mb-2 md:mb-4 flex items-center gap-1 md:gap-2">
+            <Tag className="w-4 h-4 md:w-7 md:h-7 text-yellow-500" style={{filter: 'drop-shadow(1px 1px 0 #000000)'}} />
+            <span className="md:hidden">🏷️ 30キーワード</span>
+            <span className="hidden md:inline">🏷️ 二人の組み合わせを表す30のキーワード 🏷️</span>
           </h3>
-          <p className="text-lg text-black font-black mb-6" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
-            科学的根拠に基づいた、{maleParticipant.userName}さん×{femaleParticipant.userName}さんの組み合わせの特徴的なキーワードです 💥
+          <p className="text-xs md:text-lg text-black font-black mb-2 md:mb-6" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
+            科学的根拠に基づいた、{maleParticipant.userName}さん×{femaleParticipant.userName}さんの特徴的なキーワードです 💥
           </p>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-1.5 md:gap-3">
             {combinationKeywords.map((keyword: string, index: number) => (
               <span
                 key={index}
-                className="keyword-tag"
+                className="keyword-tag text-[10px] md:text-sm px-1 py-0.5 md:px-2 md:py-1"
               >
                 {keyword}
               </span>
