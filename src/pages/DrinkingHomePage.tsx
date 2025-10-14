@@ -51,84 +51,82 @@ export function DrinkingHomePage() {
           </p>
         </div>
 
-        {/* 酒癖診断の説明 */}
-        <div className="bg-white rounded-lg shadow-lg p-3 sm:p-5 md:p-6 mb-4 sm:mb-6">
-          <div className="text-center mb-3 sm:mb-4">
-            <Wine className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 text-purple-500 mx-auto mb-2 sm:mb-3" />
-            <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-2 sm:mb-3">
-              酒癖相性診断とは？
-            </h2>
-            <p className="text-xs sm:text-sm text-gray-600 leading-snug px-2">
-              アルコール摂取時の性格変化に関する心理学・神経科学の知見に基づいて、
-              参加者の酒癖タイプを6つの科学的カテゴリに分類し、
-              その組み合わせでの相性を分析します。
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3 mt-3 sm:mt-4">
-            <div className="bg-purple-50 p-2 sm:p-3 rounded-lg">
-              <h3 className="font-semibold text-purple-800 mb-1 text-xs sm:text-sm">科学的根拠</h3>
-              <p className="text-xs text-purple-700 leading-snug">
-                アルコールの抑制解除効果、前頭前野機能の変化、
-                GABA受容体の活性化など、神経科学的メカニズムに基づく分類
+        {/* 酒癖診断の説明 - コンパクト版 */}
+        <div className="bg-white rounded-lg shadow p-2 sm:p-3 mb-3 sm:mb-4">
+          <div className="flex items-center gap-2 mb-2">
+            <Wine className="w-6 h-6 sm:w-8 sm:h-8 text-purple-500 flex-shrink-0" />
+            <div className="flex-1 min-w-0">
+              <h2 className="text-sm sm:text-base font-bold text-gray-800">
+                酒癖相性診断
+              </h2>
+              <p className="text-xs text-gray-600 leading-tight">
+                心理学・神経科学に基づく6つの酒癖タイプで相性を分析
               </p>
             </div>
-            <div className="bg-pink-50 p-2 sm:p-3 rounded-lg">
-              <h3 className="font-semibold text-pink-800 mb-1 text-xs sm:text-sm">診断内容</h3>
-              <p className="text-xs text-pink-700 leading-snug">
-                飲み会での相性、恋愛の可能性、おすすめの活動、
-                コミュニケーションのコツなどを分析
+          </div>
+          
+          <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
+            <div className="bg-purple-50 p-1.5 rounded">
+              <h3 className="font-semibold text-purple-800 text-xs">科学的根拠</h3>
+              <p className="text-xs text-purple-700 leading-tight">
+                脳神経科学に基づく分類
+              </p>
+            </div>
+            <div className="bg-pink-50 p-1.5 rounded">
+              <h3 className="font-semibold text-pink-800 text-xs">診断内容</h3>
+              <p className="text-xs text-pink-700 leading-tight">
+                飲み会の相性を分析
               </p>
             </div>
           </div>
         </div>
 
         {/* 参加者追加 */}
-        <div className="bg-white rounded-lg shadow-lg p-3 sm:p-5 md:p-6 mb-4 sm:mb-6">
-          <h2 className="text-base sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 text-center">
-            参加者を追加してください
+        <div className="bg-white rounded-lg shadow p-2 sm:p-3 mb-3 sm:mb-4">
+          <h2 className="text-sm sm:text-base font-bold text-gray-800 mb-2 text-center">
+            参加者を追加
           </h2>
           
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mb-3 sm:mb-4">
+          <div className="flex gap-2 mb-2">
             <input
               type="text"
               value={participantName}
               onChange={(e) => setParticipantName(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="参加者の名前を入力"
-              className="flex-1 input-field text-sm sm:text-base"
+              placeholder="名前"
+              className="flex-1 input-field text-sm"
               maxLength={20}
             />
             <button
               onClick={handleAddParticipant}
               disabled={!participantName.trim() || state.participants.length >= 10}
-              className="btn-primary px-4 sm:px-5 py-2 text-sm sm:text-base disabled:opacity-50 flex items-center justify-center"
+              className="btn-primary px-3 py-1.5 text-xs disabled:opacity-50 flex items-center"
             >
-              <Plus className="w-4 h-4 mr-1.5" />
+              <Plus className="w-3 h-3 mr-1" />
               追加
             </button>
           </div>
 
           {/* 参加者リスト */}
           {state.participants.length > 0 && (
-            <div className="space-y-2">
-              <h3 className="text-sm sm:text-base font-semibold text-gray-700">
-                参加者一覧 ({state.participants.length}/10)
+            <div>
+              <h3 className="text-xs font-semibold text-gray-700 mb-1">
+                参加者 ({state.participants.length}/10)
               </h3>
-              <div className="grid gap-1.5 sm:gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-1">
                 {state.participants.map((participant) => (
                   <div
                     key={participant.id}
-                    className="flex items-center justify-between bg-gray-50 p-2 sm:p-3 rounded-lg"
+                    className="flex items-center justify-between bg-gray-50 p-1.5 rounded text-xs"
                   >
-                    <span className="text-sm sm:text-base font-medium text-gray-800">
+                    <span className="font-medium text-gray-800 truncate flex-1">
                       {participant.name}
                     </span>
                     <button
                       onClick={() => removeParticipant(participant.id)}
-                      className="text-red-500 hover:text-red-700 p-1.5"
+                      className="text-red-500 hover:text-red-700 p-0.5 ml-1"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className="w-3 h-3" />
                     </button>
                   </div>
                 ))}
@@ -138,36 +136,30 @@ export function DrinkingHomePage() {
         </div>
 
         {/* 開始ボタン */}
-        <div className="text-center mb-4 sm:mb-6">
+        <div className="text-center mb-3">
           <button
             onClick={handleStartQuestions}
             disabled={state.participants.length < 2}
-            className={`w-full sm:w-auto px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base font-bold rounded-xl transition-all ${
+            className={`w-full px-4 py-2 text-sm font-bold rounded-lg transition-all ${
               state.participants.length >= 2
-                ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg hover:shadow-xl transform hover:scale-105'
+                ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow hover:shadow-lg'
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
           >
             {state.participants.length < 2
-              ? '参加者を2人以上追加してください'
-              : '酒癖診断を開始する'}
+              ? '2人以上追加してください'
+              : '診断開始'}
           </button>
         </div>
 
         {/* 相性診断へのリンク */}
         <div className="text-center">
-          <div className="bg-white rounded-lg shadow-lg p-3 sm:p-4">
-            <h3 className="text-sm sm:text-base font-semibold text-gray-800 mb-2">他の診断も試してみませんか？</h3>
-            <p className="text-xs sm:text-sm text-gray-600 mb-2 px-2">
-              一般的な恋愛・友達関係の相性を知りたい方は、相性診断もお試しください
-            </p>
-            <button
-              onClick={() => navigate('/compatibility')}
-              className="w-full sm:w-auto bg-gradient-to-r from-red-500 to-blue-500 text-white px-5 sm:px-6 py-2 text-xs sm:text-sm rounded-lg font-semibold hover:shadow-lg transition-all"
-            >
-              相性診断を試す
-            </button>
-          </div>
+          <button
+            onClick={() => navigate('/compatibility')}
+            className="text-xs text-blue-600 hover:underline"
+          >
+            他の診断も試す →
+          </button>
         </div>
 
         {/* リセットボタン */}
