@@ -47,8 +47,8 @@ export function GroupCompletionWaitingPage() {
           </div>
         </div>
 
-        {/* 完了状況表示 */}
-        <div className="bg-white rounded-xl shadow-lg p-8 mb-6">
+        {/* 完了状況表示（カード化） */}
+        <div className="rounded-xl p-6 md:p-8 mb-3 md:mb-6 border-2 md:border-4 border-black" style={{background: '#FFFFFF', boxShadow: '5px 5px 0 #000000'}}>
           <div className="text-center mb-6">
             <div className="flex justify-center mb-4">
               {allCompleted ? (
@@ -66,9 +66,9 @@ export function GroupCompletionWaitingPage() {
             <div className="text-3xl font-bold text-gray-800 mb-2">
               {completedCount}/{totalCount}人完了
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-4 mb-4">
+            <div className="w-full bg-gray-200 rounded-full h-3 md:h-4 mb-4 border border-black">
               <div 
-                className="bg-gradient-to-r from-purple-500 to-pink-500 h-4 rounded-full transition-all duration-500"
+                className="bg-gradient-to-r from-purple-500 to-pink-500 h-3 md:h-4 rounded-full transition-all duration-500"
                 style={{ width: `${(completedCount / totalCount) * 100}%` }}
               ></div>
             </div>
@@ -76,12 +76,12 @@ export function GroupCompletionWaitingPage() {
 
           {/* 完了メッセージ */}
           {allCompleted && (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-6">
+            <div className="rounded-lg p-4 md:p-6 mb-3 md:mb-6 border-2 md:border-3 border-black" style={{background: '#E6FFED', boxShadow: '4px 4px 0 #000000'}}>
               <div className="text-center">
-                <h3 className="text-xl font-semibold text-green-800 mb-2">
+                <h3 className="text-xl font-extrabold text-green-900 mb-2" style={{fontFamily: 'Bangers, sans-serif'}}>
                   🎉 お疲れ様でした！
                 </h3>
-                <p className="text-green-700">
+                <p className="text-green-900 font-bold">
                   全員の診断が完了しました。結果を計算中です...
                 </p>
               </div>
@@ -89,9 +89,9 @@ export function GroupCompletionWaitingPage() {
           )}
         </div>
 
-        {/* 参加者状況一覧 */}
-        <div className="bg-white rounded-xl shadow-lg p-8 mb-6">
-          <h3 className="text-xl font-semibold text-gray-700 mb-6 text-center">
+        {/* 参加者状況一覧（カード化） */}
+        <div className="rounded-xl p-6 md:p-8 mb-3 md:mb-6 border-2 md:border-4 border-black" style={{background: '#FFFFFF', boxShadow: '5px 5px 0 #000000'}}>
+          <h3 className="text-xl font-black text-black mb-6 text-center" style={{fontFamily: 'Bangers, sans-serif'}}>
             参加者状況
           </h3>
           
@@ -108,7 +108,8 @@ export function GroupCompletionWaitingPage() {
                   .map((participant) => (
                     <div
                       key={participant.userId}
-                      className="bg-green-100 text-green-800 p-3 rounded-lg text-center"
+                      className="bg-green-100 text-green-800 p-3 rounded-lg text-center border-2 border-black"
+                      style={{ boxShadow: '3px 3px 0 #000000' }}
                     >
                       <div className={`font-bold ${participant.gender === 'male' ? 'text-blue-600' : 'text-pink-600'}`}>
                         {participant.gender === 'male' ? '♂' : '♀'} {participant.userName}
@@ -133,7 +134,8 @@ export function GroupCompletionWaitingPage() {
                   .map((participant) => (
                     <div
                       key={participant.userId}
-                      className="bg-orange-100 text-orange-800 p-3 rounded-lg text-center"
+                      className="bg-orange-100 text-orange-800 p-3 rounded-lg text-center border-2 border-black"
+                      style={{ boxShadow: '3px 3px 0 #000000' }}
                     >
                       <div className={`font-bold ${participant.gender === 'male' ? 'text-blue-600' : 'text-pink-600'}`}>
                         {participant.gender === 'male' ? '♂' : '♀'} {participant.userName}
@@ -149,15 +151,15 @@ export function GroupCompletionWaitingPage() {
         {/* 結果表示ボタン（全員完了時のみ） */}
         {allCompleted && (
           <div className="text-center">
-            <div className="bg-white rounded-xl shadow-lg p-6">
-              <h3 className="text-xl font-semibold text-gray-800 mb-4">
+            <div className="rounded-xl p-4 md:p-6 border-2 md:border-4 border-black" style={{background: '#FFFFFF', boxShadow: '5px 5px 0 #000000'}}>
+              <h3 className="text-xl font-black text-black mb-4" style={{fontFamily: 'Bangers, sans-serif'}}>
                 結果を見る準備ができました！
               </h3>
-              <p className="text-gray-600 mb-4">
+              <p className="text-gray-800 font-bold mb-4">
                 みんなで端末を囲んで、相性結果を楽しみましょう
               </p>
               <div className="animate-pulse">
-                <div className="text-purple-500 text-lg font-semibold">
+                <div className="text-purple-700 text-lg font-extrabold">
                   結果画面に移動中...
                 </div>
               </div>
@@ -167,11 +169,11 @@ export function GroupCompletionWaitingPage() {
 
         {/* 待機中のメッセージ */}
         {!allCompleted && (
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-            <h3 className="text-lg font-semibold text-blue-800 mb-3">
+          <div className="rounded-lg p-4 md:p-6 border-2 md:border-4 border-black" style={{background: '#DBEAFE', boxShadow: '4px 4px 0 #000000'}}>
+            <h3 className="text-lg font-extrabold text-blue-900 mb-3">
               💡 待機中の過ごし方
             </h3>
-            <ul className="text-blue-700 space-y-2">
+            <ul className="text-blue-900 font-bold space-y-2">
               <li>• まだ診断していない人に端末を渡してください</li>
               <li>• 診断中の人は周りに見られないよう注意してください</li>
               <li>• 全員が完了したら自動的に結果画面に移動します</li>
