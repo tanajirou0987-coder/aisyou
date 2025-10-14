@@ -698,40 +698,42 @@ export function PairDetailsPage() {
             ★ 相性スコア詳細 ★
           </h3>
           
-          {/* レーダーチャート風の表示 */}
-          <div className="mb-8">
+          {/* レーダーチャート風の表示（モバイルは小型・太線/文字縮小） */}
+          <div className="mb-4 md:mb-8">
             <div className="flex justify-center">
-              <div className="relative w-80 h-80 rounded-xl border-4 border-black" style={{background: '#FFFFFF', boxShadow: '4px 4px 0 #000000'}}>
+              <div className="relative w-56 h-56 md:w-80 md:h-80 rounded-lg md:rounded-xl border-2 md:border-4 border-black" style={{background: '#FFFFFF', boxShadow: '2px 2px 0 #000000, 4px 4px 0 #000000'}}>
                 {/* 背景の円 */}
-                <div className="absolute inset-0 border-2 border-gray-300 rounded-full"></div>
-                <div className="absolute inset-4 border-2 border-gray-400 rounded-full"></div>
-                <div className="absolute inset-8 border-2 border-gray-500 rounded-full"></div>
-                <div className="absolute inset-12 border-2 border-gray-600 rounded-full"></div>
+                <div className="absolute inset-0 border border-gray-300 md:border-2 rounded-full"></div>
+                <div className="absolute inset-3 md:inset-4 border border-gray-400 md:border-2 rounded-full"></div>
+                <div className="absolute inset-6 md:inset-8 border border-gray-500 md:border-2 rounded-full"></div>
+                <div className="absolute inset-9 md:inset-12 border border-gray-600 md:border-2 rounded-full"></div>
                 
                 {/* 中心点 */}
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-5 h-5 bg-red-600 rounded-full border-2 border-black"></div>
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 md:w-5 h-3 md:h-5 bg-red-600 rounded-full border border-black md:border-2"></div>
                 
                 {/* 各軸のラベルとスコア */}
                 {Object.entries(analysis.detailedScores).map(([category, score], index) => {
                   const angle = (index * 360) / Object.keys(analysis.detailedScores).length
                   const radians = (angle * Math.PI) / 180
-                  const radius = 120
-                  const x = 160 + radius * Math.cos(radians - Math.PI / 2)
-                  const y = 160 + radius * Math.sin(radians - Math.PI / 2)
+                  const base = 128 // モバイル基準中心
+                  const radius = window.innerWidth < 768 ? 90 : 120
+                  const center = window.innerWidth < 768 ? base : 160
+                  const x = center + radius * Math.cos(radians - Math.PI / 2)
+                  const y = center + radius * Math.sin(radians - Math.PI / 2)
                   
                   // スコアに基づく位置
                   const scoreRadius = (score / 100) * radius
-                  const scoreX = 160 + scoreRadius * Math.cos(radians - Math.PI / 2)
-                  const scoreY = 160 + scoreRadius * Math.sin(radians - Math.PI / 2)
+                  const scoreX = center + scoreRadius * Math.cos(radians - Math.PI / 2)
+                  const scoreY = center + scoreRadius * Math.sin(radians - Math.PI / 2)
                   
                   return (
                     <div key={category}>
                       {/* 軸線 */}
                       <div 
-                        className="absolute w-1 bg-gray-600"
+                        className="absolute w-0.5 md:w-1 bg-gray-600"
                         style={{
-                          left: '160px',
-                          top: '160px',
+                          left: `${center}px`,
+                          top: `${center}px`,
                           height: `${radius}px`,
                           transformOrigin: '0 0',
                           transform: `rotate(${angle}deg)`
@@ -740,18 +742,18 @@ export function PairDetailsPage() {
                       
                       {/* スコアポイント */}
                       <div 
-                        className="absolute w-4 h-4 bg-red-600 rounded-full transform -translate-x-1/2 -translate-y-1/2 border-2 border-black"
+                        className="absolute w-2.5 md:w-4 h-2.5 md:h-4 bg-red-600 rounded-full transform -translate-x-1/2 -translate-y-1/2 border border-black md:border-2"
                         style={{ left: `${scoreX}px`, top: `${scoreY}px` }}
                       ></div>
                       
                       {/* ラベル */}
                       <div 
-                        className="absolute text-sm font-black transform -translate-x-1/2 -translate-y-1/2"
+                        className="absolute text-[10px] md:text-sm font-black transform -translate-x-1/2 -translate-y-1/2"
                         style={{ left: `${x}px`, top: `${y}px` }}
                       >
                         <div className="text-center">
                           <div className="text-black" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>{category}</div>
-                          <div className="text-red-600 font-black text-lg" style={{fontFamily: 'Bangers, sans-serif'}}>{score}点</div>
+                          <div className="text-red-600 font-black text-xs md:text-lg" style={{fontFamily: 'Bangers, sans-serif'}}>{score}点</div>
                         </div>
                       </div>
                     </div>
@@ -764,14 +766,16 @@ export function PairDetailsPage() {
                     points={Object.entries(analysis.detailedScores).map(([category, score], index) => {
                       const angle = (index * 360) / Object.keys(analysis.detailedScores).length
                       const radians = (angle * Math.PI) / 180
-                      const radius = (score / 100) * 120
-                      const x = 160 + radius * Math.cos(radians - Math.PI / 2)
-                      const y = 160 + radius * Math.sin(radians - Math.PI / 2)
+                      const maxR = window.innerWidth < 768 ? 90 : 120
+                      const r = (score / 100) * maxR
+                      const c = window.innerWidth < 768 ? 128 : 160
+                      const x = c + r * Math.cos(radians - Math.PI / 2)
+                      const y = c + r * Math.sin(radians - Math.PI / 2)
                       return `${x},${y}`
                     }).join(' ')}
-                    fill="rgba(255, 0, 0, 0.3)"
+                    fill="rgba(255, 0, 0, 0.25)"
                     stroke="rgb(255, 0, 0)"
-                    strokeWidth="3"
+                    strokeWidth={window.innerWidth < 768 ? 2 : 3}
                   />
                 </svg>
               </div>
