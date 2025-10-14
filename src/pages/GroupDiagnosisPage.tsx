@@ -99,36 +99,36 @@ export function GroupDiagnosisPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 p-3 sm:p-4 md:p-8">
       <div className="max-w-4xl mx-auto">
         {/* ヘッダー */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">
+        <div className="text-center mb-3 md:mb-8">
+          <h1 className="text-lg md:text-4xl font-bold text-gray-800 mb-1 md:mb-2">
             酒癖診断
           </h1>
-          <p className="text-lg text-gray-600">
-            <span className={`font-bold text-xl ${currentUser.gender === 'male' ? 'text-blue-600' : 'text-pink-600'}`}>
+          <p className="text-sm md:text-lg text-gray-600">
+            <span className={`font-bold text-base md:text-xl ${currentUser.gender === 'male' ? 'text-blue-600' : 'text-pink-600'}`}>
               {currentUser.gender === 'male' ? '♂' : '♀'} {currentUser.userName}
             </span>さんの番です
           </p>
         </div>
 
         {/* プログレスバー */}
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <Users className="w-6 h-6 text-purple-500" />
-              <span className="text-lg font-semibold text-gray-700">
+        <div className="bg-white rounded-lg md:rounded-xl shadow-lg p-3 md:p-6 mb-3 md:mb-6">
+          <div className="flex items-center justify-between mb-2 md:mb-4">
+            <div className="flex items-center gap-2 md:gap-3">
+              <Users className="w-4 h-4 md:w-6 md:h-6 text-purple-500" />
+              <span className="text-sm md:text-lg font-semibold text-gray-700">
                 {currentUserIndex + 1}人中{state.groupParticipants.length}人目
               </span>
             </div>
-            <div className="text-sm text-gray-500">
+            <div className="text-xs md:text-sm text-gray-500">
               {currentQuestionIndex + 1}/{state.questions.length}問目
             </div>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-3">
+          <div className="w-full bg-gray-200 rounded-full h-2 md:h-3">
             <div 
-              className="bg-gradient-to-r from-purple-500 to-pink-500 h-3 rounded-full transition-all duration-300"
+              className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 md:h-3 rounded-full transition-all duration-300"
               style={{ 
                 width: `${((currentUserIndex * state.questions.length + currentQuestionIndex + 1) / (state.groupParticipants.length * state.questions.length)) * 100}%` 
               }}
@@ -137,32 +137,32 @@ export function GroupDiagnosisPage() {
         </div>
 
         {/* プライバシー注意喚起 */}
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
-          <div className="flex items-center gap-2 text-yellow-800">
-            <EyeOff className="w-5 h-5" />
-            <span className="font-semibold">プライバシーにご注意ください</span>
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-2 md:p-4 mb-3 md:mb-6">
+          <div className="flex items-center gap-1 md:gap-2 text-yellow-800">
+            <EyeOff className="w-4 h-4 md:w-5 md:h-5" />
+            <span className="font-semibold text-xs md:text-base">プライバシーにご注意ください</span>
           </div>
-          <p className="text-yellow-700 text-sm mt-1">
+          <p className="text-yellow-700 text-xs md:text-sm mt-1 hidden md:block">
             診断中は他の人に回答が見えないよう、画面を隠して回答してください
           </p>
         </div>
 
         {/* 質問カード */}
-        <div className="bg-white rounded-xl shadow-lg p-8 mb-6">
-          <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">
+        <div className="bg-white rounded-lg md:rounded-xl shadow-lg p-4 md:p-8 mb-3 md:mb-6">
+          <div className="text-center mb-3 md:mb-6">
+            <h2 className="text-base md:text-2xl font-bold text-gray-800 mb-2 md:mb-4">
               {currentQuestion.text}
             </h2>
           </div>
 
           {/* 回答選択肢 */}
-          <div className="space-y-4">
+          <div className="space-y-2 md:space-y-4">
             {currentQuestion.options.map((option) => (
               <button
                 key={option.id}
                 onClick={() => handleAnswerSelect(option.id)}
                 disabled={isAnswerVisible}
-                className={`w-full p-4 rounded-lg text-lg font-semibold transition-all ${
+                className={`w-full p-2 md:p-4 rounded-lg text-sm md:text-lg font-semibold transition-all ${
                   selectedAnswer === option.id
                     ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
                     : isAnswerVisible
@@ -177,12 +177,12 @@ export function GroupDiagnosisPage() {
 
           {/* 回答後の表示 */}
           {isAnswerVisible && (
-            <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-              <div className="flex items-center gap-2 text-green-800 mb-2">
-                <CheckCircle className="w-5 h-5" />
-                <span className="font-semibold">回答完了！</span>
+            <div className="mt-3 md:mt-6 p-2 md:p-4 bg-green-50 border border-green-200 rounded-lg">
+              <div className="flex items-center gap-1 md:gap-2 text-green-800 mb-1 md:mb-2">
+                <CheckCircle className="w-4 h-4 md:w-5 md:h-5" />
+                <span className="font-semibold text-sm md:text-base">回答完了！</span>
               </div>
-              <p className="text-green-700 text-sm">
+              <p className="text-green-700 text-xs md:text-sm hidden md:block">
                 選択した回答: <strong>{currentQuestion.options.find(opt => opt.id === selectedAnswer)?.text}</strong>
               </p>
             </div>
@@ -194,36 +194,39 @@ export function GroupDiagnosisPage() {
           {isAnswerVisible ? (
             <button
               onClick={handleNextQuestion}
-              className="px-8 py-3 text-lg font-bold rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all flex items-center gap-2 mx-auto"
+              className="px-6 md:px-8 py-2 md:py-3 text-sm md:text-lg font-bold rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all flex items-center gap-2 mx-auto"
             >
               {isLastQuestion ? (
                 isLastUser ? (
                   <>
-                    <CheckCircle className="w-5 h-5" />
-                    診断完了
+                    <CheckCircle className="w-4 h-4 md:w-5 md:h-5" />
+                    <span className="md:hidden">完了</span>
+                    <span className="hidden md:inline">診断完了</span>
                   </>
                 ) : (
                   <>
-                    次の人へ
-                    <ArrowRight className="w-5 h-5" />
+                    <span className="md:hidden">次へ</span>
+                    <span className="hidden md:inline">次の人へ</span>
+                    <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
                   </>
                 )
               ) : (
                 <>
-                  次の質問へ
-                  <ArrowRight className="w-5 h-5" />
+                  <span className="md:hidden">次へ</span>
+                  <span className="hidden md:inline">次の質問へ</span>
+                  <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
                 </>
               )}
             </button>
           ) : (
-            <div className="text-gray-500">
+            <div className="text-gray-500 text-xs md:text-base">
               回答を選択してください
             </div>
           )}
         </div>
 
-        {/* 画面を暗くするボタン */}
-        <div className="text-center mt-6">
+        {/* 画面を暗くするボタン - PC版のみ */}
+        <div className="text-center mt-3 md:mt-6 hidden md:block">
           <button
             onClick={() => setIsAnswerVisible(!isAnswerVisible)}
             className="text-gray-500 hover:text-gray-700 text-sm flex items-center gap-1 mx-auto"
@@ -234,15 +237,15 @@ export function GroupDiagnosisPage() {
         </div>
 
         {/* 参加者リスト */}
-        <div className="bg-white rounded-xl shadow-lg p-6 mt-8">
-          <h3 className="text-lg font-semibold text-gray-700 mb-4 text-center">
+        <div className="bg-white rounded-lg md:rounded-xl shadow-lg p-3 md:p-6 mt-3 md:mt-8">
+          <h3 className="text-sm md:text-lg font-semibold text-gray-700 mb-2 md:mb-4 text-center">
             参加者進捗
           </h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-3 gap-2 md:gap-3">
             {state.groupParticipants.map((participant, index) => (
               <div
                 key={participant.userId}
-                className={`p-3 rounded-lg text-center ${
+                className={`p-2 md:p-3 rounded-lg text-center ${
                   index === currentUserIndex
                     ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
                     : participant.diagnosisCompleted
@@ -250,10 +253,14 @@ export function GroupDiagnosisPage() {
                     : 'bg-gray-100 text-gray-600'
                 }`}
               >
-                <div className={`font-bold ${participant.gender === 'male' ? 'text-blue-600' : 'text-pink-600'}`}>
+                <div className={`font-bold text-xs md:text-base ${
+                  index === currentUserIndex 
+                    ? 'text-white' 
+                    : participant.gender === 'male' ? 'text-blue-600' : 'text-pink-600'
+                }`}>
                   {participant.gender === 'male' ? '♂' : '♀'} {participant.userName}
                 </div>
-                <div className="text-sm">
+                <div className="text-xs md:text-sm">
                   {index === currentUserIndex
                     ? '診断中'
                     : participant.diagnosisCompleted

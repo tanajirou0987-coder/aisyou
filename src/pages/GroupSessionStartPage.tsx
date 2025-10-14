@@ -26,22 +26,33 @@ export function GroupSessionStartPage() {
   }
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen p-3 sm:p-4 md:p-8">
       <div className="max-w-4xl mx-auto">
-        {/* ヘッダー - ポップアート風 */}
-        <div className="text-center mb-12">
-          <div className="mb-6">
+        {/* ヘッダー */}
+        <div className="text-center mb-3 md:mb-12">
+          <div className="mb-2 md:mb-6">
             <button
               onClick={() => navigate('/')}
-              className="btn-secondary flex items-center gap-2 mx-auto"
+              className="btn-secondary text-xs md:text-base flex items-center gap-1 md:gap-2 mx-auto"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-3 h-3 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
-              ミチノワトップに戻る
+              <span className="hidden md:inline">ミチノワトップに戻る</span>
+              <span className="md:hidden">戻る</span>
             </button>
           </div>
-          <div className="card relative" style={{background: '#FF0000', transform: 'rotate(-2deg)'}}>
+          {/* スマホ版ヘッダー */}
+          <div className="card p-2 md:hidden" style={{background: '#FF0000'}}>
+            <h1 className="text-lg font-bold text-white mb-1">
+              酒癖診断
+            </h1>
+            <p className="text-xs font-bold text-white">
+              飲み会での相性を科学的に分析
+            </p>
+          </div>
+          {/* PC版ヘッダー */}
+          <div className="hidden md:block card relative" style={{background: '#FF0000', transform: 'rotate(-2deg)'}}>
             <span className="sound-effect pop-yellow absolute top-2 left-4" style={{transform: 'rotate(-20deg)', fontSize: '2rem'}}>BANG!</span>
             <span className="sound-effect pop-green absolute top-2 right-4" style={{transform: 'rotate(20deg)', fontSize: '2rem'}}>POW!</span>
             <h1 className="heading-primary text-7xl mb-4 mt-6" style={{color: '#FFFFFF', WebkitTextStroke: '3px #000000', textShadow: '5px 5px 0 #FFD700'}}>
@@ -53,9 +64,21 @@ export function GroupSessionStartPage() {
           </div>
         </div>
 
-        {/* メインコンテンツ - ポップアート風 */}
-        <div className="card mb-8" style={{background: '#FFFFFF'}}>
-          <div className="text-center mb-8">
+        {/* メインコンテンツ */}
+        <div className="card mb-3 md:mb-8 p-2 md:p-6" style={{background: '#FFFFFF'}}>
+          {/* スマホ版アイコン */}
+          <div className="text-center mb-2 md:mb-8 md:hidden">
+            <div className="flex justify-center mb-2">
+              <div className="relative p-2 bg-purple-500 rounded-full border-2 border-black">
+                <Wine className="w-6 h-6 text-white" />
+                <Sparkles className="w-3 h-3 text-yellow-300 absolute -top-1 -right-1" />
+              </div>
+            </div>
+            <h2 className="text-sm font-bold">診断方法を選択</h2>
+          </div>
+
+          {/* PC版アイコン */}
+          <div className="hidden md:block text-center mb-8">
             <div className="flex justify-center mb-6">
               <div className="relative p-5 bg-purple-500 rounded-full border-5 border-black" style={{boxShadow: '7px 7px 0 #000000'}}>
                 <Wine className="w-20 h-20 text-white" style={{filter: 'drop-shadow(3px 3px 0 #000000)'}} />
@@ -71,65 +94,67 @@ export function GroupSessionStartPage() {
           </div>
 
           {/* 診断方法の選択 */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-2 gap-2 md:gap-6 mb-2 md:mb-8">
             {/* 1台で回す */}
-            <div 
+            <button 
               onClick={() => setSessionMode('single')}
-              className={`p-6 rounded-xl border-4 border-black cursor-pointer transition-all duration-200 ${
+              className={`p-2 md:p-6 rounded md:rounded-xl border-2 md:border-4 border-black transition-all ${
                 sessionMode === 'single' 
-                  ? 'bg-blue-500 transform scale-105' 
+                  ? 'bg-blue-500 md:transform md:scale-105' 
                   : 'bg-white hover:bg-blue-100'
               }`}
-              style={{boxShadow: sessionMode === 'single' ? '8px 8px 0 #000000' : '4px 4px 0 #000000'}}
+              style={{boxShadow: sessionMode === 'single' ? '2px 2px 0 #000000 , 8px 8px 0 #000000' : '2px 2px 0 #000000, 4px 4px 0 #000000'}}
             >
               <div className="text-center">
-                <div className="flex justify-center mb-4">
-                  <Smartphone className={`w-16 h-16 ${sessionMode === 'single' ? 'text-white' : 'text-blue-500'}`} style={{filter: 'drop-shadow(2px 2px 0 #000000)'}} />
+                <div className="flex justify-center mb-1 md:mb-4">
+                  <Smartphone className={`w-6 h-6 md:w-16 md:h-16 ${sessionMode === 'single' ? 'text-white' : 'text-blue-500'}`} style={{filter: window.innerWidth >= 768 ? 'drop-shadow(2px 2px 0 #000000)' : 'none'}} />
                 </div>
-                <h3 className={`text-2xl font-black mb-3 ${sessionMode === 'single' ? 'text-white' : 'text-black'}`} style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
+                <h3 className={`text-xs md:text-2xl font-bold md:font-black mb-1 md:mb-3 ${sessionMode === 'single' ? 'text-white' : 'text-black'}`} style={{fontFamily: window.innerWidth >= 768 ? 'M PLUS Rounded 1c, sans-serif' : 'inherit'}}>
                   📱 1台で回す
                 </h3>
-                <p className={`font-bold ${sessionMode === 'single' ? 'text-white' : 'text-gray-700'}`}>
-                  1台の端末をみんなで回しながら順番に診断
+                <p className={`text-xs md:text-base md:font-bold ${sessionMode === 'single' ? 'text-white' : 'text-gray-700'}`}>
+                  <span className="md:hidden">順番に診断</span>
+                  <span className="hidden md:inline">1台の端末をみんなで回しながら順番に診断</span>
                 </p>
-                <p className={`text-sm mt-2 ${sessionMode === 'single' ? 'text-yellow-300' : 'text-gray-500'}`}>
+                <p className={`text-xs md:text-sm mt-0 md:mt-2 hidden md:block ${sessionMode === 'single' ? 'text-yellow-300' : 'text-gray-500'}`}>
                   ✅ シンプル・簡単<br />
                   ✅ その場で盛り上がる
                 </p>
               </div>
-            </div>
+            </button>
 
             {/* 複数端末でやる */}
-            <div 
+            <button 
               onClick={() => setSessionMode('multi')}
-              className={`p-6 rounded-xl border-4 border-black cursor-pointer transition-all duration-200 ${
+              className={`p-2 md:p-6 rounded md:rounded-xl border-2 md:border-4 border-black transition-all ${
                 sessionMode === 'multi' 
-                  ? 'bg-green-500 transform scale-105' 
+                  ? 'bg-green-500 md:transform md:scale-105' 
                   : 'bg-white hover:bg-green-100'
               }`}
-              style={{boxShadow: sessionMode === 'multi' ? '8px 8px 0 #000000' : '4px 4px 0 #000000'}}
+              style={{boxShadow: sessionMode === 'multi' ? '2px 2px 0 #000000, 8px 8px 0 #000000' : '2px 2px 0 #000000, 4px 4px 0 #000000'}}
             >
               <div className="text-center">
-                <div className="flex justify-center mb-4">
-                  <QrCode className={`w-16 h-16 ${sessionMode === 'multi' ? 'text-white' : 'text-green-600'}`} style={{filter: 'drop-shadow(2px 2px 0 #000000)'}} />
+                <div className="flex justify-center mb-1 md:mb-4">
+                  <QrCode className={`w-6 h-6 md:w-16 md:h-16 ${sessionMode === 'multi' ? 'text-white' : 'text-green-600'}`} style={{filter: window.innerWidth >= 768 ? 'drop-shadow(2px 2px 0 #000000)' : 'none'}} />
                 </div>
-                <h3 className={`text-2xl font-black mb-3 ${sessionMode === 'multi' ? 'text-white' : 'text-black'}`} style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
-                  📲 複数端末でやる
+                <h3 className={`text-xs md:text-2xl font-bold md:font-black mb-1 md:mb-3 ${sessionMode === 'multi' ? 'text-white' : 'text-black'}`} style={{fontFamily: window.innerWidth >= 768 ? 'M PLUS Rounded 1c, sans-serif' : 'inherit'}}>
+                  📲 複数端末
                 </h3>
-                <p className={`font-bold ${sessionMode === 'multi' ? 'text-white' : 'text-gray-700'}`}>
-                  QRコードで各自のスマホから参加
+                <p className={`text-xs md:text-base md:font-bold ${sessionMode === 'multi' ? 'text-white' : 'text-gray-700'}`}>
+                  <span className="md:hidden">同時に診断</span>
+                  <span className="hidden md:inline">QRコードで各自のスマホから参加</span>
                 </p>
-                <p className={`text-sm mt-2 ${sessionMode === 'multi' ? 'text-yellow-300' : 'text-gray-500'}`}>
+                <p className={`text-xs md:text-sm mt-0 md:mt-2 hidden md:block ${sessionMode === 'multi' ? 'text-yellow-300' : 'text-gray-500'}`}>
                   ✅ 同時に診断できる<br />
                   ✅ 待ち時間なし
                 </p>
               </div>
-            </div>
+            </button>
           </div>
 
           {/* 飲み会名入力 */}
-          <div className="mb-8">
-            <label htmlFor="groupName" className="block text-lg font-semibold text-gray-700 mb-3">
+          <div className="mb-2 md:mb-8">
+            <label htmlFor="groupName" className="block text-xs md:text-lg font-semibold text-gray-700 mb-1 md:mb-3">
               飲み会の名前（オプション）
             </label>
             <input
@@ -138,18 +163,18 @@ export function GroupSessionStartPage() {
               value={groupName}
               onChange={(e) => setGroupName(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="例：10/10 金曜夜の飲み会"
-              className="w-full input-field text-lg"
+              placeholder="例：10/10金曜"
+              className="w-full input-field text-sm md:text-lg"
               maxLength={30}
             />
-            <p className="text-sm text-gray-500 mt-2">
+            <p className="text-xs md:text-sm text-gray-500 mt-1 md:mt-2 hidden md:block">
               飲み会の名前を入力すると、後で結果を見返すときに便利です
             </p>
           </div>
 
-          {/* 利用シーン説明 - 条件付き表示 */}
+          {/* 利用シーン説明 - PC版のみ表示 */}
           {sessionMode === 'single' && (
-            <div className="p-6 rounded-xl border-4 border-black mb-8" style={{background: '#FFE4B5', boxShadow: '4px 4px 0 #000000'}}>
+            <div className="hidden md:block p-6 rounded-xl border-4 border-black mb-8" style={{background: '#FFE4B5', boxShadow: '4px 4px 0 #000000'}}>
               <h3 className="text-xl font-black text-black mb-4 flex items-center gap-2" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
                 <Users className="w-6 h-6 text-blue-600" />
                 📱 1台で回す場合の流れ
@@ -172,7 +197,7 @@ export function GroupSessionStartPage() {
           )}
 
           {sessionMode === 'multi' && (
-            <div className="p-6 rounded-xl border-4 border-black mb-8" style={{background: '#D4EDDA', boxShadow: '4px 4px 0 #000000'}}>
+            <div className="hidden md:block p-6 rounded-xl border-4 border-black mb-8" style={{background: '#D4EDDA', boxShadow: '4px 4px 0 #000000'}}>
               <h3 className="text-xl font-black text-black mb-4 flex items-center gap-2" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
                 <QrCode className="w-6 h-6 text-green-600" />
                 📲 複数端末でやる場合の流れ
@@ -198,22 +223,23 @@ export function GroupSessionStartPage() {
             </div>
           )}
 
-          {/* 開始ボタン - ポップアート風 */}
+          {/* 開始ボタン */}
           {sessionMode && (
             <div className="text-center">
               <button
                 onClick={sessionMode === 'single' ? handleStartSingleDevice : handleStartMultiDevice}
-                className="btn-primary px-16 py-5 text-2xl"
+                className="btn-primary w-full md:w-auto px-4 md:px-16 py-2 md:py-5 text-sm md:text-2xl"
               >
-                {sessionMode === 'single' ? '🍺 1台で診断を始める 🍺' : '📲 QRコードを作成 📲'}
+                <span className="md:hidden">{sessionMode === 'single' ? '診断を始める' : 'QRコード作成'}</span>
+                <span className="hidden md:inline">{sessionMode === 'single' ? '🍺 1台で診断を始める 🍺' : '📲 QRコードを作成 📲'}</span>
               </button>
             </div>
           )}
         </div>
 
-        {/* 注意事項 - ポップアート風 - 条件付き表示 */}
+        {/* 注意事項 - PC版のみ表示 */}
         {sessionMode === 'single' && (
-          <div className="card" style={{background: '#FFD700', transform: 'rotate(1deg)'}}>
+          <div className="hidden md:block card" style={{background: '#FFD700', transform: 'rotate(1deg)'}}>
             <h3 className="text-2xl font-black text-black mb-4" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif', WebkitTextStroke: '1px #000000'}}>
               ⚠️ 注意事項 ⚠️
             </h3>
@@ -239,7 +265,7 @@ export function GroupSessionStartPage() {
         )}
 
         {sessionMode === 'multi' && (
-          <div className="card" style={{background: '#D4EDDA', transform: 'rotate(-1deg)'}}>
+          <div className="hidden md:block card" style={{background: '#D4EDDA', transform: 'rotate(-1deg)'}}>
             <h3 className="text-2xl font-black text-black mb-4" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif', WebkitTextStroke: '1px #000000'}}>
               ⚠️ 注意事項 ⚠️
             </h3>
