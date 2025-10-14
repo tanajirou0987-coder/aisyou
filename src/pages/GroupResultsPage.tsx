@@ -490,7 +490,7 @@ export function GroupResultsPage() {
                   return (
                     <div
                       key={`${couple.maleId}-${couple.femaleId}`}
-                      className="p-6 rounded-xl border-5 border-black cursor-pointer transform transition-all duration-200 hover:scale-105 hover:-rotate-1"
+                      className="p-3 md:p-6 rounded-lg md:rounded-xl border-2 md:border-5 border-black cursor-pointer transform transition-all duration-200 hover:scale-105 hover:-rotate-1"
                       style={{
                         background: colors.bg,
                         boxShadow: '8px 8px 0 #000000'
@@ -498,26 +498,26 @@ export function GroupResultsPage() {
                       onClick={() => handleCoupleClick(couple.maleName, couple.femaleName)}
                     >
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                          <div className="text-5xl">
+                        <div className="flex items-center gap-2 md:gap-4">
+                          <div className="text-2xl md:text-5xl">
                             {couple.rank === 1 ? '🥇' : couple.rank === 2 ? '🥈' : '🥉'}
                           </div>
                           <div>
-                            <div className="text-2xl font-black mb-2" style={{fontFamily: 'Bangers, sans-serif', color: colors.text, textShadow: '3px 3px 0 #000000'}}>
+                            <div className="text-base md:text-2xl font-black mb-1 md:mb-2" style={{fontFamily: 'Bangers, sans-serif', color: colors.text, textShadow: '3px 3px 0 #000000'}}>
                               {couple.rank}位
                             </div>
-                            <div className="text-xl font-black mb-1" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
-                              <span className="inline-block px-2 py-1 bg-white text-black rounded border-3 border-black mr-1" style={{boxShadow: '3px 3px 0 #000000', fontWeight: 900}}>♂ {couple.maleName}</span>
-                              <span className="mx-2" style={{color: colors.text, fontWeight: 900}}>×</span>
-                              <span className="inline-block px-2 py-1 bg-white text-black rounded border-3 border-black" style={{boxShadow: '3px 3px 0 #000000', fontWeight: 900}}>♀ {couple.femaleName}</span>
+                            <div className="text-sm md:text-xl font-black mb-1" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
+                              <span className="inline-block px-1.5 md:px-2 py-0.5 md:py-1 bg-white text-black rounded border-2 md:border-3 border-black mr-1" style={{boxShadow: '2px 2px 0 #000000, 3px 3px 0 #000000', fontWeight: 900}}>♂ {couple.maleName}</span>
+                              <span className="mx-1 md:mx-2" style={{color: colors.text, fontWeight: 900}}>×</span>
+                              <span className="inline-block px-1.5 md:px-2 py-0.5 md:py-1 bg-white text-black rounded border-2 md:border-3 border-black" style={{boxShadow: '2px 2px 0 #000000, 3px 3px 0 #000000', fontWeight: 900}}>♀ {couple.femaleName}</span>
                             </div>
-                            <div className="text-3xl font-black" style={{fontFamily: 'Bangers, sans-serif', color: colors.scoreColor, textShadow: '3px 3px 0 #000000', WebkitTextStroke: couple.rank === 1 ? '1px #000000' : '0'}}>
+                            <div className="text-xl md:text-3xl font-black" style={{fontFamily: 'Bangers, sans-serif', color: colors.scoreColor, textShadow: '3px 3px 0 #000000', WebkitTextStroke: couple.rank === 1 ? '1px #000000' : '0'}}>
                               {couple.romanticScore}点 🍻
                             </div>
                           </div>
                         </div>
-                        <div className="p-3 bg-white rounded-full border-3 border-black" style={{boxShadow: '3px 3px 0 #000000'}}>
-                          <ArrowRight className="w-8 h-8 text-black" />
+                        <div className="p-1.5 md:p-3 bg-white rounded-full border-2 md:border-3 border-black" style={{boxShadow: '2px 2px 0 #000000, 3px 3px 0 #000000'}}>
+                          <ArrowRight className="w-4 h-4 md:w-8 md:h-8 text-black" />
                         </div>
                       </div>
                     </div>
@@ -553,7 +553,7 @@ export function GroupResultsPage() {
               .map((combination) => (
               <div
                 key={`${combination.maleId}-${combination.femaleId}`}
-                className="p-4 rounded-xl border-4 border-black cursor-pointer transform transition-all duration-200 hover:scale-105 hover:rotate-1"
+                className="p-2.5 md:p-4 rounded-lg md:rounded-xl border-2 md:border-4 border-black cursor-pointer transform transition-all duration-200 hover:scale-105 hover:rotate-1"
                 style={{
                   background: '#FFE4B5',
                   boxShadow: '5px 5px 0 #000000'
@@ -561,30 +561,30 @@ export function GroupResultsPage() {
                 onClick={() => handleCoupleClick(combination.maleName, combination.femaleName)}
               >
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-orange-500 border-3 border-black flex items-center justify-center" style={{boxShadow: '3px 3px 0 #000000'}}>
-                      <span className="text-xl font-black text-white" style={{fontFamily: 'Bangers, sans-serif'}}>
+                  <div className="flex items-center gap-2 md:gap-4">
+                    <div className="w-7 h-7 md:w-12 md:h-12 rounded-full bg-orange-500 border-2 md:border-3 border-black flex items-center justify-center" style={{boxShadow: '2px 2px 0 #000000, 3px 3px 0 #000000'}}>
+                      <span className="text-sm md:text-xl font-black text-white" style={{fontFamily: 'Bangers, sans-serif'}}>
                         {combination.rank}
                       </span>
                     </div>
                     <div>
-                      <div className="text-lg font-black text-black mb-1" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
-                        <span className="inline-block px-2 py-1 bg-blue-500 text-white rounded border-2 border-black mr-1">♂ {combination.maleName}</span>
-                        <span className="mx-2">×</span>
-                        <span className="inline-block px-2 py-1 bg-pink-500 text-white rounded border-2 border-black">♀ {combination.femaleName}</span>
+                      <div className="text-sm md:text-lg font-black text-black mb-0.5 md:mb-1" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
+                        <span className="inline-block px-1.5 md:px-2 py-0.5 md:py-1 bg-blue-500 text-white rounded border border-black md:border-2 mr-1">♂ {combination.maleName}</span>
+                        <span className="mx-1 md:mx-2">×</span>
+                        <span className="inline-block px-1.5 md:px-2 py-0.5 md:py-1 bg-pink-500 text-white rounded border border-black md:border-2">♀ {combination.femaleName}</span>
                       </div>
-                      <div className="inline-block px-3 py-1 bg-yellow-300 rounded-lg border-2 border-black" style={{boxShadow: '2px 2px 0 #000000'}}>
-                        <span className="text-sm font-black text-black" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
+                      <div className="inline-block px-2 md:px-3 py-0.5 md:py-1 bg-yellow-300 rounded md:rounded-lg border border-black md:border-2" style={{boxShadow: '1px 1px 0 #000000, 2px 2px 0 #000000'}}>
+                        <span className="text-xs md:text-sm font-black text-black" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
                           {combination.compatibilityLevel}
                         </span>
                       </div>
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-3xl font-black text-red-600 mb-1" style={{fontFamily: 'Bangers, sans-serif', WebkitTextStroke: '1px #000000'}}>
+                    <div className="text-xl md:text-3xl font-black text-red-600 mb-0.5 md:mb-1" style={{fontFamily: 'Bangers, sans-serif', WebkitTextStroke: '1px #000000'}}>
                       {combination.romanticScore}点
                     </div>
-                    <div className="text-lg font-bold text-yellow-600">
+                    <div className="text-sm md:text-lg font-bold text-yellow-600">
                       {getStarRating(combination.romanticScore)}
                     </div>
                   </div>
