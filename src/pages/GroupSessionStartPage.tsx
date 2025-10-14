@@ -28,7 +28,7 @@ export function GroupSessionStartPage() {
   return (
     <div className="min-h-screen p-2 sm:p-3 md:p-8">
       <div className="max-w-4xl mx-auto">
-        {/* ヘッダー */}
+        {/* ヘッダー（診断結果画面と同テイスト） */}
         <div className="text-center mb-2 md:mb-12">
           <div className="mb-1.5 md:mb-6">
             <button
@@ -42,34 +42,36 @@ export function GroupSessionStartPage() {
               <span className="md:hidden">戻る</span>
             </button>
           </div>
-          {/* スマホ版ヘッダー */}
-          <div className="card p-1.5 md:hidden" style={{background: '#FF0000'}}>
-            <h1 className="text-base font-bold text-white mb-0.5">
-              酒癖診断
+          {/* スマホ版ヘッダー（結果画面風） */}
+          <div className="card p-2 md:hidden relative" style={{background: '#FFD700'}}>
+            <div className="absolute top-1 left-2 text-xs" style={{transform: 'rotate(-15deg)'}}>POW!</div>
+            <div className="absolute top-1 right-2 text-xs" style={{transform: 'rotate(15deg)'}}>BANG!</div>
+            <h1 className="text-lg font-black text-black mb-0.5" style={{fontFamily: 'Bangers, sans-serif'}}>
+              酒癖診断スタート
             </h1>
-            <p className="text-[11px] font-bold text-white">
-              飲み会での相性を科学的に分析
+            <p className="text-[11px] font-black text-black" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
+              ★ 診断方法を選んで始めよう！ ★
             </p>
           </div>
-          {/* PC版ヘッダー */}
-          <div className="hidden md:block card relative" style={{background: '#FF0000', transform: 'rotate(-2deg)'}}>
-            <span className="sound-effect pop-yellow absolute top-2 left-4" style={{transform: 'rotate(-20deg)', fontSize: '2rem'}}>BANG!</span>
-            <span className="sound-effect pop-green absolute top-2 right-4" style={{transform: 'rotate(20deg)', fontSize: '2rem'}}>POW!</span>
-            <h1 className="heading-primary text-7xl mb-4 mt-6" style={{color: '#FFFFFF', WebkitTextStroke: '3px #000000', textShadow: '5px 5px 0 #FFD700'}}>
-              酒癖診断
+          {/* PC版ヘッダー（結果画面風） */}
+          <div className="hidden md:block card relative" style={{background: '#FFD700', transform: 'rotate(-2deg)'}}>
+            <span className="sound-effect pop-yellow absolute top-2 left-4" style={{transform: 'rotate(-20deg)', fontSize: '2rem'}}>POW!</span>
+            <span className="sound-effect pop-blue absolute top-2 right-4" style={{transform: 'rotate(20deg)', fontSize: '2rem'}}>BANG!</span>
+            <h1 className="heading-primary text-7xl mb-4 mt-6" style={{color: '#FF0000', WebkitTextStroke: '3px #000000', textShadow: '5px 5px 0 #FFFFFF'}}>
+              酒癖診断スタート
             </h1>
-            <p className="text-2xl font-black text-white" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
-              ★ 1台の端末を回しながら、みんなで酒癖相性を診断しよう！ ★
+            <p className="text-2xl font-black text-black" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
+              ★ みんなで診断して結果で盛り上がろう！ ★
             </p>
           </div>
         </div>
 
         {/* メインコンテンツ */}
         <div className="card mb-2 md:mb-8 p-2 md:p-6" style={{background: '#FFFFFF'}}>
-          {/* スマホ版アイコン */}
+          {/* スマホ版アイコン（結果画面の質感に寄せる） */}
           <div className="text-center mb-1.5 md:mb-8 md:hidden">
             <div className="flex justify-center mb-2">
-              <div className="relative p-1.5 bg-purple-500 rounded-full border border-black">
+              <div className="relative p-1.5 bg-purple-500 rounded-full border-2 border-black" style={{boxShadow: '2px 2px 0 #000000'}}>
                 <Wine className="w-5 h-5 text-white" />
                 <Sparkles className="w-2.5 h-2.5 text-yellow-300 absolute -top-1 -right-1" />
               </div>
@@ -98,12 +100,12 @@ export function GroupSessionStartPage() {
             {/* 1台で回す */}
             <button 
               onClick={() => setSessionMode('single')}
-              className={`p-1.5 md:p-6 rounded md:rounded-xl border md:border-4 border-black transition-all ${
+              className={`p-1.5 md:p-6 rounded md:rounded-xl border-2 md:border-4 border-black transition-all ${
                 sessionMode === 'single' 
                   ? 'bg-blue-500 md:transform md:scale-105' 
                   : 'bg-white hover:bg-blue-100'
               }`}
-              style={{boxShadow: sessionMode === 'single' ? '1px 1px 0 #000000 , 8px 8px 0 #000000' : '1px 1px 0 #000000, 4px 4px 0 #000000'}}
+              style={{boxShadow: sessionMode === 'single' ? '3px 3px 0 #000000' : '2px 2px 0 #000000'}}
             >
               <div className="text-center">
                 <div className="flex justify-center mb-1 md:mb-4">
@@ -126,12 +128,12 @@ export function GroupSessionStartPage() {
             {/* 複数端末でやる */}
             <button 
               onClick={() => setSessionMode('multi')}
-              className={`p-1.5 md:p-6 rounded md:rounded-xl border md:border-4 border-black transition-all ${
+              className={`p-1.5 md:p-6 rounded md:rounded-xl border-2 md:border-4 border-black transition-all ${
                 sessionMode === 'multi' 
                   ? 'bg-green-500 md:transform md:scale-105' 
                   : 'bg-white hover:bg-green-100'
               }`}
-              style={{boxShadow: sessionMode === 'multi' ? '1px 1px 0 #000000, 8px 8px 0 #000000' : '1px 1px 0 #000000, 4px 4px 0 #000000'}}
+              style={{boxShadow: sessionMode === 'multi' ? '3px 3px 0 #000000' : '2px 2px 0 #000000'}}
             >
               <div className="text-center">
                 <div className="flex justify-center mb-1 md:mb-4">
