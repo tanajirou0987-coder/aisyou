@@ -573,87 +573,95 @@ export function PairDetailsPage() {
   }
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen p-3 sm:p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
-        {/* ヘッダー - ポップアート風 */}
-        <div className="text-center mb-8">
+        {/* ヘッダー - モバイルはコンパクト、PCは従来の演出 */}
+        <div className="text-center mb-3 md:mb-8">
           <button
             onClick={() => navigate('/group-results')}
-            className="btn-secondary text-sm flex items-center gap-2 mx-auto mb-6"
+            className="btn-secondary text-xs md:text-sm flex items-center gap-1 md:gap-2 mx-auto mb-2 md:mb-6"
           >
-            <ArrowLeft className="w-5 h-5" />
-            結果に戻る
+            <ArrowLeft className="w-3 h-3 md:w-5 md:h-5" />
+            <span className="md:hidden">戻る</span>
+            <span className="hidden md:inline">結果に戻る</span>
           </button>
-          <div className="card relative" style={{background: '#0066FF', transform: 'rotate(-2deg)'}}>
+          {/* モバイルタイトル */}
+          <div className="card p-2 md:hidden" style={{background: '#0066FF'}}>
+            <h1 className="text-lg font-bold text-white mb-1">ペア相性詳細分析</h1>
+            <p className="text-xs font-bold text-white">二人の相性をコンパクト表示</p>
+          </div>
+          {/* PCタイトル */}
+          <div className="hidden md:block card relative" style={{background: '#0066FF', transform: 'rotate(-2deg)'}}>
             <span className="sound-effect pop-yellow absolute top-2 left-4" style={{transform: 'rotate(-15deg)', fontSize: '1.5rem'}}>💘</span>
             <span className="sound-effect pop-pink absolute top-2 right-4" style={{transform: 'rotate(15deg)', fontSize: '1.5rem'}}>LOVE!</span>
             <h1 className="heading-primary text-6xl mb-3" style={{color: '#FF69B4', WebkitTextStroke: '3px #000000', textShadow: '5px 5px 0 #FFD700'}}>
-            ペア相性詳細分析
-          </h1>
+              ペア相性詳細分析
+            </h1>
             <p className="text-xl font-black text-white" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
               ★ この二人の相性を詳しく分析しました ★
-          </p>
+            </p>
           </div>
         </div>
 
-        {/* ペア情報 - ポップアート風 */}
-        <div className="card mb-6" style={{background: '#FFFFFF'}}>
-          <div className="text-center mb-6">
-            <div className="flex justify-center mb-4">
-              <div className="relative p-4 bg-pink-500 rounded-full border-5 border-black" style={{boxShadow: '6px 6px 0 #000000'}}>
-                <Users className="w-12 h-12 text-white" style={{filter: 'drop-shadow(2px 2px 0 #000000)'}} />
-                <Heart className="w-7 h-7 text-red-600 absolute -top-1 -right-1 animate-pulse" style={{filter: 'drop-shadow(2px 2px 0 #000000)'}} />
+        {/* ペア情報 - モバイルは簡潔表示 */}
+        <div className="card mb-3 md:mb-6 p-3 md:p-6" style={{background: '#FFFFFF'}}>
+          <div className="text-center mb-3 md:mb-6">
+            <div className="flex justify-center mb-2 md:mb-4">
+              <div className="relative p-2 md:p-4 bg-pink-500 rounded-full border-2 md:border-5 border-black" style={{boxShadow: '2px 2px 0 #000000, 6px 6px 0 #000000'}}>
+                <Users className="w-6 h-6 md:w-12 md:h-12 text-white" />
+                <Heart className="w-3 h-3 md:w-7 md:h-7 text-red-600 absolute -top-1 -right-1 animate-pulse" />
               </div>
             </div>
-            <h2 className="heading-secondary mb-6">
-              💥 このペアの酒癖相性分析 💥
+            <h2 className="text-sm font-bold md:heading-secondary mb-2 md:mb-6">
+              <span className="md:hidden">このペアの相性</span>
+              <span className="hidden md:inline">💥 このペアの酒癖相性分析 💥</span>
             </h2>
-            <div className="flex justify-center items-center gap-6 mb-6">
+            <div className="flex justify-center items-center gap-2 md:gap-6 mb-3 md:mb-6">
               <div className="text-center">
-                <div className={`inline-block px-4 py-2 rounded-xl font-black text-white border-4 border-black text-xl ${maleParticipant.gender === 'male' ? 'bg-blue-500' : 'bg-pink-500'}`} style={{boxShadow: '4px 4px 0 #000000', fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
+                <div className={`inline-block px-2 md:px-4 py-1 md:py-2 rounded-lg md:rounded-xl font-black text-white border-2 md:border-4 border-black text-sm md:text-xl ${maleParticipant.gender === 'male' ? 'bg-blue-500' : 'bg-pink-500'}`} style={{boxShadow: '2px 2px 0 #000000, 4px 4px 0 #000000', fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
                   {maleParticipant.gender === 'male' ? '♂' : '♀'} {maleParticipant.userName}
                 </div>
-                <div className="text-sm text-black font-bold mt-2">{maleType}</div>
+                <div className="text-xs md:text-sm text-black font-bold mt-1 md:mt-2">{maleType}</div>
               </div>
-              <div className="text-5xl font-black" style={{fontFamily: 'Bangers, sans-serif', WebkitTextStroke: '2px #000000', color: '#FF0000'}}>×</div>
+              <div className="text-2xl md:text-5xl font-black" style={{fontFamily: 'Bangers, sans-serif', WebkitTextStroke: '0 md:2px #000000', color: '#FF0000'}}>×</div>
               <div className="text-center">
-                <div className={`inline-block px-4 py-2 rounded-xl font-black text-white border-4 border-black text-xl ${femaleParticipant.gender === 'male' ? 'bg-blue-500' : 'bg-pink-500'}`} style={{boxShadow: '4px 4px 0 #000000', fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
+                <div className={`inline-block px-2 md:px-4 py-1 md:py-2 rounded-lg md:rounded-xl font-black text-white border-2 md:border-4 border-black text-sm md:text-xl ${femaleParticipant.gender === 'male' ? 'bg-blue-500' : 'bg-pink-500'}`} style={{boxShadow: '2px 2px 0 #000000, 4px 4px 0 #000000', fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
                   {femaleParticipant.gender === 'male' ? '♂' : '♀'} {femaleParticipant.userName}
                 </div>
-                <div className="text-sm text-black font-bold mt-2">{femaleType}</div>
+                <div className="text-xs md:text-sm text-black font-bold mt-1 md:mt-2">{femaleType}</div>
               </div>
             </div>
-            <div className="compatibility-score mb-8">
+            <div className="compatibility-score mb-3 md:mb-8">
               {analysis.compatibilityScore}点
             </div>
             
             {/* イキリスの相性診断コメント - 吹き出し風 */}
-            <div className="relative mt-8">
-              <div className="flex items-start gap-4">
+            <div className="relative mt-3 md:mt-8">
+              <div className="flex items-start gap-2 md:gap-4">
                 {/* イキリスのキャラクター */}
                 <div className="flex-shrink-0">
-                  <div className="relative w-24 h-24 rounded-full flex items-center justify-center transform hover:scale-110 transition-transform" style={{
+                  <div className="relative w-12 h-12 md:w-24 md:h-24 rounded-full flex items-center justify-center transform hover:scale-110 transition-transform" style={{
                     background: '#00CC44',
-                    border: '4px solid #000000',
-                    boxShadow: '5px 5px 0 #000000'
+                    border: '2px md:border-4 solid #000000',
+                    boxShadow: '2px 2px 0 #000000, 5px 5px 0 #000000'
                   }}>
-                    <span className="text-4xl">🐿️</span>
-                    <span className="absolute -right-1 bottom-2 text-2xl transform rotate-12">🍺</span>
+                    <span className="text-xl md:text-4xl">🐿️</span>
+                    <span className="absolute -right-0.5 md:-right-1 bottom-1 md:bottom-2 text-sm md:text-2xl transform rotate-12">🍺</span>
                   </div>
-                  <div className="text-center mt-2 px-2 py-1 bg-black rounded-lg border-2 border-black" style={{boxShadow: '2px 2px 0 #FF0000'}}>
+                  <div className="text-center mt-1 md:mt-2 px-1 md:px-2 py-0.5 md:py-1 bg-black rounded md:rounded-lg border border-black md:border-2" style={{boxShadow: '1px 1px 0 #FF0000, 2px 2px 0 #FF0000'}}>
                     <p className="text-xs font-black text-white" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>イキリス</p>
                   </div>
                 </div>
                 
                 {/* 吹き出し */}
                 <div className="flex-1 relative">
-                  <div className="rounded-2xl p-6 relative" style={{
+                  <div className="rounded-lg md:rounded-2xl p-3 md:p-6 relative" style={{
                     background: '#FFFFFF',
-                    border: '5px solid #000000',
-                    boxShadow: '6px 6px 0 #000000'
+                    border: '2px md:border-5 solid #000000',
+                    boxShadow: '3px 3px 0 #000000, 6px 6px 0 #000000'
                   }}>
-                    {/* 吹き出しの三角形 */}
-                    <div className="absolute left-0 top-8 transform -translate-x-4">
+                    {/* 吹き出しの三角形（PCのみ） */}
+                    <div className="hidden md:block absolute left-0 top-8 transform -translate-x-4">
                       <div className="w-0 h-0" style={{
                         borderTop: '15px solid transparent',
                         borderRight: '15px solid #FFFFFF',
@@ -666,16 +674,16 @@ export function PairDetailsPage() {
                       }}></div>
                     </div>
                     
-                    <div className="flex items-start gap-2 mb-3">
-                      <Sparkles className="w-6 h-6 text-yellow-500 flex-shrink-0 mt-1" style={{filter: 'drop-shadow(2px 2px 0 #000000)'}} />
-                      <h3 className="text-2xl font-black text-black" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
+                    <div className="flex items-start gap-1 md:gap-2 mb-2 md:mb-3">
+                      <Sparkles className="w-4 h-4 md:w-6 md:h-6 text-yellow-500 flex-shrink-0 mt-0.5 md:mt-1" style={{filter: 'drop-shadow(1px 1px 0 #000000)'}} />
+                      <h3 className="text-sm md:text-2xl font-black text-black" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
                         💥 {analysis.relationshipType} 💥
-              </h3>
+                      </h3>
                     </div>
                     
-                    <p className="text-black leading-relaxed text-base font-bold pl-7" style={{fontFamily: 'Noto Sans JP, sans-serif'}}>
-                {analysis.coupleDescription}
-              </p>
+                    <p className="text-black leading-relaxed text-xs md:text-base font-bold pl-0 md:pl-7" style={{fontFamily: 'Noto Sans JP, sans-serif'}}>
+                      {analysis.coupleDescription}
+                    </p>
                   </div>
                 </div>
               </div>

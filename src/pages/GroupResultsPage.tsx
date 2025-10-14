@@ -395,32 +395,32 @@ export function GroupResultsPage() {
           </div>
 
           {/* イキリスの総評コメント - 吹き出し風 */}
-          <div className="relative mt-8">
-            <div className="flex items-start gap-4">
+          <div className="relative mt-3 md:mt-8">
+            <div className="flex items-start gap-2 md:gap-4">
               {/* イキリスのキャラクター */}
               <div className="flex-shrink-0">
-                <div className="relative w-24 h-24 rounded-full flex items-center justify-center transform hover:scale-110 transition-transform" style={{
+                <div className="relative w-12 h-12 md:w-24 md:h-24 rounded-full flex items-center justify-center transform hover:scale-110 transition-transform" style={{
                   background: '#00CC44',
-                  border: '4px solid #000000',
-                  boxShadow: '5px 5px 0 #000000'
+                  border: '2px md:border-4 solid #000000',
+                  boxShadow: '2px 2px 0 #000000, 5px 5px 0 #000000'
                 }}>
-                  <span className="text-4xl">🐿️</span>
-                  <span className="absolute -right-1 bottom-2 text-2xl transform rotate-12">🍺</span>
+                  <span className="text-xl md:text-4xl">🐿️</span>
+                  <span className="absolute -right-0.5 md:-right-1 bottom-1 md:bottom-2 text-sm md:text-2xl transform rotate-12">🍺</span>
                 </div>
-                <div className="text-center mt-2 px-2 py-1 bg-black rounded-lg border-2 border-black" style={{boxShadow: '2px 2px 0 #FF0000'}}>
+                <div className="text-center mt-1 md:mt-2 px-1 md:px-2 py-0.5 md:py-1 bg-black rounded md:rounded-lg border border-black md:border-2" style={{boxShadow: '1px 1px 0 #FF0000, 2px 2px 0 #FF0000'}}>
                   <p className="text-xs font-black text-white" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>イキリス</p>
                 </div>
               </div>
               
               {/* 吹き出し */}
               <div className="flex-1 relative">
-                <div className="rounded-2xl p-6 relative" style={{
+                <div className="rounded-lg md:rounded-2xl p-3 md:p-6 relative" style={{
                   background: '#FFFFFF',
-                  border: '5px solid #000000',
-                  boxShadow: '6px 6px 0 #000000'
+                  border: '2px md:border-5 solid #000000',
+                  boxShadow: '3px 3px 0 #000000, 6px 6px 0 #000000'
                 }}>
-                  {/* 吹き出しの三角形 */}
-                  <div className="absolute left-0 top-8 transform -translate-x-4">
+                  {/* 吹き出しの三角形 - PC版のみ表示 */}
+                  <div className="hidden md:block absolute left-0 top-8 transform -translate-x-4">
                     <div className="w-0 h-0" style={{
                       borderTop: '15px solid transparent',
                       borderRight: '15px solid #FFFFFF',
@@ -433,14 +433,15 @@ export function GroupResultsPage() {
                     }}></div>
                   </div>
                   
-                  <div className="flex items-start gap-2 mb-3">
-                    <Sparkles className="w-6 h-6 text-yellow-500 flex-shrink-0 mt-1" style={{filter: 'drop-shadow(2px 2px 0 #000000)'}} />
-                    <h3 className="text-xl font-black text-black" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
-                      💥 今夜の飲み会、俺が分析したるわ！ 💥
+                  <div className="flex items-start gap-1 md:gap-2 mb-2 md:mb-3">
+                    <Sparkles className="w-4 h-4 md:w-6 md:h-6 text-yellow-500 flex-shrink-0 mt-0.5 md:mt-1" style={{filter: 'drop-shadow(1px 1px 0 #000000)'}} />
+                    <h3 className="text-xs md:text-xl font-black text-black" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
+                      <span className="md:hidden">💥 今夜の分析 💥</span>
+                      <span className="hidden md:inline">💥 今夜の飲み会、俺が分析したるわ！ 💥</span>
                     </h3>
                   </div>
                   
-                  <p className="text-black leading-relaxed text-base font-bold pl-7" style={{fontFamily: 'Noto Sans JP, sans-serif'}}>
+                  <p className="text-black leading-relaxed text-xs md:text-base font-bold pl-0 md:pl-7" style={{fontFamily: 'Noto Sans JP, sans-serif'}}>
                     {(() => {
                       // 全カップルの相性度データを抽出
                       const couplesData = allCombinations.combinations
