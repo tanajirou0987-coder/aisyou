@@ -42,8 +42,8 @@ export function GroupResultsPage() {
     )
   }
 
-  // 1人の場合の個人診断結果表示
-  if (summary.maleCount + summary.femaleCount === 1) {
+  // 1人または2人の場合の個人診断結果表示
+  if (summary.maleCount + summary.femaleCount <= 2) {
     const participant = state.groupParticipants[0]
     
     // 科学的根拠に基づいた酒癖タイプの判定
