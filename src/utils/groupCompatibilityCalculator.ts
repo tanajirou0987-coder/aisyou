@@ -107,38 +107,39 @@ export function calculateGroupCompatibility(
   }
 }
 
-// 2人の相性スコアを計算
+// 2人の相性スコアを計算（高速化版）
 function calculateRomanticScore(participantA: GroupParticipant, participantB: GroupParticipant): number {
   const answersA = participantA.diagnosisData || []
   const answersB = participantB.diagnosisData || []
   
   if (answersA.length === 0 || answersB.length === 0) {
-    return Math.floor(Math.random() * 40) + 30 // 30-70のランダムスコア
+    return 50 // デフォルトスコア（ランダム要素を削除）
   }
   
   let totalScore = 0
   let questionCount = 0
   
-  // 同じ質問に対する回答を比較
+  // 同じ質問に対する回答を比較（最適化）
+  const answerMap = new Map(answersB.map(b => [b.questionId, b.value]))
+  
   for (const answerA of answersA) {
-    const answerB = answersB.find(b => b.questionId === answerA.questionId)
-    if (answerB) {
+    const answerBValue = answerMap.get(answerA.questionId)
+    if (answerBValue !== undefined) {
       // 回答の一致度を計算
-      const similarity = calculateAnswerSimilarity(answerA.value, answerB.value)
+      const similarity = calculateAnswerSimilarity(answerA.value, answerBValue)
       totalScore += similarity
       questionCount++
     }
   }
   
   if (questionCount === 0) {
-    return Math.floor(Math.random() * 40) + 30
+    return 50
   }
   
   const baseScore = (totalScore / questionCount) * 100
   
-  // ランダム要素を追加してより自然な結果に
-  const randomFactor = (Math.random() - 0.5) * 20
-  const finalScore = Math.max(0, Math.min(100, baseScore + randomFactor))
+  // ランダム要素を削除して高速化
+  const finalScore = Math.max(0, Math.min(100, baseScore))
   
   return Math.round(finalScore)
 }
@@ -166,42 +167,22 @@ function getStarRating(score: number): number {
   return 1
 }
 
-// 簡易コメントを生成
+// 簡易コメントを生成（高速化版）
 function generateBriefComment(score: number, nameA: string, nameB: string): string {
-  const comments = {
-    high: [
-      '今夜くっつく可能性大！',
-      '危険なほど相性抜群！',
-      'お互い意識してそう。',
-      'バランス抜群の組み合わせ。',
-      '恋愛が生まれやすい相性！'
-    ],
-    medium: [
-      '良い雰囲気になりそう。',
-      '友達以上恋人未満のライン。',
-      '時と場合によって変わる。',
-      '今夜だけの相性。',
-      '話すきっかけを作ってみては？'
-    ],
-    low: [
-      '友達止まりかも。',
-      '真逆すぎて噛み合わない。',
-      '完全に友達ゾーン（笑）',
-      '恋愛は期待しない方がいいかも。',
-      '飲み友達としては最高！'
-    ]
-  }
-  
-  let commentList: string[]
-  if (score >= 70) {
-    commentList = comments.high
+  // ランダム要素を削除して固定コメントに
+  if (score >= 80) {
+    return '今夜くっつく可能性大！'
+  } else if (score >= 70) {
+    return '危険なほど相性抜群！'
+  } else if (score >= 60) {
+    return 'お互い意識してそう。'
+  } else if (score >= 50) {
+    return '良い雰囲気になりそう。'
   } else if (score >= 40) {
-    commentList = comments.medium
+    return '友達以上恋人未満のライン。'
   } else {
-    commentList = comments.low
+    return '友達止まりかも。'
   }
-  
-  return commentList[Math.floor(Math.random() * commentList.length)]
 }
 
 // グループ全体のサマリーを生成
@@ -266,7 +247,7 @@ function generateBalanceComment(maleCount: number, femaleCount: number): string 
   return '女性陣が多めですが、男性陣は選び放題。今夜は特別な出会いがありそう。'
 }
 
-// グループ全体のコメントを生成
+// グループ全体のコメントを生成（高速化版）
 function generateOverallComment(
   averageScore: number, 
   maxScore: CombinationItem | undefined, 
@@ -278,32 +259,14 @@ function generateOverallComment(
     return '異性間の組み合わせがないため、恋愛相性診断ができませんでした。'
   }
 
-  const comments = {
-    high: [
-      `このグループは恋愛が生まれやすい相性！特に${maxScore.maleName}さん♂と${maxScore.femaleName}さん♀は今夜くっつく可能性大。全体的にバランスが良く、誰かしらがカップルになりそうな予感。今夜はみんなでキューピッド役になって盛り上げよう！`,
-      `今夜の飲み会は恋愛の香りがプンプン！${maxScore.maleName}さん♂と${maxScore.femaleName}さん♀の相性が特に抜群で、周りも応援したくなる組み合わせ。全体的に恋愛モード全開のグループなので、今夜は恋愛トークで盛り上がろう！`,
-      `このメンバーなら恋愛が生まれる確率が高い！${maxScore.maleName}さん♂と${maxScore.femaleName}さん♀は危険なほど相性が良く、今夜告白やキスまで行く可能性も。みんなで二人の距離を縮めるお手伝いをしよう！`
-    ],
-    medium: [
-      `バランスの取れたグループ！${maxScore.maleName}さん♂と${maxScore.femaleName}さん♀が特に相性が良く、恋愛の可能性も十分。全体的には友達関係も恋愛関係も楽しめる、理想的なメンバー構成。今夜は自然体で楽しもう！`,
-      `恋愛も友情も楽しめるグループ！${maxScore.maleName}さん♂と${maxScore.femaleName}さん♀の相性が良く、恋愛のきっかけもありそう。全体的に程よい距離感で、無理せず自然に盛り上がれるメンバー。今夜はリラックスして楽しもう！`
-    ],
-    low: [
-      `友情重視のグループ！恋愛よりも深い友情を築けそうなメンバー構成。${maxScore.maleName}さん♂と${maxScore.femaleName}さん♀も友達として最高の相性。今夜は恋愛よりも、みんなで楽しく飲んで盛り上がろう！`,
-      `友達として最高のグループ！恋愛は期待せず、純粋に飲み友達として楽しめるメンバー。${maxScore.maleName}さん♂と${maxScore.femaleName}さん♀も友達ゾーンだが、気の置けない関係で最高。今夜は友情を深めよう！`
-    ]
-  }
-  
-  let commentList: string[]
+  // ランダム要素を削除して固定コメントに
   if (averageScore >= 70) {
-    commentList = comments.high
+    return `このグループは恋愛が生まれやすい相性！特に${maxScore.maleName}さん♂と${maxScore.femaleName}さん♀は今夜くっつく可能性大。全体的にバランスが良く、誰かしらがカップルになりそうな予感。今夜はみんなでキューピッド役になって盛り上げよう！`
   } else if (averageScore >= 50) {
-    commentList = comments.medium
+    return `バランスの取れたグループ！${maxScore.maleName}さん♂と${maxScore.femaleName}さん♀が特に相性が良く、恋愛の可能性も十分。全体的には友達関係も恋愛関係も楽しめる、理想的なメンバー構成。今夜は自然体で楽しもう！`
   } else {
-    commentList = comments.low
+    return `友情重視のグループ！恋愛よりも深い友情を築けそうなメンバー構成。${maxScore.maleName}さん♂と${maxScore.femaleName}さん♀も友達として最高の相性。今夜は恋愛よりも、みんなで楽しく飲んで盛り上がろう！`
   }
-  
-  return commentList[Math.floor(Math.random() * commentList.length)]
 }
 
 // ベストカップルTop3を生成
@@ -319,33 +282,16 @@ function generateBestCouples(combinations: CombinationItem[]): BestCouple[] {
   }))
 }
 
-// 詳細コメントを生成
+// 詳細コメントを生成（高速化版）
 function generateDetailedComment(score: number, maleName: string, femaleName: string, rank: number): string {
-  const comments = {
-    high: [
-      `危険なほど相性抜群！今夜この二人を二人きりにしたら、告白やキスまで行く可能性大。みんなで二人の距離を縮めるお手伝いをしよう（笑）`,
-      `お互い意識してそうな雰囲気。今夜のうちにチャンスを作ってあげると、いい関係に発展しそう。隣同士に座らせてみては？`,
-      `真逆のタイプだけど、だからこそバランス抜群。今夜話すきっかけを作ってあげたら、自然と惹かれ合うはず。`
-    ],
-    medium: [
-      `いい感じの相性！恋愛の可能性も十分ある。今夜は自然体で接して、お互いの魅力を引き出し合える関係になりそう。`,
-      `バランスの良い組み合わせ。恋愛も友情も楽しめる関係性。今夜は無理せず、自然な流れで盛り上がろう。`
-    ],
-    low: [
-      `友達として最高の相性。恋愛は期待せず、純粋に楽しい関係を築けそう。今夜は気の置けない飲み友達として楽しもう！`
-    ]
-  }
-  
-  let commentList: string[]
+  // ランダム要素を削除して固定コメントに
   if (score >= 80) {
-    commentList = comments.high
+    return `危険なほど相性抜群！今夜この二人を二人きりにしたら、告白やキスまで行く可能性大。みんなで二人の距離を縮めるお手伝いをしよう（笑）`
   } else if (score >= 60) {
-    commentList = comments.medium
+    return `いい感じの相性！恋愛の可能性も十分ある。今夜は自然体で接して、お互いの魅力を引き出し合える関係になりそう。`
   } else {
-    commentList = comments.low
+    return `友達として最高の相性。恋愛は期待せず、純粋に楽しい関係を築けそう。今夜は気の置けない飲み友達として楽しもう！`
   }
-  
-  return commentList[Math.floor(Math.random() * commentList.length)]
 }
 
 // ワーストカップルを生成
@@ -360,14 +306,8 @@ function generateWorstCouple(combination: CombinationItem): WorstCouple {
   }
 }
 
-// ユーモアたっぷりのコメントを生成
+// ユーモアたっぷりのコメントを生成（高速化版）
 function generateHumorousComment(score: number, maleName: string, femaleName: string): string {
-  const comments = [
-    `どれだけ酔っても恋愛対象として見れない最強の友達ゾーン（笑）。でも気の置けない飲み友達としては最高の関係。恋愛を期待せず、純粋に楽しもう！`,
-    `完全に友達ゾーン！恋愛は諦めて、今夜は飲み友達として最高の時間を過ごそう。この関係性も悪くないよ（笑）`,
-    `恋愛は期待しない方がいいかも（笑）。でも友達としては最高の相性なので、今夜は気の置けない関係で楽しく飲もう！`,
-    `友達止まり確定の組み合わせ（笑）。でもこの関係性も悪くない。今夜は恋愛を忘れて、純粋に友情を深めよう！`
-  ]
-  
-  return comments[Math.floor(Math.random() * comments.length)]
+  // ランダム要素を削除して固定コメントに
+  return `どれだけ酔っても恋愛対象として見れない最強の友達ゾーン（笑）。でも気の置けない飲み友達としては最高の関係。恋愛を期待せず、純粋に楽しもう！`
 }
