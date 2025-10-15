@@ -280,12 +280,36 @@ export function GroupResultsPage() {
   }
 
   const handleCoupleClick = (maleName: string, femaleName: string) => {
-    // 参加者IDを取得
+    console.log('handleCoupleClick called with:', { maleName, femaleName })
+    console.log('Available participants:', state.groupParticipants)
+    
+    // 参加者IDを取得（userNameとgenderで検索）
     const maleParticipant = state.groupParticipants.find(p => p.userName === maleName && p.gender === 'male')
     const femaleParticipant = state.groupParticipants.find(p => p.userName === femaleName && p.gender === 'female')
     
+    console.log('Found participants:', { maleParticipant, femaleParticipant })
+    
     if (maleParticipant && femaleParticipant) {
+      console.log('Navigating to pair-details with:', { 
+        maleId: maleParticipant.userId, 
+        femaleId: femaleParticipant.userId 
+      })
       navigate(`/pair-details?maleId=${maleParticipant.userId}&femaleId=${femaleParticipant.userId}`)
+    } else {
+      // フォールバック: 名前で検索
+      const maleByName = state.groupParticipants.find(p => p.userName === maleName)
+      const femaleByName = state.groupParticipants.find(p => p.userName === femaleName)
+      
+      if (maleByName && femaleByName) {
+        console.log('Fallback navigation with:', { 
+          maleId: maleByName.userId, 
+          femaleId: femaleByName.userId 
+        })
+        navigate(`/pair-details?maleId=${maleByName.userId}&femaleId=${femaleByName.userId}`)
+      } else {
+        console.error('Could not find participants for:', { maleName, femaleName })
+        alert('参加者情報が見つかりません')
+      }
     }
   }
 
