@@ -67,7 +67,7 @@ export function GroupDiagnosisPage() {
 
   const handleAnswerSelect = (optionId: string) => {
     setSelectedAnswer(optionId)
-    setIsAnswerVisible(true)
+    // 回答選択後も選択肢を変更可能にするため、isAnswerVisibleは設定しない
   }
 
   const handleNextQuestion = () => {
@@ -187,30 +187,35 @@ export function GroupDiagnosisPage() {
               <button
                 key={option.id}
                 onClick={() => handleAnswerSelect(option.id)}
-                disabled={isAnswerVisible}
                 className={`w-full p-2 md:p-4 rounded-lg text-[13px] md:text-lg font-extrabold transition-all border-2 md:border-3 border-black ${
                   selectedAnswer === option.id
-                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
-                    : isAnswerVisible
-                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                    : 'bg-white text-black hover:bg-yellow-100'
+                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg transform scale-105'
+                    : 'bg-white text-black hover:bg-yellow-100 hover:transform hover:scale-105'
                 }`}
                 style={{ boxShadow: '3px 3px 0 #000000' }}
               >
-                {option.text}
+                <div className="flex items-center gap-2">
+                  {selectedAnswer === option.id && (
+                    <CheckCircle className="w-4 h-4 md:w-5 md:h-5 flex-shrink-0" />
+                  )}
+                  <span className="flex-1">{option.text}</span>
+                </div>
               </button>
             ))}
           </div>
 
-          {/* 回答後の表示 */}
-          {isAnswerVisible && (
+          {/* 回答選択状態の表示 */}
+          {selectedAnswer && (
             <div className="mt-2.5 md:mt-6 p-2 md:p-4 rounded-lg border-2 md:border-3 border-black" style={{background: '#E6FFED', boxShadow: '3px 3px 0 #000000'}}>
               <div className="flex items-center gap-1 md:gap-2 text-green-800 mb-1 md:mb-2">
                 <CheckCircle className="w-4 h-4 md:w-5 md:h-5" />
-                <span className="font-semibold text-[13px] md:text-base">回答完了！</span>
+                <span className="font-semibold text-[13px] md:text-base">回答を選択しました</span>
               </div>
               <p className="text-green-700 text-[12px] md:text-sm hidden lg:block">
                 選択した回答: <strong>{currentQuestion.options.find(opt => opt.id === selectedAnswer)?.text}</strong>
+              </p>
+              <p className="text-green-600 text-[11px] md:text-xs mt-1">
+                他の選択肢をクリックして変更できます
               </p>
             </div>
           )}
@@ -218,7 +223,7 @@ export function GroupDiagnosisPage() {
 
         {/* 操作ボタン */}
         <div className="text-center">
-          {isAnswerVisible ? (
+          {selectedAnswer ? (
             <button
               onClick={handleNextQuestion}
               className="px-6 md:px-8 py-2 md:py-3 text-sm md:text-lg font-bold rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all flex items-center gap-2 mx-auto"
