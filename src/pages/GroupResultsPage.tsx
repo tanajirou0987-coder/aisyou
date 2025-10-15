@@ -142,11 +142,20 @@ export function GroupResultsPage() {
                 </p>
                 <button
                   onClick={() => {
-                    const participant = state.groupParticipants[0]
-                    if (participant) {
-                      navigate(`/pair-details?maleId=${participant.userId}&femaleId=${participant.userId}`)
+                    // 二人の参加者がいる場合のペア詳細分析
+                    if (state.groupParticipants.length >= 2) {
+                      const maleParticipant = state.groupParticipants.find(p => p.gender === 'male')
+                      const femaleParticipant = state.groupParticipants.find(p => p.gender === 'female')
+                      
+                      if (maleParticipant && femaleParticipant) {
+                        navigate(`/pair-details?maleId=${maleParticipant.userId}&femaleId=${femaleParticipant.userId}`)
+                      } else {
+                        // 性別が不明な場合は最初の二人を使用
+                        navigate(`/pair-details?maleId=${state.groupParticipants[0].userId}&femaleId=${state.groupParticipants[1].userId}`)
+                      }
                     } else {
-                      navigate('/group-results')
+                      // 一人の場合は個人詳細ページへ
+                      navigate('/drinking-details')
                     }
                   }}
                   className="px-6 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors"
