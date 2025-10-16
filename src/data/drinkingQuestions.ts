@@ -111,6 +111,46 @@ export const drinkingQuestions: Question[] = [
     ],
     category: '恋愛積極性',
     weight: 1
+  },
+  {
+    id: 'drinking_12',
+    text: '今酔っていて、冗談が増えていますか？',
+    options: [
+      { id: 'yes', text: 'YES', value: 1 },
+      { id: 'no', text: 'NO', value: 0 }
+    ],
+    category: '盛り上げ力',
+    weight: 1
+  },
+  {
+    id: 'drinking_13',
+    text: '今、異性と二人きりになりたい気分ですか？',
+    options: [
+      { id: 'yes', text: 'YES', value: 1 },
+      { id: 'no', text: 'NO', value: 0 }
+    ],
+    category: '恋愛積極性',
+    weight: 1
+  },
+  {
+    id: 'drinking_14',
+    text: '今酔っていて、人に頼りたくなっていますか？',
+    options: [
+      { id: 'yes', text: 'YES', value: 1 },
+      { id: 'no', text: 'NO', value: 0 }
+    ],
+    category: '社交性',
+    weight: 1
+  },
+  {
+    id: 'drinking_15',
+    text: '今、異性の連絡先を聞きたい気分ですか？',
+    options: [
+      { id: 'yes', text: 'YES', value: 1 },
+      { id: 'no', text: 'NO', value: 0 }
+    ],
+    category: '恋愛積極性',
+    weight: 1
   }
 ]
 
@@ -137,6 +177,6 @@ export function getRandomDrinkingQuestions(mode: AppMode): Question[] {
     index === self.findIndex(q => q.id === question.id)
   )
   
-  return uniqueQuestions.slice(0, 10)
+  return uniqueQuestions.slice(0, 15)
 }
 
