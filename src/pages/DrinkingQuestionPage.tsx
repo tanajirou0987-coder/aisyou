@@ -122,6 +122,12 @@ export function DrinkingQuestionPage() {
           </div>
         </div>
 
+        {/* 注記（科学的・一般的傾向に基づく旨） */}
+        <div className="text-[10px] sm:text-xs text-gray-500 mb-3">
+          本診断は、アルコールが前頭前野の抑制を弱め、感情・行動（大脳辺縁系）に影響を与えるという
+          科学的・一般的な傾向をもとに作成されています。個人の医学的・臨床的な性格診断ではありません。
+        </div>
+
         {/* 参加者リスト */}
         <div className="bg-white rounded-lg shadow p-2 mb-3">
           <h3 className="text-xs font-semibold text-gray-800 mb-1">参加者</h3>
