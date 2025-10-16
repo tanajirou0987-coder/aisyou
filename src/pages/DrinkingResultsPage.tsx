@@ -81,29 +81,6 @@ export function DrinkingResultsPage() {
               <p className="text-2xl font-bold text-gray-800">{compatibilityScores.length}組</p>
             </div>
           </div>
-          
-          {/* 酒癖タイプの説明 */}
-          <div className="mt-4 p-4 bg-white rounded-lg border-2 border-black" style={{boxShadow: '2px 2px 0 #000000'}}>
-            <h3 className="text-lg font-bold text-center mb-3" style={{fontFamily: 'Bangers, sans-serif'}}>酒癖タイプの科学的根拠</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div className="p-3 bg-purple-50 rounded-lg border border-black">
-                <div className="font-bold text-purple-600 text-sm mb-1">ソーシャルエンハンサー</div>
-                <div className="text-gray-600 text-xs">アルコールの抑制解除効果により社交性が向上</div>
-              </div>
-              <div className="p-3 bg-pink-50 rounded-lg border border-black">
-                <div className="font-bold text-pink-600 text-sm mb-1">エモーショナルエクスプレス</div>
-                <div className="text-gray-600 text-xs">前頭前野の抑制解除により感情表現が豊か</div>
-              </div>
-              <div className="p-3 bg-blue-50 rounded-lg border border-black">
-                <div className="font-bold text-blue-600 text-sm mb-1">コンフィデンスブースター</div>
-                <div className="text-gray-600 text-xs">自己効力感の向上により自信が向上</div>
-              </div>
-              <div className="p-3 bg-green-50 rounded-lg border border-black">
-                <div className="font-bold text-green-600 text-sm mb-1">ストレスリリーバー</div>
-                <div className="text-gray-600 text-xs">GABA受容体の活性化によりストレス解消</div>
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* 相性ランキング */}
