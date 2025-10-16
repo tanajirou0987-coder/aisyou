@@ -14,7 +14,7 @@ export const drinkingQuestions: Question[] = [
   },
   {
     id: 'drinking_2',
-    text: '今酔っていて、場を盛り上げていますか？',
+    text: '今、場を盛り上げていますか？',
     options: [
       { id: 'yes', text: 'YES', value: 1 },
       { id: 'no', text: 'NO', value: 0 }
@@ -34,7 +34,7 @@ export const drinkingQuestions: Question[] = [
   },
   {
     id: 'drinking_4',
-    text: '今酔っていて、普段言えないことを口にしていますか？',
+    text: '今、普段言えないことを口にしていますか？',
     options: [
       { id: 'yes', text: 'YES', value: 1 },
       { id: 'no', text: 'NO', value: 0 }
@@ -54,7 +54,7 @@ export const drinkingQuestions: Question[] = [
   },
   {
     id: 'drinking_6',
-    text: '今酔っていて、歌いたくなっていますか？',
+    text: '今、歌いたい気分ですか？',
     options: [
       { id: 'yes', text: 'YES', value: 1 },
       { id: 'no', text: 'NO', value: 0 }
@@ -74,7 +74,7 @@ export const drinkingQuestions: Question[] = [
   },
   {
     id: 'drinking_8',
-    text: '今酔っていて、人懐っこくなっていますか？',
+    text: '今、人懐っこくなっていますか？',
     options: [
       { id: 'yes', text: 'YES', value: 1 },
       { id: 'no', text: 'NO', value: 0 }
@@ -94,7 +94,7 @@ export const drinkingQuestions: Question[] = [
   },
   {
     id: 'drinking_10',
-    text: '今酔っていて、踊りたくなっていますか？',
+    text: '今、踊りたい気分ですか？',
     options: [
       { id: 'yes', text: 'YES', value: 1 },
       { id: 'no', text: 'NO', value: 0 }
@@ -114,7 +114,7 @@ export const drinkingQuestions: Question[] = [
   },
   {
     id: 'drinking_12',
-    text: '今酔っていて、冗談が増えていますか？',
+    text: '今、冗談が増えていますか？',
     options: [
       { id: 'yes', text: 'YES', value: 1 },
       { id: 'no', text: 'NO', value: 0 }
@@ -134,7 +134,7 @@ export const drinkingQuestions: Question[] = [
   },
   {
     id: 'drinking_14',
-    text: '今酔っていて、人に頼りたくなっていますか？',
+    text: '今、人に頼りたい気分ですか？',
     options: [
       { id: 'yes', text: 'YES', value: 1 },
       { id: 'no', text: 'NO', value: 0 }
