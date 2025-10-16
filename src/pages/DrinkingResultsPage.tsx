@@ -140,16 +140,7 @@ export function DrinkingResultsPage() {
                     </div>
                   </div>
 
-                  {/* タイプ表示 */}
-                  <div className="flex items-center gap-2 text-sm">
-                    <span className="bg-purple-100 text-purple-700 px-2 py-1 rounded border border-black text-xs font-bold truncate">
-                      {participant1Type}
-                    </span>
-                    <span className="font-bold">×</span>
-                    <span className="bg-pink-100 text-pink-700 px-2 py-1 rounded border border-black text-xs font-bold truncate">
-                      {participant2Type}
-                    </span>
-                  </div>
+                  {/* タイプ名は非表示 */}
                 </button>
               )
             })}

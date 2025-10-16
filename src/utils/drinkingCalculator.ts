@@ -25,42 +25,27 @@ export function calculateDrinkingCompatibility(participants: Participant[]): Com
 }
 
 function calculatePairDrinkingCompatibility(participant1: Participant, participant2: Participant): CompatibilityScore {
-  // 酒癖診断の相性計算ロジック
+  // 科学的根拠に基づく重み付け（脱抑制＝行動/感情/接近の変化）
+  const weights = {
+    恋愛積極性: 0.28,   // 接近・リスク選好
+    盛り上げ力: 0.26,   // 情動活性・多弁
+    社交性:     0.22,   // 社会的行動
+    本音度:     0.14,   // 自己開示
+    飲酒量:     0.10    // 用量影響
+  }
+
   const factors = [
-    {
-      category: '恋愛積極性',
-      score: calculateCategoryScore(participant1, participant2, ['恋愛積極性']),
-      weight: 0.3,
-      description: '飲み会での恋愛への積極性'
-    },
-    {
-      category: '盛り上げ力',
-      score: calculateCategoryScore(participant1, participant2, ['盛り上げ力']),
-      weight: 0.25,
-      description: '飲み会を盛り上げる力'
-    },
-    {
-      category: '社交性',
-      score: calculateCategoryScore(participant1, participant2, ['社交性']),
-      weight: 0.2,
-      description: '人との関わり方'
-    },
-    {
-      category: '本音度',
-      score: calculateCategoryScore(participant1, participant2, ['本音度']),
-      weight: 0.15,
-      description: '酔った時の本音度'
-    },
-    {
-      category: '飲酒量',
-      score: calculateCategoryScore(participant1, participant2, ['飲酒量']),
-      weight: 0.1,
-      description: '飲酒量の相性'
-    }
+    { category: '恋愛積極性', score: calculateCategoryScore(participant1, participant2, ['恋愛積極性']), weight: weights.恋愛積極性, description: '飲み会での恋愛への積極性' },
+    { category: '盛り上げ力', score: calculateCategoryScore(participant1, participant2, ['盛り上げ力']), weight: weights.盛り上げ力, description: '飲み会を盛り上げる力' },
+    { category: '社交性',     score: calculateCategoryScore(participant1, participant2, ['社交性']),     weight: weights.社交性,     description: '人との関わり方' },
+    { category: '本音度',     score: calculateCategoryScore(participant1, participant2, ['本音度']),     weight: weights.本音度,     description: '本音の出やすさ' },
+    { category: '飲酒量',     score: calculateCategoryScore(participant1, participant2, ['飲酒量']),     weight: weights.飲酒量,     description: '飲酒量の相性' }
   ]
 
-  const totalScore = factors.reduce((sum, factor) => sum + (factor.score * factor.weight), 0)
-  const finalScore = Math.round(Math.min(100, Math.max(0, totalScore)))
+  // 重み付き平均（0-100）
+  const weighted = factors.reduce((sum, f) => sum + f.score * f.weight, 0)
+  // 上限下限クリップ
+  const finalScore = Math.round(Math.max(0, Math.min(100, weighted)))
 
   return {
     participant1Id: participant1.id,
