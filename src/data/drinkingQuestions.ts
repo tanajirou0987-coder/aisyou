@@ -4,7 +4,7 @@ import { Question, AppMode } from '../types'
 export const drinkingQuestions: Question[] = [
   {
     id: 'drinking_1',
-    text: 'アルコールは前頭前野の抑制を弱めます。今は、気になる異性がいると積極的に飲みに行きたいですか？',
+    text: '今、気になる異性と飲みに行きたい気分ですか？',
     options: [
       { id: 'yes', text: 'YES', value: 1 },
       { id: 'no', text: 'NO', value: 0 }
@@ -14,7 +14,7 @@ export const drinkingQuestions: Question[] = [
   },
   {
     id: 'drinking_2',
-    text: 'アルコールは理性のブレーキを弱めます。今は、酔うと場の盛り上げ役になりやすいですか？',
+    text: '今酔っていて、場を盛り上げていますか？',
     options: [
       { id: 'yes', text: 'YES', value: 1 },
       { id: 'no', text: 'NO', value: 0 }
@@ -24,7 +24,7 @@ export const drinkingQuestions: Question[] = [
   },
   {
     id: 'drinking_3',
-    text: '感情の抑制が下がると行動も大胆になります。今は、仲の良い友人と飲むと飲酒量が増えやすいですか？',
+    text: '今、いつもよりお酒の量が増えていますか？',
     options: [
       { id: 'yes', text: 'YES', value: 1 },
       { id: 'no', text: 'NO', value: 0 }
@@ -34,7 +34,7 @@ export const drinkingQuestions: Question[] = [
   },
   {
     id: 'drinking_4',
-    text: '前頭前野の働きが弱まると本音が出やすくなります。今は、酔うと普段言えない本音を言いやすいですか？',
+    text: '今酔っていて、普段言えないことを口にしていますか？',
     options: [
       { id: 'yes', text: 'YES', value: 1 },
       { id: 'no', text: 'NO', value: 0 }
@@ -44,7 +44,7 @@ export const drinkingQuestions: Question[] = [
   },
   {
     id: 'drinking_5',
-    text: '抑制が弱まると対人行動が積極的になります。今は、飲み会で異性の隣に座りたいですか？',
+    text: '今、異性の隣に座りたい気分ですか？',
     options: [
       { id: 'yes', text: 'YES', value: 1 },
       { id: 'no', text: 'NO', value: 0 }
@@ -54,7 +54,7 @@ export const drinkingQuestions: Question[] = [
   },
   {
     id: 'drinking_6',
-    text: '情動の高まりで多弁・行動化が起きやすくなります。今は、酔うとテンションが上がって歌い出しやすいですか？',
+    text: '今酔っていて、歌いたくなっていますか？',
     options: [
       { id: 'yes', text: 'YES', value: 1 },
       { id: 'no', text: 'NO', value: 0 }
@@ -64,7 +64,7 @@ export const drinkingQuestions: Question[] = [
   },
   {
     id: 'drinking_7',
-    text: '社会的動機づけが高まることがあります。今は、飲み会で異性の話を積極的に聞きたいですか？',
+    text: '今、異性の話をよく聞けていますか？',
     options: [
       { id: 'yes', text: 'YES', value: 1 },
       { id: 'no', text: 'NO', value: 0 }
@@ -74,7 +74,7 @@ export const drinkingQuestions: Question[] = [
   },
   {
     id: 'drinking_8',
-    text: '大脳辺縁系の活性化で親和性が高まることがあります。今は、酔うと人懐っこくなりやすいですか？',
+    text: '今酔っていて、人懐っこくなっていますか？',
     options: [
       { id: 'yes', text: 'YES', value: 1 },
       { id: 'no', text: 'NO', value: 0 }
@@ -84,7 +84,7 @@ export const drinkingQuestions: Question[] = [
   },
   {
     id: 'drinking_9',
-    text: '抑制低下でアプローチ行動が増えることがあります。今は、飲み会で異性に積極的に話しかけたいですか？',
+    text: '今、異性に話しかけたい気分ですか？',
     options: [
       { id: 'yes', text: 'YES', value: 1 },
       { id: 'no', text: 'NO', value: 0 }
@@ -94,7 +94,7 @@ export const drinkingQuestions: Question[] = [
   },
   {
     id: 'drinking_10',
-    text: '運動抑制の低下で身体表現が活発になります。今は、酔うとダンスを踊りたくなりますか？',
+    text: '今酔っていて、踊りたくなっていますか？',
     options: [
       { id: 'yes', text: 'YES', value: 1 },
       { id: 'no', text: 'NO', value: 0 }
@@ -104,7 +104,7 @@ export const drinkingQuestions: Question[] = [
   },
   {
     id: 'drinking_11',
-    text: '対人好奇心が高まりやすくなります。今は、飲み会で異性の好みを聞きたいですか？',
+    text: '今、異性の好みを聞きたい気分ですか？',
     options: [
       { id: 'yes', text: 'YES', value: 1 },
       { id: 'no', text: 'NO', value: 0 }
@@ -114,7 +114,7 @@ export const drinkingQuestions: Question[] = [
   },
   {
     id: 'drinking_12',
-    text: '情動表現が豊かになりやすくなります。今は、酔うと冗談を言って場を盛り上げたいですか？',
+    text: '今酔っていて、冗談が増えていますか？',
     options: [
       { id: 'yes', text: 'YES', value: 1 },
       { id: 'no', text: 'NO', value: 0 }
@@ -124,7 +124,7 @@ export const drinkingQuestions: Question[] = [
   },
   {
     id: 'drinking_13',
-    text: '抑制の低下で親密行動が増えることがあります。今は、飲み会で異性と二人きりになりたいですか？',
+    text: '今、異性と二人きりになりたい気分ですか？',
     options: [
       { id: 'yes', text: 'YES', value: 1 },
       { id: 'no', text: 'NO', value: 0 }
@@ -134,7 +134,7 @@ export const drinkingQuestions: Question[] = [
   },
   {
     id: 'drinking_14',
-    text: '依存傾向の表出が起こりやすくなります。今は、酔うと人に甘えたくなりますか？',
+    text: '今酔っていて、人に頼りたくなっていますか？',
     options: [
       { id: 'yes', text: 'YES', value: 1 },
       { id: 'no', text: 'NO', value: 0 }
@@ -144,7 +144,7 @@ export const drinkingQuestions: Question[] = [
   },
   {
     id: 'drinking_15',
-    text: '意思決定の抑制が弱まり積極性が増します。今は、飲み会で異性の連絡先を聞きたいですか？',
+    text: '今、異性の連絡先を聞きたい気分ですか？',
     options: [
       { id: 'yes', text: 'YES', value: 1 },
       { id: 'no', text: 'NO', value: 0 }
