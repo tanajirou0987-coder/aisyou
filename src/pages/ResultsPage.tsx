@@ -108,28 +108,47 @@ export function ResultsPage() {
 
   const nameA = p1?.name || 'あなた'
   const nameB = p2?.name || '相手'
+  const isDating = state.relationshipStage?.status === 'dating'
 
   // 関係性説明（簡易テンプレ）
-  const relationText = adjustByRelationship(
-    'まるで少女漫画から飛び出してきたような、周りが羨むほど甘々なカップル。' +
-      '一緒にいるだけで世界が輝いて見えて、離れてる時間すら愛おしく感じるタイプ。' +
-      '\n\n「好き」を言葉でも態度でも表現し合えるから、愛情を疑うことがほとんどない。' +
-      '二人でいる時間が何より幸せで、デートの予定を立ててる時からワクワクが止まらない。',
-    state.relationshipStage
-  )
+  const relationText = isDating
+    ? [
+        'まるで少女漫画から飛び出してきたような、',
+        '周りが羨むほど甘々なカップル。',
+        '一緒にいるだけで世界が輝いて見えて、',
+        '離れてる時間すら愛おしく感じるタイプ。',
+        '',
+        '「好き」を言葉でも態度でも表現し合えるから、',
+        '愛情を疑うことがほとんどない。',
+        '二人でいる時間が何より幸せで、',
+        'デートの予定を立ててる時からワクワクが止まらない。'
+      ].join('\n')
+    : [
+        'もし付き合ったら、まるで少女漫画のような',
+        '甘々カップルになれる相性。',
+        '一緒にいるだけで自然と笑顔になって、',
+        'もっと一緒にいたいって思えるタイプ。',
+        '',
+        'お互いに「好き」を素直に伝え合える関係になれそう。',
+        '付き合ったら、二人でいる時間が',
+        '何より幸せに感じるはず。',
+        'この相性なら、理想的な恋愛ができるかも💕'
+      ].join('\n')
 
   // お互いの魅力（簡易テンプレ。将来は回答データで強化）
-  const charmsA = ['一緒にいると心が満たされる存在', '笑顔が本当に可愛い', '細かいことに気づいてくれる優しさ', '素直に愛情を表現してくれる', '話を聞いてくれる安心感']
-  const charmsB = ['安心感がハンパない', '何でも受け止めてくれる包容力', '二人の時間を大切にしてくれる', '愛情表現が豊かで嬉しい', '自分のことを一番に考えてくれる']
+  const charmsTitle = isDating ? '💕 お互いから見た魅力 💕' : '💕 お互いが惹かれるポイント 💕'
+  const charmsA = isDating
+    ? ['一緒にいると心が満たされる存在', '笑顔が本当に可愛い', '細かいことに気づいてくれる優しさ', '素直に愛情を表現してくれる', '話を聞いてくれる安心感']
+    : ['一緒にいると居心地がいい', '笑顔が素敵で癒される', 'さりげない気遣いが嬉しい', '話をじっくり聞いてくれる', '自然体でいられる']
+  const charmsB = isDating
+    ? ['安心感がハンパない', '何でも受け止めてくれる包容力', '二人の時間を大切にしてくれる', '愛情表現が豊かで嬉しい', '自分のことを一番に考えてくれる']
+    : ['安心感がある', '優しくて話しやすい', '一緒にいると楽しい', '価値観が近いと感じる', '素直なところが魅力的']
 
   // きゅんポイント（簡易テンプレ）
-  const kyun = [
-    '何気ない瞬間に「好き」って言う 💕',
-    '急に手を繋いだり抱きしめたり',
-    '相手の好きなものを覚えてる',
-    'デートのサプライズを用意する',
-    'LINEの返信が早くて既読スルーしない',
-  ]
+  const kyunTitle = isDating ? '✨ 相手をきゅんとさせる方法TOP5 ✨' : '✨ 相手をドキッとさせる方法TOP5 ✨'
+  const kyun = isDating
+    ? ['何気ない瞬間に「好き」って言う 💕', '急に手を繋いだり抱きしめたり', '相手の好きなものを覚えてる', 'デートのサプライズを用意する', 'LINEの返信が早くて既読スルーしない']
+    : ['さりげなく褒める 💕', '二人きりの時間を作る', '相手の話をしっかり聞く', '共通の趣味の話で盛り上がる', 'LINEで楽しい会話を続ける']
 
   // 相性の理由（スコア連動）
   const reasons: string[] = []
@@ -144,38 +163,107 @@ export function ResultsPage() {
   const commons = ['恋愛体質で愛情深い', '寂しがり屋な一面がある', '記念日やイベントを大切にしたい', 'スキンシップで愛を確認したい', 'ロマンチックなことが好き']
 
   // 相性が良いシチュ
-  const situations = ['二人きりでまったりしてる時間', 'デートで手を繋いで歩いてる時', 'お互いの好きなものをシェアしてる時', '夜遅くまで電話やLINEしてる時', '記念日を一緒に祝ってる時']
+  const situationsTitle = isDating ? '💫 特に相性バツグンな時 💫' : '💫 もし付き合ったら相性良さそうな場面 💫'
+  const situations = isDating
+    ? ['二人きりでまったりしてる時間', 'デートで手を繋いで歩いてる時', 'お互いの好きなものをシェアしてる時', '夜遅くまで電話やLINEしてる時', '記念日を一緒に祝ってる時']
+    : ['二人きりで話してる時間', '一緒に出かけた時', '共通の話題で盛り上がってる時', 'LINEで楽しくやり取りしてる時', '偶然会えた時']
 
   // 相手の性格分析
-  const partnerName = nameB
-  const partnerTraits = ['基本的に愛情深くて優しい性格', '感情表現がストレートで素直', '記念日を大事にするロマンチスト', '二人の時間を最優先してくれる', 'ちょっと独占欲が強めかも？', 'でもそれも愛情の裏返し💕']
+  const partnerName = isDating ? nameB : '気になるあの人'
+  const partnerTraits = isDating
+    ? ['基本的に愛情深くて優しい性格', '感情表現がストレートで素直', '記念日を大事にするロマンチスト', '二人の時間を最優先してくれる', 'ちょっと独占欲が強めかも？', 'でもそれも愛情の裏返し💕']
+    : ['基本的に優しくて思いやりがある', '感情表現は素直で分かりやすい', '大切な日を覚えているタイプ', '一緒にいる時間を大事にする', '少し独占欲が見える時も', 'でもそれも好意の裏返し💕']
 
   // おすすめデート（スコアで軽く並べ替え可だが今は固定）
-  const dates = ['夜景の綺麗なレストランでディナー', 'お揃いのアイテムを買いに行く', '水族館や動物園でまったりデート', 'おうちで映画鑑賞＆まったり', '記念日にサプライズプレゼント交換']
+  const datesTitle = isDating ? '🗓️ このタイプにおすすめデート 🗓️' : '🗓️ もし付き合ったらおすすめデート 🗓️'
+  const dates = isDating
+    ? ['夜景の綺麗なレストランでディナー', 'お揃いのアイテムを買いに行く', '水族館や動物園でまったりデート', 'おうちで映画鑑賞＆まったり', '記念日にサプライズプレゼント交換']
+    : ['カフェでゆっくりお茶', '水族館や動物園で二人で楽しむ', '映画を一緒に見に行く', '共通の趣味のイベントに参加', '夜景の綺麗な場所に散歩']
 
   // 注意点＋アドバイス（低め項目を参照）
   const lowestKey = Object.entries({ 刺激度: scores.stimulation, 癒し度: scores.healing, 会話: scores.conversation, 価値観: scores.values, 将来性: scores.future }).sort((a, b) => a[1] - b[1])[0][0]
-  const caution = `ときどき${lowestKey}が物足りなくなる瞬間があるかも。無理のない範囲で少し意識してみよう。`
-  const actions = ['新しい場所や体験を一緒に試す', '感謝や好きの言葉を増やす', '次の予定を早めに決めてワクワクを共有']
+  const caution = isDating
+    ? '二人の世界が完璧すぎて、たまにマンネリ化しちゃうかも。'
+    : '相性は抜群だけど、付き合うまでのアプローチが大事。'
+  const actions = isDating
+    ? ['たまには新しい場所にデートしてみる', '友達とも適度に遊ぶ時間を作る', 'サプライズで予想外の刺激をプラス']
+    : ['自分から積極的に話しかける', '二人きりの時間を作る機会を増やす', '素直に気持ちを伝える勇気を持つ']
 
-  // 未来予測（交際期間と将来性で調整）
-  function futureByStage(stage?: RelationshipStage): string {
-    const s = scores.future
-    const core = s >= 90 ? '結婚を意識するほど絆が深まる' : s >= 80 ? 'さらに理解が深まり関係が成長する' : s >= 70 ? '安定して心地よい関係を継続できる' : 'お互いの歩幅を合わせる工夫で安定する'
+  // 未来予測（交際期間と関係性で固定文面）
+  function futureByStage(stage?: RelationshipStage): { title: string; text: string } {
     if (!stage || stage.status === 'before_dating') {
-      return `もし付き合ったら、${core}。この相性なら、素敵な未来が待ってるかも💕`
+      return {
+        title: '🔮 もし付き合ったら...？ 🔮',
+        text: [
+          'この相性なら、付き合ったら',
+          'すぐに居心地のいい関係になれそう。',
+          '',
+          'お互いに素直に愛情を伝え合えて、',
+          '周りから羨ましがられるような',
+          'カップルになれるはず。',
+          '',
+          '勇気を出して一歩踏み出してみて💕'
+        ].join('\n')
+      }
     }
     switch (stage.duration) {
       case 'less_than_3m':
-        return `半年後には、${core}。これからもっと深い関係になっていきそう。`
+        return {
+          title: '🔮 半年後の二人 🔮',
+          text: [
+            '今よりもっとお互いのことを',
+            '知って理解が深まってるはず。',
+            '',
+            '「この人で良かった」って',
+            '実感する瞬間が増えてそう。',
+            '',
+            '初々しさを大切にしながら、',
+            '二人の絆を深めていってね💕'
+          ].join('\n')
+        }
       case '3m_to_1y':
-        return `1年記念日には、${core}。お互いの理解がさらに深まってるはず。`
+        return {
+          title: '🔮 1年後の二人 🔮',
+          text: [
+            'もっと絆が深まって、',
+            'お互いにとって欠かせない存在に。',
+            '',
+            '周りからも',
+            '「理想のカップルだね」',
+            'って言われてそう。',
+            '',
+            'この調子で大切にしてね💕'
+          ].join('\n')
+        }
       case '1y_to_3y':
-        return `この調子なら、${core}。結婚も視野に入ってくるかも。`
+        return {
+          title: '🔮 数年後の二人 🔮',
+          text: [
+            '結婚を意識し始めるかも。',
+            'お互いの家族とも仲良くなって、',
+            '自然と将来の話が出てくる関係。',
+            '',
+            'この愛情を大切にすれば、',
+            '10年後も20年後も、',
+            'ずっと笑い合ってる未来が見える💕'
+          ].join('\n')
+        }
       case 'over_3y':
-        return `${core}。人生のパートナーとして、ずっと支え合っていける関係。`
+        return {
+          title: '🔮 この先の二人 🔮',
+          text: [
+            'もはや人生のパートナー。',
+            '結婚してもしなくても、',
+            'お互いにとって最高の相棒。',
+            '',
+            'これからもずっと、',
+            '支え合いながら一緒に歩んでいける。',
+            '',
+            '素敵な関係を築いてきたね💕'
+          ].join('\n')
+        }
       default:
-        return core
+        return { title: '🔮 1年後の二人 🔮', text: 'この調子で大切にしてね💕' }
     }
   }
 
@@ -187,7 +275,7 @@ export function ResultsPage() {
     return base
   }
 
-  const baseTitle = 'ハニームーンカップル'
+  const baseTitle = isDating ? 'ハニームーンカップル' : 'ハニームーンタイプ'
   const pairTitle = titleByScore(baseTitle, scores.total)
 
   return (
@@ -234,14 +322,14 @@ export function ResultsPage() {
 
         {/* 5. お互いの魅力 */}
         <div className="bg-white rounded-2xl shadow p-8">
-          <h3 className="text-2xl font-bold text-center text-gray-800 mb-6">💕 お互いから見た魅力 💕</h3>
+          <h3 className="text-2xl font-bold text-center text-gray-800 mb-6">{charmsTitle}</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
-              <h4 className="text-xl font-semibold text-pink-600 mb-4">【{nameB}から見た{nameA}】</h4>
+              <h4 className="text-xl font-semibold text-pink-600 mb-4">{isDating ? `【${nameB}から見た${nameA}】` : '【相手があなたに惹かれる理由】'}</h4>
               <ul className="space-y-2 text-gray-700">{charmsA.map((c, i) => <li key={i}>・{c}</li>)}</ul>
             </div>
             <div>
-              <h4 className="text-xl font-semibold text-pink-600 mb-4">【{nameA}から見た{nameB}】</h4>
+              <h4 className="text-xl font-semibold text-pink-600 mb-4">{isDating ? `【${nameA}から見た${nameB}】` : '【あなたが相手に惹かれる理由】'}</h4>
               <ul className="space-y-2 text-gray-700">{charmsB.map((c, i) => <li key={i}>・{c}</li>)}</ul>
             </div>
           </div>
@@ -249,7 +337,7 @@ export function ResultsPage() {
 
         {/* 6. きゅんポイントTOP5 */}
         <div className="bg-white rounded-2xl shadow p-8">
-          <h3 className="text-2xl font-bold text-center text-gray-800 mb-6">✨ 相手をきゅんとさせる方法TOP5 ✨</h3>
+          <h3 className="text-2xl font-bold text-center text-gray-800 mb-6">{kyunTitle}</h3>
           <ol className="list-decimal ml-6 text-gray-700 space-y-1">{kyun.map((k, i) => <li key={i}>{k}</li>)}</ol>
           <div className="mt-4 p-4 rounded-xl bg-yellow-50 text-yellow-800 font-semibold">
             💡 ワンポイントアドバイス<br />このタイプは愛情確認が大事！ こまめに「好き」を伝えるとGOOD💕
@@ -271,21 +359,21 @@ export function ResultsPage() {
 
         {/* 9. 相性が良いシチュエーション */}
         <div className="bg-white rounded-2xl shadow p-8">
-          <h3 className="text-2xl font-bold text-center text-gray-800 mb-6">💫 特に相性バツグンな時 💫</h3>
+          <h3 className="text-2xl font-bold text-center text-gray-800 mb-6">{situationsTitle}</h3>
           <ul className="space-y-2 text-gray-700">{situations.map((s, i) => <li key={i}>・{s}</li>)}</ul>
         </div>
 
         {/* 10. 相手の性格分析 */}
         <div className="bg-white rounded-2xl shadow p-8">
           <h3 className="text-2xl font-bold text-center text-gray-800 mb-6">📝 相手の性格プチ分析 📝</h3>
-          <div className="text-gray-700 whitespace-pre-line">{`【${partnerName}はこんな人】\n` + partnerTraits.join('\n') + '\n\n当たってる？😊'}</div>
+          <div className="text-gray-700 whitespace-pre-line">{`${isDating ? `【${partnerName}はこんな人】` : '【気になるあの人はこんな人】'}\n` + partnerTraits.join('\n') + `\n\n${isDating ? '当たってる？😊' : '当たってるかも？😊'}`}</div>
         </div>
 
         {/* 11. おすすめデート */}
         <div className="bg-white rounded-2xl shadow p-8">
-          <h3 className="text-2xl font-bold text-center text-gray-800 mb-6">🗓️ このタイプにおすすめデート 🗓️</h3>
+          <h3 className="text-2xl font-bold text-center text-gray-800 mb-6">{datesTitle}</h3>
           <ul className="space-y-2 text-gray-700">{dates.map((d, i) => <li key={i}>・{d}</li>)}</ul>
-          <div className="text-center text-gray-700 mt-3">試してみて💕</div>
+          <div className="text-center text-gray-700 mt-3">{isDating ? '試してみて💕' : '付き合えたら試してみて💕'}</div>
         </div>
 
         {/* 12. 注意点＋アドバイス */}
@@ -294,20 +382,22 @@ export function ResultsPage() {
           <p className="text-gray-700 mb-3">{caution}</p>
           <div className="text-gray-800 font-semibold mb-1">🌟 おすすめアクション</div>
           <ul className="space-y-1 text-gray-700">{actions.map((a, i) => <li key={i}>・{a}</li>)}</ul>
-          <div className="text-gray-700 mt-3">でも基本的には最高の相性！💯</div>
+          <div className="text-gray-700 mt-3">{isDating ? 'でも基本的には最高の相性！💯' : 'この相性なら、きっと上手くいく！💯'}</div>
         </div>
 
         {/* 13. 未来予測 */}
         <div className="bg-white rounded-2xl shadow p-8">
-          <h3 className="text-2xl font-bold text-center text-gray-800 mb-6">🔮 1年後の二人 🔮</h3>
-          <p className="text-gray-700 whitespace-pre-line">{futureByStage(state.relationshipStage) + '\n\nこの調子で大切にしてね💕'}</p>
+          {(() => { const f = futureByStage(state.relationshipStage); return (<>
+            <h3 className="text-2xl font-bold text-center text-gray-800 mb-6">{f.title}</h3>
+            <p className="text-gray-700 whitespace-pre-line">{f.text}</p>
+          </>)})()}
         </div>
 
         {/* 14. 二人の称号 */}
         <div className="bg-white rounded-2xl shadow p-8">
-          <h3 className="text-2xl font-bold text-center text-gray-800 mb-6">👑 二人の称号 👑</h3>
+          <h3 className="text-2xl font-bold text-center text-gray-800 mb-6">{isDating ? '👑 二人の称号 👑' : '👑 二人の相性称号 👑'}</h3>
           <div className="text-center text-xl font-bold text-pink-600">「{pairTitle}」</div>
-          <div className="text-center text-gray-800 mt-2">おめでとう！🎉</div>
+          <div className="text-center text-gray-800 mt-2">{isDating ? 'おめでとう！🎉' : '付き合えたら最高だね！🎉'}</div>
         </div>
       </div>
     </PageLayout>
