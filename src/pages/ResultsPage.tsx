@@ -1,281 +1,397 @@
-import { useNavigate } from 'react-router-dom'
+import React, { useState } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
-import { useState } from 'react'
-import { getTwentyTypeAnalysis } from '../data/twentyTypeAnalysisData'
+import { PageLayout } from '../layouts/PageLayout'
+import { Button } from '../components/ui/Button'
+import { Card } from '../components/ui/Card'
+import { Crown, Heart, Star, Sparkles, Users, ArrowLeft, Share2 } from 'lucide-react'
+import type { Participant } from '../types'
 
 export function ResultsPage() {
   const navigate = useNavigate()
   const { state } = useApp()
+  const [searchParams] = useSearchParams()
+  const [showDetail, setShowDetail] = useState(false)
   const [selectedPair, setSelectedPair] = useState<{participant1Id: string, participant2Id: string} | null>(null)
+  
+  // URLパラメータで詳細画面を直接表示するかどうかを判定
+  const shouldShowDetailDirectly = searchParams.get('showDetail') === 'true'
+  
 
-  const handleStartOver = () => {
-    navigate('/')
+  const handleBackToRanking = () => {
+    setShowDetail(false)
+    setSelectedPair(null)
   }
 
-  const handlePairSelect = (participant1Id: string, participant2Id: string) => {
-    setSelectedPair({ participant1Id, participant2Id })
-    navigate('/couple-details')
-  }
-
-  // 固定の結果を表示
-  const compatibilityScores = [{
-    participant1Id: '1',
-    participant2Id: '2',
-    score: 85,
-    factors: [{
-      category: '16タイプ相性',
-      score: 85,
-      weight: 1,
-      description: '瞬時計算による相性スコア'
-    }]
-  }]
-
-  // 相性スコアの基準を定義
+  // バズる診断結果の6大要素を実装
   const getCompatibilityLevel = (score: number) => {
-    if (score >= 80) return { level: 'とても良い', color: 'text-green-700', bgColor: 'bg-yellow-50' }
-    if (score >= 70) return { level: '良い', color: 'text-blue-700', bgColor: 'bg-blue-50' }
-    if (score >= 60) return { level: '普通', color: 'text-gray-500', bgColor: 'bg-gray-50' }
-    if (score >= 50) return { level: 'やや悪い', color: 'text-orange-500', bgColor: 'bg-orange-50' }
-    return { level: '悪い', color: 'text-red-500', bgColor: 'bg-red-50' }
+    if (score >= 90) return { 
+      level: 'SS級', 
+      description: '運命の赤い糸、見つけちゃったかも...？💕',
+      rarity: '3%',
+      color: 'text-red-500'
+    }
+    if (score >= 80) return { 
+      level: 'S級', 
+      description: '全カップルの上位5%に入る奇跡の相性！',
+      rarity: '5%',
+      color: 'text-pink-500'
+    }
+    if (score >= 70) return { 
+      level: 'A級', 
+      description: 'とても良い相性のカップルです！',
+      rarity: '15%',
+      color: 'text-purple-500'
+    }
+    return { 
+      level: 'B級', 
+      description: 'お互いを理解し合える関係です',
+      rarity: '30%',
+      color: 'text-blue-500'
+    }
   }
 
-  return (
-    <div className="min-h-screen p-4">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-extrabold text-gray-800 text-center mb-8">診断結果</h1>
+  const generateDetailedScores = (baseScore: number) => {
+    return {
+      values: Math.max(85, baseScore - 5),
+      conversation: Math.max(90, baseScore + 2),
+      healing: Math.max(88, baseScore - 1),
+      stimulation: Math.max(75, baseScore - 10),
+      future: Math.max(92, baseScore + 3)
+    }
+  }
 
-        {/* 統計情報 */}
-        <div className="card mb-8">
-          <h2 className="text-2xl font-semibold text-center mb-6">統計情報</h2>
-          <div className="grid grid-cols-2 gap-4 text-center">
-            <div>
-              <p className="text-gray-500 text-sm">参加者数</p>
-              <p className="text-3xl font-bold text-gray-800">{state.participants.length}人</p>
+  // 14項目の詳細分析メトリクスを生成
+  const generateFourteenMetrics = (baseScore: number) => {
+    const clamp = (n: number) => Math.max(0, Math.min(100, Math.round(n)))
+    const s = baseScore
+    return [
+      { key: 'values', label: '価値観の一致', emoji: '❤️', color: 'bg-pink-500', score: clamp(Math.max(70, s - 5)) },
+      { key: 'conversation', label: '会話のテンポ', emoji: '💛', color: 'bg-yellow-500', score: clamp(Math.max(70, s + 2)) },
+      { key: 'healing', label: '居心地（癒し）', emoji: '💙', color: 'bg-blue-500', score: clamp(Math.max(68, s - 1)) },
+      { key: 'stimulation', label: '刺激・トキメキ', emoji: '💚', color: 'bg-green-500', score: clamp(Math.max(60, s - 10)) },
+      { key: 'future', label: '将来ビジョン一致', emoji: '💜', color: 'bg-purple-500', score: clamp(Math.max(72, s + 3)) },
+      { key: 'trust', label: '信頼・安心感', emoji: '🫶', color: 'bg-rose-400', score: clamp(Math.max(70, s - 2)) },
+      { key: 'conflict', label: '衝突時の相性', emoji: '🕊️', color: 'bg-sky-500', score: clamp(Math.max(62, s - 8)) },
+      { key: 'intimacy', label: '親密度の高まり', emoji: '✨', color: 'bg-fuchsia-500', score: clamp(Math.max(68, s + 1)) },
+      { key: 'independence', label: '自立と依存のバランス', emoji: '⚖️', color: 'bg-amber-500', score: clamp(Math.max(60, s - 6)) },
+      { key: 'clarity', label: '伝わりやすさ', emoji: '🗣️', color: 'bg-indigo-500', score: clamp(Math.max(66, s - 3)) },
+      { key: 'humor', label: '笑いのツボ一致', emoji: '😄', color: 'bg-lime-500', score: clamp(Math.max(65, s - 4)) },
+      { key: 'lifestyle', label: '生活リズム適合', emoji: '🕰️', color: 'bg-teal-500', score: clamp(Math.max(63, s - 7)) },
+      { key: 'growth', label: '成長し合える関係', emoji: '🌱', color: 'bg-emerald-500', score: clamp(Math.max(67, s + 0)) },
+      { key: 'emotional', label: '感情の波の同期', emoji: '🌊', color: 'bg-cyan-500', score: clamp(Math.max(61, s - 9)) },
+    ] as Array<{ key: string; label: string; emoji: string; color: string; score: number }>
+  }
+
+  const generateAllPairs = () => {
+    const pairs = []
+    for (let i = 0; i < state.participants.length; i++) {
+      for (let j = i + 1; j < state.participants.length; j++) {
+        const score = 75 + Math.random() * 20
+        pairs.push({
+          participant1Id: state.participants[i].id,
+          participant2Id: state.participants[j].id,
+          score: Math.round(score),
+          coupleType: {
+            name: 'ハニームーン型',
+            emoji: '🎀',
+            description: '「永遠の新婚カップル」'
+          }
+        })
+      }
+    }
+    return pairs.sort((a, b) => b.score - a.score)
+  }
+
+  const allPairs = generateAllPairs()
+
+  // 詳細分析画面の共通レンダリング関数
+  const renderDetailedAnalysis = () => {
+    // 常に最初のペアを使用して統一された画面を表示
+    const targetPair = { participant1Id: state.participants[0]?.id, participant2Id: state.participants[1]?.id }
+    const targetScore = allPairs.find(p => 
+      (p.participant1Id === targetPair.participant1Id && p.participant2Id === targetPair.participant2Id) ||
+      (p.participant1Id === targetPair.participant2Id && p.participant2Id === targetPair.participant1Id)
+    ) || allPairs[0]
+    
+    const score = targetScore || { score: 85, coupleType: { name: 'ハニームーン型', emoji: '🎀', description: '「永遠の新婚カップル」' } }
+    const compatibility = getCompatibilityLevel(score.score)
+    const detailedScores = generateDetailedScores(score.score)
+    const fourteenMetrics = generateFourteenMetrics(score.score)
+    const coupleType = score.coupleType || { name: 'ハニームーン型', emoji: '🎀', description: '「永遠の新婚カップル」' }
+
+    return (
+      <PageLayout>
+        <div className="max-w-5xl mx-auto p-4">
+          <div className="space-y-8">
+            {/* STEP 1: インパクトある一言 */}
+            <div className="text-center mb-8">
+              <div className="inline-block p-6 rounded-3xl bg-gradient-to-r from-pink-100 to-purple-100 border-2 border-pink-200">
+                <h1 className="text-3xl font-bold text-[#FF1493] mb-2">
+                  {compatibility.description}
+                </h1>
+                <div className="flex items-center justify-center gap-2 text-lg text-gray-600">
+                  <Crown className="w-6 h-6 text-yellow-500" />
+                  <span>全カップル中 上位{compatibility.rarity}！</span>
+                </div>
+              </div>
             </div>
-            <div>
-              <p className="text-gray-500 text-sm">ペア数</p>
-              <p className="text-3xl font-bold text-gray-800">{compatibilityScores.length}組</p>
+
+            {/* STEP 2: タイプ名発表 */}
+            <div className="text-center mb-8">
+              <div className="inline-block p-8 rounded-3xl bg-gradient-to-r from-pink-200 to-purple-200 border-2 border-pink-300">
+                <div className="text-4xl mb-4">{coupleType.emoji}</div>
+                <h2 className="text-4xl font-bold text-[#FF1493] mb-2">
+                  {coupleType.name}
+                </h2>
+                <p className="text-xl text-gray-700 mb-4">{coupleType.description}</p>
+                <div className="flex items-center justify-center gap-2">
+                  <Star className="w-5 h-5 text-yellow-500" />
+                  <span className="text-lg font-semibold text-gray-600">
+                    このタイプは全体の{compatibility.rarity}！
+                  </span>
+                </div>
+                <div className="mt-2">
+                  <span className="inline-block px-4 py-2 bg-yellow-100 text-yellow-800 rounded-full font-bold">
+                    ランク：{compatibility.level}
+                  </span>
+                </div>
+              </div>
             </div>
-          </div>
-          
-          {/* 相性スコアの基準 */}
-          <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-            <h3 className="text-lg font-semibold text-center mb-4">相性スコアの基準</h3>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-3 text-center">
-              <div className="p-3 bg-green-50 rounded-lg">
-                <div className="text-green-600 font-bold">80%以上</div>
-                <div className="text-sm text-green-700">とても良い</div>
+
+            {/* STEP 3: 相性スコア */}
+            <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
+              <h3 className="text-2xl font-bold text-center text-gray-800 mb-6">
+                💕 総合相性度：{score.score}% 💕
+              </h3>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-lg font-semibold">❤️ 価値観マッチ度：{detailedScores.values}%</span>
+                  <div className="w-32 bg-gray-200 rounded-full h-4">
+                    <div className="bg-pink-500 h-4 rounded-full" style={{width: `${detailedScores.values}%`}}></div>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-lg font-semibold">💛 会話の相性：{detailedScores.conversation}%</span>
+                  <div className="w-32 bg-gray-200 rounded-full h-4">
+                    <div className="bg-yellow-500 h-4 rounded-full" style={{width: `${detailedScores.conversation}%`}}></div>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-lg font-semibold">💙 癒し度：{detailedScores.healing}%</span>
+                  <div className="w-32 bg-gray-200 rounded-full h-4">
+                    <div className="bg-blue-500 h-4 rounded-full" style={{width: `${detailedScores.healing}%`}}></div>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-lg font-semibold">💚 刺激度：{detailedScores.stimulation}%</span>
+                  <div className="w-32 bg-gray-200 rounded-full h-4">
+                    <div className="bg-green-500 h-4 rounded-full" style={{width: `${detailedScores.stimulation}%`}}></div>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-lg font-semibold">💜 将来性：{detailedScores.future}%</span>
+                  <div className="w-32 bg-gray-200 rounded-full h-4">
+                    <div className="bg-purple-500 h-4 rounded-full" style={{width: `${detailedScores.future}%`}}></div>
+                  </div>
+                </div>
               </div>
-              <div className="p-3 bg-blue-50 rounded-lg">
-                <div className="text-blue-600 font-bold">70-79%</div>
-                <div className="text-sm text-blue-700">良い</div>
+              <div className="text-center mt-6">
+                <span className="text-lg font-bold text-pink-600">
+                  全カップル中 上位{compatibility.rarity}！
+                </span>
               </div>
-              <div className="p-3 bg-gray-50 rounded-lg">
-                <div className="text-gray-600 font-bold">60-69%</div>
-                <div className="text-sm text-gray-700">普通</div>
+            </div>
+
+            {/* STEP 4: 14項目の詳細分析 */}
+            <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
+              <h3 className="text-2xl font-bold text-center text-gray-800 mb-6">
+                📊 14の詳細分析 📊
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {fourteenMetrics.map(item => (
+                  <div key={item.key} className="border border-pink-100 rounded-xl p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="text-gray-800 font-semibold truncate">
+                        <span className="mr-2">{item.emoji}</span>{item.label}
+                      </div>
+                      <div className="text-[#FF1493] font-bold">{item.score}%</div>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-3">
+                      <div
+                        className={`h-3 rounded-full transition-all duration-500 ${item.color}`}
+                        style={{ width: `${item.score}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <div className="p-3 bg-orange-50 rounded-lg">
-                <div className="text-orange-600 font-bold">50-59%</div>
-                <div className="text-sm text-orange-700">やや悪い</div>
+            </div>
+
+            {/* STEP 5: 関係性の説明 */}
+            <div className="bg-gradient-to-r from-pink-50 to-purple-50 rounded-2xl p-8 mb-8">
+              <h3 className="text-2xl font-bold text-center text-gray-800 mb-6">
+                🌸 あなたたちの関係性 🌸
+              </h3>
+              <p className="text-lg text-gray-700 leading-relaxed">
+                まるで少女漫画から飛び出してきたような、周りが羨むほど甘々なカップル。
+                一緒にいるだけで世界が輝いて見えて、離れてる時間すら愛おしく感じるタイプ。
+                「好き」を言葉でも態度でも表現し合えるから、愛情を疑うことがほとんどない。
+                二人でいる時間が何より幸せで、デートの予定を立ててる時からワクワクが止まらない。
+              </p>
+            </div>
+
+            {/* STEP 5: お互いの魅力分析 */}
+            <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
+              <h3 className="text-2xl font-bold text-center text-gray-800 mb-6">
+                💕 お互いから見た魅力 💕
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                  <h4 className="text-xl font-semibold text-pink-600 mb-4">【相手から見たあなた】</h4>
+                  <ul className="space-y-2 text-gray-700">
+                    <li>・一緒にいると心が満たされる存在</li>
+                    <li>・笑顔が本当に可愛い</li>
+                    <li>・細かいことに気づいてくれる優しさ</li>
+                    <li>・素直に愛情を表現してくれる</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="text-xl font-semibold text-pink-600 mb-4">【あなたから見た相手】</h4>
+                  <ul className="space-y-2 text-gray-700">
+                    <li>・安心感がハンパない</li>
+                    <li>・何でも受け止めてくれる包容力</li>
+                    <li>・二人の時間を大切にしてくれる</li>
+                    <li>・愛情表現が豊かで嬉しい</li>
+                  </ul>
+                </div>
               </div>
-              <div className="p-3 bg-red-50 rounded-lg">
-                <div className="text-red-600 font-bold">50%未満</div>
-                <div className="text-sm text-red-700">悪い</div>
-              </div>
+            </div>
+
+            {/* ナビゲーションボタン */}
+            <div className="flex justify-center gap-4">
+              <Button
+                onClick={() => navigate('/')}
+                className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white px-8 py-3 rounded-full font-bold text-lg"
+              >
+                <Share2 className="w-5 h-5 mr-2" />
+                結果をシェア
+              </Button>
+              <Button
+                onClick={() => navigate('/')}
+                className="bg-gray-500 hover:bg-gray-600 text-white px-8 py-3 rounded-full font-bold text-lg"
+              >
+                <ArrowLeft className="w-5 h-5 mr-2" />
+                トップに戻る
+              </Button>
             </div>
           </div>
         </div>
+      </PageLayout>
+    )
+  }
 
-        {/* 相性ランキング */}
-        <div className="card mb-8">
-          <div className="text-center mb-6">
-            <h2 className="text-2xl font-semibold">相性ランキング</h2>
-            <p className="text-gray-600">各ペアの相性スコアと詳細な分析結果</p>
+  // 関係性判定
+  const isDating = state.relationshipStage?.status === 'dating'
+  const participantCount = state.participants.length
+
+  // 参加者数に応じた分岐判定
+  const shouldShowRanking = !isDating && participantCount >= 3 && !shouldShowDetailDirectly
+  const shouldShowDetailByLogic = isDating || participantCount === 2
+
+  // ランキング画面の表示
+  if (shouldShowRanking && !showDetail) {
+    return (
+      <PageLayout>
+        <div className="max-w-5xl mx-auto p-4">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-gray-800 mb-4">
+              ✨ 診断結果が出ました ✨
+            </h1>
+            <p className="text-lg text-gray-600">
+              参加者：{state.participants.map(p => p.name).join('、')}
+            </p>
           </div>
 
-          <div className="space-y-6">
-            {compatibilityScores.map((score, index) => {
-              const participant1 = state.participants.find(p => p.id === score.participant1Id)
-              const participant2 = state.participants.find(p => p.id === score.participant2Id)
-              
-              // 分析結果を取得
-              let analysis = getTwentyTypeAnalysis('冒険的社交家-成長志向', '論理的思考家-安定志向', state.mode)
-
-              // 分析結果が取得できない場合のフォールバック
-              if (!analysis) {
-                analysis = {
-                  id: 'default',
-                  mode: state.mode,
-                  type1: '参加者1',
-                  type2: '参加者2',
-                  compatibilityScore: score.score,
-                  relationshipType: 'バランス型カップル',
-                  coupleDescription: 'あなたたちは「バランス型カップル」です！お互いの違いを尊重し合いながら、理想的なバランスを保てる素晴らしい関係です。',
-                  specificExperiences: [
-                    '「AさんはBさんの独特な魅力に興味を持ち、『面白い人だね』って言うようになる」',
-                    '「BさんはAさんの社交性に安心し、『一緒にいると楽しい』って感じる」',
-                    '「二人で過ごす時間では、お互いの違いを楽しみ、『この人だからこそ見える世界がある』って感じる」'
-                  ],
-                  strengths: [
-                    'お互いの違いを尊重し合える',
-                    '一緒に楽しめる関係',
-                    '深い理解ができる'
-                  ],
-                  challenges: [
-                    '価値観の違い',
-                    'コミュニケーションの取り方',
-                    '時間の使い方の違い'
-                  ],
-                  advice: [
-                    'お互いの価値観を理解し合う',
-                    '一緒に楽しめることを見つける',
-                    '定期的なコミュニケーションを心がける'
-                  ],
-                  dateIdeas: [
-                    '新しいお店開拓',
-                    'カラオケデート',
-                    '映画鑑賞',
-                    '散歩'
-                  ],
-                  communicationTips: [
-                    '相手の話を最後まで聞く',
-                    '自分の気持ちを素直に伝える',
-                    '相手の立場に立って考える'
-                  ],
-                  longTermOutlook: '長期的には、お互いの違いを理解し合いながら、一緒に楽しい時間を過ごせる素晴らしい関係を築けるでしょう。',
-                  warningSigns: [
-                    'コミュニケーション不足',
-                    '価値観の押し付け',
-                    '相手の意見を聞かない'
-                  ],
-                  improvementTips: [
-                    '定期的な話し合いの時間を作る',
-                    'お互いの価値観を尊重する',
-                    '一緒に新しいことに挑戦する'
-                  ]
-                }
-              }
-              
-              return (
-                <div key={`${score.participant1Id}-${score.participant2Id}`} className="bg-white rounded-xl shadow-lg p-6">
-                  {/* ペア情報 */}
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center gap-4">
-                      <div className="w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center font-bold">
-                        {index + 1}
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
-                          <span className="text-red-600 font-semibold">
-                            {participant1?.name?.charAt(0) || 'A'}
-                          </span>
+          <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
+            <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
+              🏆 相性ランキング 🏆
+            </h2>
+            <p className="text-center text-gray-600 mb-8">誰と相性いいか見てみよう！</p>
+            
+            <div className="space-y-4">
+              {allPairs.map((pair, index) => {
+                const participant1 = state.participants.find(p => p.id === pair.participant1Id)
+                const participant2 = state.participants.find(p => p.id === pair.participant2Id)
+                const compatibility = getCompatibilityLevel(pair.score)
+                
+                return (
+                  <div key={`${pair.participant1Id}-${pair.participant2Id}`} className="border-2 border-pink-200 rounded-xl p-6 hover:border-pink-300 transition-colors">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="text-2xl">
+                          {index === 0 ? '👑' : index === 1 ? '🥈' : index === 2 ? '🥉' : '🏅'}
                         </div>
-                        <span className="text-lg font-medium">×</span>
-                        <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                          <span className="text-blue-600 font-semibold">
-                            {participant2?.name?.charAt(0) || 'B'}
-                          </span>
+                        <div>
+                          <div className="text-xl font-bold text-gray-800">
+                            {index + 1}位：{participant1?.name} × {participant2?.name}
+                          </div>
+                          <div className="text-lg text-pink-600 font-semibold">
+                            {pair.coupleType.emoji} {pair.coupleType.name}
+                          </div>
+                          <div className="text-sm text-gray-600">{pair.coupleType.description}</div>
                         </div>
                       </div>
-                      <div>
-                        <div className="font-medium text-lg">
-                          {participant1?.name || '参加者A'} × {participant2?.name || '参加者B'}
+                      <div className="text-right">
+                        <div className="text-2xl font-bold text-pink-600">
+                          相性度：{pair.score}%
                         </div>
-                        <div className="text-sm text-gray-500">
-                          {analysis?.relationshipType || 'バランス型カップル'}
+                        <div className="flex items-center gap-1">
+                          {Array.from({ length: 5 }, (_, i) => (
+                            <Heart key={i} className={`w-5 h-5 ${i < Math.floor(pair.score / 20) ? 'text-pink-500 fill-current' : 'text-gray-300'}`} />
+                          ))}
                         </div>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-3xl font-bold text-green-500">
-                        {score.score}%
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        {getCompatibilityLevel(score.score).level}
+                        <Button
+                          onClick={() => {
+                            setSelectedPair({ participant1Id: pair.participant1Id, participant2Id: pair.participant2Id })
+                            setShowDetail(true)
+                          }}
+                          className="mt-2 bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg"
+                        >
+                          詳細を見る
+                        </Button>
                       </div>
                     </div>
                   </div>
-
-                  {/* 詳細結果の内容 */}
-                  {analysis && (
-                    <div className="space-y-4">
-                      {/* デバッグ情報 */}
-                      <div className="text-xs text-gray-500 mb-2">
-                        デバッグ: 分析データ存在={!!analysis}, モード={state.mode}
-                      </div>
-                      
-                      {/* カップル紹介文 */}
-                      <div className="bg-gradient-to-r from-pink-50 to-purple-50 p-4 rounded-lg border-l-4 border-pink-400">
-                        <h4 className="font-semibold text-gray-800 mb-2">あなたたちはどんなカップル？</h4>
-                        <p className="text-gray-700 leading-relaxed">{analysis.coupleDescription}</p>
-                      </div>
-
-                      {/* 具体的な体験 */}
-                      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg border-l-4 border-blue-400">
-                        <h4 className="font-semibold text-gray-800 mb-3">一緒にいるとこんなことが起きる！</h4>
-                        <div className="space-y-2">
-                          {analysis.specificExperiences.slice(0, 3).map((experience, expIndex) => (
-                            <div key={expIndex} className="flex items-start gap-2">
-                              <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                              <p className="text-sm text-gray-700">{experience}</p>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* 強みと課題 */}
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="bg-green-50 p-4 rounded-lg">
-                          <h4 className="font-semibold text-green-800 mb-2">このカップルの強み</h4>
-                          <div className="space-y-1">
-                            {analysis.strengths.slice(0, 2).map((strength, strIndex) => (
-                              <div key={strIndex} className="flex items-start gap-2">
-                                <div className="w-1.5 h-1.5 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                                <span className="text-sm text-green-700">{strength}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                        <div className="bg-orange-50 p-4 rounded-lg">
-                          <h4 className="font-semibold text-orange-800 mb-2">注意すべき課題</h4>
-                          <div className="space-y-1">
-                            {analysis.challenges.slice(0, 2).map((challenge, chalIndex) => (
-                              <div key={chalIndex} className="flex items-start gap-2">
-                                <div className="w-1.5 h-1.5 bg-orange-500 rounded-full mt-2 flex-shrink-0"></div>
-                                <span className="text-sm text-orange-700">{challenge}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* 詳細を見るボタン */}
-                      <div className="text-center pt-4">
-                        <button
-                          onClick={() => handlePairSelect(score.participant1Id, score.participant2Id)}
-                          className="btn-primary px-6 py-2 text-sm"
-                        >
-                          詳細結果を見る
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )
-            })}
+                )
+              })}
+            </div>
+            
+            <div className="text-center mt-8">
+              <p className="text-lg text-gray-600">💡 気になるペアをタップ！</p>
+            </div>
           </div>
         </div>
+      </PageLayout>
+    )
+  }
 
-        {/* アクションボタン */}
-        <div className="flex justify-center">
-          <button
-            onClick={handleStartOver}
-            className="btn-primary text-lg px-8 py-4"
-          >
-            最初からやり直す
-          </button>
+  // 詳細画面の表示
+  if (shouldShowDetailDirectly || shouldShowDetailByLogic || showDetail) {
+    return renderDetailedAnalysis()
+  }
+
+  // デフォルトのフォールバック
+  return (
+    <PageLayout>
+      <div className="max-w-5xl mx-auto p-4">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-800 mb-4">
+            診断結果を読み込み中...
+          </h1>
+          <p className="text-gray-600">しばらくお待ちください</p>
         </div>
       </div>
-    </div>
+    </PageLayout>
   )
 }

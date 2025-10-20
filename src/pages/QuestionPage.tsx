@@ -42,30 +42,35 @@ export function QuestionPage() {
   }
 
   return (
-    <div className="min-h-screen p-4">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold text-center mb-8">
-          相性診断質問（全40問）
-        </h1>
+    <div className="w-full h-full overflow-y-auto scrollable-area" style={{height: 'calc(var(--vh, 1vh) * 100)'}}>
+      <div className="max-w-6xl mx-auto p-4">
+        <div className="text-center mb-8">
+          <h1 className="heading-kawaii-primary">
+            💕 ココロノオト質問 💕
+          </h1>
+          <p className="text-lg kawaii-light-pink font-medium">
+            全40問の質問に答えて、あなたのココロノオトを分析しましょう
+          </p>
+        </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {questions.map((question, index) => (
-            <div key={question.id} className="card">
-              <h2 className="text-lg font-semibold mb-4">
-                質問 {index + 1}: {question.text}
+            <div key={question.id} className="card-kawaii">
+              <h2 className="heading-kawaii-secondary mb-4">
+                💭 質問 {index + 1}: {question.text}
               </h2>
               
               <div className="space-y-4">
                 {state.participants.map(participant => (
-                  <div key={participant.id} className="bg-gray-50 p-3 rounded-lg">
-                    <h3 className="text-sm font-medium mb-2 text-gray-600">
-                      {participant.name}さんの回答
+                  <div key={participant.id} className="bg-white/60 backdrop-blur-sm p-4 rounded-2xl border-2 border-kawaii-light-pink/30">
+                    <h3 className="text-sm font-semibold mb-3 kawaii-pink">
+                      ✨ {participant.name}さんの回答
                     </h3>
                     <div className="space-y-2">
                       {question.options.map((option: any) => (
                         <label
                           key={option.id}
-                          className="flex items-center p-2 rounded cursor-pointer bg-white border border-gray-200 hover:bg-gray-50 text-sm"
+                          className="flex items-center p-3 rounded-2xl cursor-pointer bg-white/80 border-2 border-kawaii-light-pink/30 hover:border-kawaii-pink/50 hover:bg-white/90 text-sm transition-all duration-300"
                         >
                           <input
                             type="radio"
@@ -73,9 +78,9 @@ export function QuestionPage() {
                             value={option.id}
                             checked={answers[question.id]?.[participant.id] === option.id}
                             onChange={() => handleAnswerChange(question.id, participant.id, option.id)}
-                            className="form-radio h-4 w-4 text-blue-600"
+                            className="form-radio h-4 w-4 text-kawaii-pink"
                           />
-                          <span className="ml-2 text-gray-700">{option.text}</span>
+                          <span className="ml-3 text-gray-700 font-medium">{option.text}</span>
                         </label>
                       ))}
                     </div>
@@ -90,13 +95,13 @@ export function QuestionPage() {
           <button
             onClick={handleSubmit}
             disabled={!isAllAnswered()}
-            className={`px-8 py-3 rounded-lg font-semibold ${
+            className={`px-8 py-4 rounded-2xl text-lg font-semibold transition-all duration-300 ${
               isAllAnswered() 
-                ? 'bg-blue-600 text-white hover:bg-blue-700' 
+                ? 'btn-kawaii-primary' 
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
           >
-            {isAllAnswered() ? '診断完了' : '全ての質問に回答してください'}
+            {isAllAnswered() ? '✨ 診断完了 ✨' : '👥 全ての質問に回答してください'}
           </button>
         </div>
       </div>

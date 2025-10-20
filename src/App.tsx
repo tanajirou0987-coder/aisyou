@@ -1,9 +1,10 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import React, { Suspense } from 'react'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { BaseLayout } from './layouts'
 import { TopPage } from './pages/TopPage'
 import { HomePage } from './pages/HomePage'
 import { QuestionPage } from './pages/QuestionPage'
 import { ResultsPage } from './pages/ResultsPage'
-import { CoupleDetailsPage } from './pages/CoupleDetailsPage'
 import { GroupSessionStartPage } from './pages/GroupSessionStartPage'
 import { MultiDeviceSessionStartPage } from './pages/MultiDeviceSessionStartPage'
 import { JoinSessionPage } from './pages/JoinSessionPage'
@@ -19,9 +20,10 @@ import { AppProvider } from './context/AppContext'
 function App() {
   return (
     <AppProvider>
-      <Router>
-        <div className="min-h-screen">
-          <Routes>
+      <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <BaseLayout>
+          <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-gray-600">読み込み中…</div>}>
+            <Routes>
             {/* トップページ */}
             <Route path="/" element={<TopPage />} />
             
@@ -29,9 +31,8 @@ function App() {
             <Route path="/compatibility" element={<HomePage />} />
             <Route path="/questions" element={<QuestionPage />} />
             <Route path="/results" element={<ResultsPage />} />
-            <Route path="/couple-details" element={<CoupleDetailsPage />} />
             
-            {/* 酒癖診断のルート */}
+            {/* グラスノオトのルート */}
             <Route path="/group-session-start" element={<GroupSessionStartPage />} />
             <Route path="/multi-device-session-start" element={<MultiDeviceSessionStartPage />} />
             <Route path="/join-session/:sessionId" element={<JoinSessionPage />} />
@@ -42,8 +43,13 @@ function App() {
             <Route path="/group-results" element={<GroupResultsPage />} />
             <Route path="/drinking-details" element={<DrinkingDetailsPage />} />
             <Route path="/pair-details" element={<PairDetailsPage />} />
-          </Routes>
-        </div>
+            {/* 互換用: 古いリンクのリダイレクト/エイリアス */}
+            <Route path="/drinking-results" element={<GroupResultsPage />} />
+            {/* 不明なパスはトップへリダイレクト */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </Suspense>
+        </BaseLayout>
       </Router>
     </AppProvider>
   )

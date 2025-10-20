@@ -38,7 +38,7 @@ export function GroupSessionStartPage() {
               <svg className="w-3 h-3 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
-              <span className="hidden md:inline">ミチノワトップに戻る</span>
+              <span className="hidden md:inline">すきのおとトップに戻る</span>
               <span className="md:hidden">戻る</span>
             </button>
           </div>
@@ -47,7 +47,7 @@ export function GroupSessionStartPage() {
             <div className="absolute top-1 left-2 text-xs" style={{transform: 'rotate(-15deg)'}}>POW!</div>
             <div className="absolute top-1 right-2 text-xs" style={{transform: 'rotate(15deg)'}}>BANG!</div>
             <h1 className="text-lg font-black text-black mb-0.5" style={{fontFamily: 'Bangers, sans-serif'}}>
-              酒癖診断スタート
+              グラスノオトスタート
             </h1>
             <p className="text-[11px] font-black text-black" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
               ★ 診断方法を選んで始めよう！ ★
@@ -58,7 +58,7 @@ export function GroupSessionStartPage() {
             <span className="sound-effect pop-yellow absolute top-2 left-4" style={{transform: 'rotate(-20deg)', fontSize: '2rem'}}>POW!</span>
             <span className="sound-effect pop-blue absolute top-2 right-4" style={{transform: 'rotate(20deg)', fontSize: '2rem'}}>BANG!</span>
             <h1 className="heading-primary text-7xl mb-4 mt-6" style={{color: '#FF0000', WebkitTextStroke: '3px #000000', textShadow: '5px 5px 0 #FFFFFF'}}>
-              酒癖診断スタート
+              グラスノオトスタート
             </h1>
             <p className="text-2xl font-black text-black" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
               ★ みんなで診断して結果で盛り上がろう！ ★
@@ -88,7 +88,7 @@ export function GroupSessionStartPage() {
               </div>
             </div>
             <h2 className="text-4xl font-black mb-4" style={{fontFamily: 'Bangers, sans-serif', WebkitTextStroke: '2px #000000', color: '#0066FF', textShadow: '3px 3px 0 #FFFFFF'}}>
-              新しい酒癖診断を始める
+              新しいグラスノオトを始める
             </h2>
             <p className="text-black leading-relaxed mb-8 font-bold text-lg" style={{fontFamily: 'Noto Sans JP, sans-serif'}}>
               診断方法を選んでください！💥

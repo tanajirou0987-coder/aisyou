@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { PageLayout } from '../layouts/PageLayout'
 import { useApp } from '../context/AppContext'
 import { ArrowLeft, Heart, Wine, Users, Sparkles, Tag } from 'lucide-react'
 import { 
@@ -16,17 +17,19 @@ export function DrinkingDetailsPage() {
 
   if (!participant) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 flex items-center justify-center">
+      <PageLayout>
+        <div className="kawaii-reset min-h-[calc(var(--vh,1vh)*100)] flex items-center justify-center">
         <div className="text-center">
           <p className="text-gray-600">参加者情報が見つかりません</p>
           <button
             onClick={() => navigate('/group-session-start')}
-            className="mt-4 px-6 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600"
+              className="mt-4 btn-primary px-6 py-2"
           >
-            酒癖診断を始める
+            グラスノオトを始める
           </button>
         </div>
-      </div>
+        </div>
+      </PageLayout>
     )
   }
 
@@ -253,8 +256,8 @@ export function DrinkingDetailsPage() {
   const analysis = getDetailedAnalysis(drinkingType)
 
   return (
-    <div className="min-h-screen p-3 sm:p-4">
-      <div className="max-w-4xl mx-auto">
+    <PageLayout>
+      <div className="kawaii-reset max-w-4xl mx-auto p-3 sm:p-4">
         {/* ヘッダー - コンパクト版 */}
         <div className="mb-3">
           <button
@@ -264,36 +267,36 @@ export function DrinkingDetailsPage() {
             <ArrowLeft className="w-3 h-3" />
             戻る
           </button>
-          <div className="card p-2" style={{background: '#FF69B4'}}>
-            <h1 className="text-base sm:text-lg font-bold mb-1">
-              酒癖診断詳細
+          <div className="card p-2">
+            <h1 className="text-base sm:text-lg font-bold mb-1 heading-secondary">
+              グラスノオト詳細
             </h1>
-            <p className="text-xs font-bold text-black" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
+            <p className="text-xs font-bold text-gray-700">
               {participant.userName}さん
             </p>
           </div>
         </div>
 
         {/* 基本情報 - コンパクト版 */}
-        <div className="card mb-2 p-2" style={{background: '#FFFFFF'}}>
+        <div className="card mb-2 p-2">
           <div className="flex items-center gap-2 mb-2">
-            <div className="relative p-1.5 bg-yellow-400 rounded-full border-2 border-black flex-shrink-0">
-              <Wine className="w-5 h-5 text-red-600" />
-              <Heart className="w-3 h-3 text-pink-500 absolute -top-0.5 -right-0.5" />
+            <div className="relative p-1.5 bg-pink-100 rounded-full border border-pink-200 flex-shrink-0">
+              <Wine className="w-5 h-5 text-pink-500" />
+              <Heart className="w-3 h-3 text-pink-400 absolute -top-0.5 -right-0.5" />
             </div>
             <div className="flex-1 min-w-0">
               <h2 className="text-xs font-bold">あなたの酒癖タイプ</h2>
-              <span className={`inline-block px-2 py-0.5 rounded text-white border border-black text-xs font-bold ${participant.gender === 'male' ? 'bg-blue-500' : 'bg-pink-500'}`}>
+              <span className={`inline-block px-2 py-0.5 rounded text-white text-xs font-bold ${participant.gender === 'male' ? 'bg-[#8B5A9F]' : 'bg-[#D63384]'}`}>
                 {participant.gender === 'male' ? '♂' : '♀'} {participant.userName}
               </span>
             </div>
           </div>
 
-          <div className="p-2 rounded border-2 border-black" style={{background: '#FFD700'}}>
-            <h3 className="text-sm font-black text-red-600 text-center mb-1">
+          <div className="p-2 rounded border border-pink-200 bg-pink-50">
+            <h3 className="text-sm font-bold text-[#D63384] text-center mb-1">
               {analysis.title}
             </h3>
-            <p className="text-black text-xs text-center leading-tight">
+            <p className="text-gray-700 text-xs text-center leading-tight">
               {analysis.description}
             </p>
           </div>
@@ -302,31 +305,31 @@ export function DrinkingDetailsPage() {
         {/* 詳細分析 - グリッド表示 */}
         <div className="grid grid-cols-2 gap-2 mb-2">
           {/* 長所 */}
-          <div className="card p-2" style={{background: '#00CC44'}}>
-            <h3 className="text-xs font-black text-white mb-1 flex items-center gap-1">
-              <Sparkles className="w-3 h-3 text-yellow-300" />
+          <div className="card p-2">
+            <h3 className="text-xs font-bold text-[#D63384] mb-1 flex items-center gap-1">
+              <Sparkles className="w-3 h-3 text-pink-400" />
               長所
             </h3>
             <ul className="space-y-0.5">
               {analysis.strengths.slice(0, 3).map((strength: string, index: number) => (
                 <li key={index} className="flex items-start gap-1">
-                  <span className="text-xs text-yellow-300 flex-shrink-0">★</span>
-                  <span className="text-white font-bold text-xs leading-tight">{strength}</span>
+                  <span className="text-xs text-pink-400 flex-shrink-0">★</span>
+                  <span className="text-gray-700 font-medium text-xs leading-tight">{strength}</span>
                 </li>
               ))}
             </ul>
         </div>
 
           {/* 注意点 */}
-          <div className="bg-white rounded-lg shadow p-2">
-            <h3 className="text-xs font-bold text-orange-700 mb-1 flex items-center gap-1">
+          <div className="card p-2">
+            <h3 className="text-xs font-bold text-[#D63384] mb-1 flex items-center gap-1">
               <Users className="w-3 h-3" />
               注意点
             </h3>
             <ul className="space-y-0.5">
               {analysis.challenges.slice(0, 3).map((challenge: string, index: number) => (
                 <li key={index} className="flex items-start gap-1">
-                  <span className="text-orange-500 flex-shrink-0 text-xs">⚠</span>
+                  <span className="text-pink-400 flex-shrink-0 text-xs">⚠</span>
                   <span className="text-gray-700 text-xs leading-tight">{challenge}</span>
                 </li>
               ))}
@@ -337,15 +340,15 @@ export function DrinkingDetailsPage() {
         {/* アドバイス・アイデア・コツ - 3カラムグリッド */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-2">
           {/* アドバイス */}
-          <div className="bg-white rounded-lg shadow p-2">
-            <h3 className="text-xs font-bold text-blue-700 mb-1 flex items-center gap-1">
+          <div className="card p-2">
+            <h3 className="text-xs font-bold text-[#D63384] mb-1 flex items-center gap-1">
               <Heart className="w-3 h-3" />
               アドバイス
             </h3>
             <ul className="space-y-0.5">
               {analysis.advice.slice(0, 3).map((tip: string, index: number) => (
                 <li key={index} className="flex items-start gap-1">
-                  <span className="text-blue-500 flex-shrink-0 text-xs">💡</span>
+                  <span className="text-pink-400 flex-shrink-0 text-xs">💡</span>
                   <span className="text-gray-700 text-xs leading-tight">{tip}</span>
                 </li>
               ))}
@@ -353,8 +356,8 @@ export function DrinkingDetailsPage() {
           </div>
 
           {/* デートアイデア */}
-          <div className="bg-white rounded-lg shadow p-2">
-            <h3 className="text-xs font-bold text-pink-700 mb-1 flex items-center gap-1">
+          <div className="card p-2">
+            <h3 className="text-xs font-bold text-[#D63384] mb-1 flex items-center gap-1">
               <Wine className="w-3 h-3" />
               デート
             </h3>
@@ -368,15 +371,15 @@ export function DrinkingDetailsPage() {
           </div>
 
           {/* コミュニケーション */}
-          <div className="bg-white rounded-lg shadow p-2">
-            <h3 className="text-xs font-bold text-purple-700 mb-1 flex items-center gap-1">
+          <div className="card p-2">
+            <h3 className="text-xs font-bold text-[#D63384] mb-1 flex items-center gap-1">
               <Users className="w-3 h-3" />
               コツ
             </h3>
             <ul className="space-y-0.5">
               {analysis.communicationTips.slice(0, 3).map((tip: string, index: number) => (
                 <li key={index} className="flex items-start gap-1">
-                  <span className="text-purple-500 flex-shrink-0 text-xs">🗣</span>
+                  <span className="text-pink-400 flex-shrink-0 text-xs">🗣</span>
                   <span className="text-gray-700 text-xs leading-tight">{tip}</span>
                 </li>
               ))}
@@ -386,7 +389,7 @@ export function DrinkingDetailsPage() {
 
         {/* キーワード - コンパクト版 */}
         <div className="card mb-2 p-2">
-          <h3 className="text-xs font-bold text-orange-600 mb-1 flex items-center gap-1">
+          <h3 className="text-xs font-bold text-[#D63384] mb-1 flex items-center gap-1">
             <Tag className="w-3 h-3" />
             30のキーワード
           </h3>
@@ -394,7 +397,7 @@ export function DrinkingDetailsPage() {
             {typeKeywords.map((keyword: string, index: number) => (
               <span
                 key={index}
-                className="keyword-tag text-xs px-1.5 py-0.5"
+                className="tag-kawaii text-xs px-1.5 py-0.5"
               >
                 {keyword}
               </span>
@@ -406,7 +409,7 @@ export function DrinkingDetailsPage() {
         <div className="text-center space-y-2">
           <button
             onClick={() => navigate('/group-session-start')}
-            className="w-full px-4 py-2 text-sm font-semibold rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow hover:shadow-lg transition-all"
+            className="w-full px-4 py-2 text-sm font-semibold rounded-lg btn-primary"
           >
             新しい診断
           </button>
@@ -419,7 +422,7 @@ export function DrinkingDetailsPage() {
           </button>
         </div>
       </div>
-    </div>
+    </PageLayout>
   )
 }
 

@@ -121,7 +121,8 @@ function appReducer(state: AppState, action: AppAction): AppState {
                   {
                     questionId: action.payload.questionId,
                     optionId: action.payload.optionId,
-                    value: action.payload.value
+                    value: action.payload.value,
+                    timestamp: Date.now()
                   }
                 ]
               }
@@ -253,10 +254,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
     dispatch({ type: 'SET_QUESTIONS', payload: questions })
   }
 
-  const addParticipant = (name: string) => {
+  const addParticipant = (name: string, gender: 'male' | 'female' = 'male') => {
     const participant: Participant = {
       id: `participant_${Date.now()}`,
       name,
+      gender,
       answers: [],
       joinedAt: Date.now()
     }
@@ -290,20 +292,31 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const mockParticipants: Participant[] = [
       {
         id: '1',
-        name: '参加者A',
+        name: '太郎',
+        gender: 'male',
         answers: [],
         joinedAt: Date.now()
       },
       {
         id: '2', 
-        name: '参加者B',
+        name: '花子',
+        gender: 'female',
         answers: [],
         joinedAt: Date.now()
       }
     ]
     
+    // 全ての状態をリセットしてから設定
+    dispatch({ type: 'RESET_APP' })
     dispatch({ type: 'SET_MODE', payload: mode })
     dispatch({ type: 'SET_PARTICIPANTS', payload: mockParticipants })
+    dispatch({ 
+      type: 'SET_RELATIONSHIP_STAGE', 
+      payload: { 
+        status: 'dating', 
+        duration: '3m_to_1y' 
+      } 
+    })
   }
 
   // グループ診断用のモックデータを設定する関数
@@ -430,7 +443,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     // グループセッションを開始
     const groupSession: GroupSession = {
       groupId: 'demo_group_123',
-      groupName: 'デモ酒癖診断',
+      groupName: 'デモグラスノオト',
       createdAt: new Date().toISOString(),
       status: 'active'
     }

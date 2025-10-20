@@ -267,7 +267,7 @@ export const drinkingTypes = [
   }
 ]
 
-// 酒癖診断結果データ（科学的根拠に基づく）
+// グラスノオト結果データ（科学的根拠に基づく）
 export const drinkingAnalysisData: DrinkingAnalysis[] = [
   {
     id: 'social_enhancer_x_romantic_enhancer',

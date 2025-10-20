@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { Heart, Users, Wine, Sparkles, Settings, Zap } from 'lucide-react'
 import { useState } from 'react'
 import { useApp } from '../context/AppContext'
+import { PageLayout } from '../layouts/PageLayout'
 
 export function TopPage() {
   const navigate = useNavigate()
@@ -15,18 +16,31 @@ export function TopPage() {
     navigate('/drinking-details')
   }
 
-  const goToCompatibilityDetails = () => {
-    setMockData('romance')
-    navigate('/couple-details')
-  }
 
   const goToGroupResults = () => {
     setGroupMockData()
     navigate('/group-results')
   }
 
+  // 詳細分析画面へのショートカット関数
+  const goToDetailedAnalysis = () => {
+    // 相性診断のモックデータを設定
+    setMockData('romance')
+    // 詳細分析画面を直接表示するために、showDetail状態をtrueにして遷移
+    setTimeout(() => {
+      navigate('/results?showDetail=true')
+    }, 100)
+  }
+
+  const goToGroupDetailedAnalysis = () => {
+    // グループ診断のモックデータを設定
+    setGroupMockData()
+    // グループ結果画面に遷移（詳細分析は自動で表示される）
+    navigate('/group-results')
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50">
+    <PageLayout>
       {/* 管理者用デバッグパネル */}
       <div className="fixed top-4 right-4 z-50">
         <button
@@ -51,34 +65,34 @@ export function TopPage() {
                 🍷 酒癖詳細ページ
               </button>
               <button
-                onClick={goToCompatibilityDetails}
-                className="w-full text-left px-3 py-2 bg-pink-50 hover:bg-pink-100 rounded text-sm text-pink-700 transition-colors"
-              >
-                💕 相性詳細ページ
-              </button>
-              <button
-                onClick={() => navigate('/drinking-results')}
-                className="w-full text-left px-3 py-2 bg-blue-50 hover:bg-blue-100 rounded text-sm text-blue-700 transition-colors"
-              >
-                📊 酒癖結果ページ
-              </button>
-              <button
                 onClick={() => navigate('/results')}
                 className="w-full text-left px-3 py-2 bg-green-50 hover:bg-green-100 rounded text-sm text-green-700 transition-colors"
               >
-                📈 相性結果ページ
+                📈 相性結果ページ（2人）
+              </button>
+              <button
+                onClick={goToDetailedAnalysis}
+                className="w-full text-left px-3 py-2 bg-pink-50 hover:bg-pink-100 rounded text-sm text-pink-700 transition-colors"
+              >
+                💕 相性詳細分析画面
               </button>
               <button
                 onClick={() => navigate('/group-session-start')}
                 className="w-full text-left px-3 py-2 bg-purple-50 hover:bg-purple-100 rounded text-sm text-purple-700 transition-colors"
               >
-                👥 酒癖診断開始
+                👥 グラスノオト開始
               </button>
               <button
                 onClick={goToGroupResults}
                 className="w-full text-left px-3 py-2 bg-indigo-50 hover:bg-indigo-100 rounded text-sm text-indigo-700 transition-colors"
               >
-                🎭 酒癖診断結果デモ
+                🎭 グラスノオト結果デモ
+              </button>
+              <button
+                onClick={goToGroupDetailedAnalysis}
+                className="w-full text-left px-3 py-2 bg-orange-50 hover:bg-orange-100 rounded text-sm text-orange-700 transition-colors"
+              >
+                🍻 グループ詳細分析画面
               </button>
             </div>
             <div className="mt-3 pt-3 border-t text-xs text-gray-500">
@@ -88,20 +102,29 @@ export function TopPage() {
         )}
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="w-full h-full overflow-y-auto scrollable-area px-4 py-4">
         {/* ヘッダー */}
         <div className="text-center mb-16">
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <Sparkles className="w-12 h-12 text-pink-500" />
-            <h1 className="text-6xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-clip-text text-transparent">
-              ミチノワ
+          <div className="flex items-center justify-center gap-4 mb-8 relative">
+            <div className="logo-sparkle"></div>
+            <div className="logo-sparkle"></div>
+            <div className="logo-sparkle"></div>
+            <div className="logo-sparkle"></div>
+            <div className="logo-sparkle"></div>
+            <div className="logo-sparkle"></div>
+            <Sparkles className="w-16 h-16 kawaii-pink animate-kawaii-heart" />
+            <h1 className="logo-suki-no-oto text-7xl relative">
+              💕 すきのおと 💕
             </h1>
-            <Sparkles className="w-12 h-12 text-blue-500" />
+            <Sparkles className="w-16 h-16 kawaii-pink animate-kawaii-heart" />
+            <div className="sound-wave"></div>
+            <div className="sound-wave"></div>
+            <div className="sound-wave"></div>
           </div>
-          <p className="text-2xl text-gray-700 mb-4">
+          <p className="text-2xl kawaii-light-pink font-medium mb-4">
             あなたの「道」を見つける相性診断アプリ
           </p>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          <p className="text-lg kawaii-light-pink max-w-3xl mx-auto">
             恋愛・友達関係の相性診断と、今の酔った状態での恋愛相性診断。
             科学的根拠に基づいた分析で、あなたにぴったりの関係性を見つけましょう。
           </p>
@@ -110,80 +133,80 @@ export function TopPage() {
         {/* サービス紹介 */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
           {/* 相性診断 */}
-          <div className="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+          <div className="card-kawaii hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
             <div className="text-center mb-6">
-              <div className="w-20 h-20 bg-gradient-to-r from-red-400 to-pink-400 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-20 h-20 bg-gradient-to-r from-pink-400 to-red-400 rounded-full flex items-center justify-center mx-auto mb-4 animate-kawaii-bounce">
                 <Heart className="w-10 h-10 text-white" />
               </div>
-              <h2 className="text-3xl font-bold text-gray-800 mb-2">相性診断</h2>
-              <p className="text-gray-600 text-lg">
+              <h2 className="heading-kawaii-primary mb-2">💕 ココロノオト 💕</h2>
+              <p className="kawaii-light-pink text-lg font-medium">
                 恋愛・友達関係の相性を分析
               </p>
             </div>
             
             <div className="space-y-4 mb-8">
               <div className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-red-400 rounded-full"></div>
-                <span className="text-gray-700">心理学理論に基づいた20タイプ分析</span>
+                <div className="w-2 h-2 bg-pink-400 rounded-full animate-kawaii-heart"></div>
+                <span className="kawaii-light-pink font-medium">🧠 心理学理論に基づいた20タイプ分析</span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-pink-400 rounded-full"></div>
-                <span className="text-gray-700">恋愛・友達関係の相性スコア</span>
+                <div className="w-2 h-2 bg-red-400 rounded-full animate-kawaii-heart"></div>
+                <span className="kawaii-light-pink font-medium">💕 恋愛・友達関係の相性スコア</span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-red-400 rounded-full"></div>
-                <span className="text-gray-700">具体的な関係性のアドバイス</span>
+                <div className="w-2 h-2 bg-pink-400 rounded-full animate-kawaii-heart"></div>
+                <span className="kawaii-light-pink font-medium">💡 具体的な関係性のアドバイス</span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-pink-400 rounded-full"></div>
-                <span className="text-gray-700">デートアイデアやコミュニケーションのコツ</span>
+                <div className="w-2 h-2 bg-red-400 rounded-full animate-kawaii-heart"></div>
+                <span className="kawaii-light-pink font-medium">✨ デートアイデアやコミュニケーションのコツ</span>
               </div>
             </div>
 
             <button
               onClick={() => navigate('/compatibility')}
-              className="w-full bg-gradient-to-r from-red-500 to-pink-500 text-white py-4 px-6 rounded-xl font-bold text-lg hover:shadow-lg transition-all transform hover:scale-105"
+              className="w-full btn-kawaii-primary py-4 px-6 text-lg font-bold"
             >
-              相性診断を始める
+              💕 ココロノオトを始める
             </button>
           </div>
 
           {/* 酒癖マッチング */}
-          <div className="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+          <div className="card-kawaii hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
             <div className="text-center mb-6">
-              <div className="w-20 h-20 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-20 h-20 bg-gradient-to-r from-pink-400 to-purple-400 rounded-full flex items-center justify-center mx-auto mb-4 animate-kawaii-bounce">
                 <Wine className="w-10 h-10 text-white" />
               </div>
-              <h2 className="text-3xl font-bold text-gray-800 mb-2">酒癖診断</h2>
-              <p className="text-gray-600 text-lg">
+              <h2 className="heading-kawaii-primary mb-2">🍻 グラスノオト 🍻</h2>
+              <p className="kawaii-light-pink text-lg font-medium">
                 今の酔った状態での恋愛相性を診断
               </p>
             </div>
             
             <div className="space-y-4 mb-8">
               <div className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
-                <span className="text-gray-700">今の酔った状態での恋愛相性分析</span>
+                <div className="w-2 h-2 bg-pink-400 rounded-full animate-kawaii-heart"></div>
+                <span className="kawaii-light-pink font-medium">💕 今の酔った状態での恋愛相性分析</span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-pink-400 rounded-full"></div>
-                <span className="text-gray-700">グループ診断で全員の相性を一覧表示</span>
+                <div className="w-2 h-2 bg-purple-400 rounded-full animate-kawaii-heart"></div>
+                <span className="kawaii-light-pink font-medium">👥 グループ診断で全員の相性を一覧表示</span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
-                <span className="text-gray-700">ベストカップルTop3を自動抽出</span>
+                <div className="w-2 h-2 bg-pink-400 rounded-full animate-kawaii-heart"></div>
+                <span className="kawaii-light-pink font-medium">🏆 ベストカップルTop3を自動抽出</span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-pink-400 rounded-full"></div>
-                <span className="text-gray-700">今夜の恋愛シーン予測とアクション提案</span>
+                <div className="w-2 h-2 bg-purple-400 rounded-full animate-kawaii-heart"></div>
+                <span className="kawaii-light-pink font-medium">✨ 今夜の恋愛シーン予測とアクション提案</span>
               </div>
             </div>
 
             <button
               onClick={() => navigate('/group-session-start')}
-              className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-4 px-6 rounded-xl font-bold text-lg hover:shadow-lg transition-all transform hover:scale-105"
+              className="w-full btn-kawaii-primary py-4 px-6 text-lg font-bold"
             >
-              酒癖診断を始める
+              🍻 グラスノオトを始める
             </button>
           </div>
 
@@ -192,7 +215,7 @@ export function TopPage() {
         {/* 特徴セクション */}
         <div className="bg-white rounded-2xl shadow-xl p-8 mb-16">
           <h3 className="text-3xl font-bold text-center text-gray-800 mb-8">
-            ミチノワの特徴
+            すきのおとの特徴
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
@@ -262,7 +285,7 @@ export function TopPage() {
           </div>
         </div>
       </div>
-    </div>
+    </PageLayout>
   )
 }
 

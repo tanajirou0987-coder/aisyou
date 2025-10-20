@@ -68,11 +68,11 @@ export function JoinSessionPage() {
   if (error && !sessionData) {
     return (
       <div className="min-h-screen flex items-center justify-center p-8">
-        <div className="card" style={{background: '#FF0000', maxWidth: '500px'}}>
-          <h2 className="text-3xl font-black text-white mb-4" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
+        <div className="card" style={{maxWidth: '500px'}}>
+          <h2 className="text-3xl font-bold heading-secondary mb-4">
             ⚠️ エラー ⚠️
           </h2>
-          <p className="text-white font-bold text-lg mb-6">{error}</p>
+          <p className="text-[#D63384] font-bold text-lg mb-6 text-center">{error}</p>
           <button
             onClick={() => navigate('/')}
             className="btn-secondary"
@@ -168,8 +168,8 @@ export function JoinSessionPage() {
 
           {/* エラーメッセージ */}
           {error && (
-            <div className="mb-4 p-4 rounded-lg border-3 border-red-600" style={{background: '#FFE4E4'}}>
-              <p className="text-red-600 font-bold text-center">⚠️ {error}</p>
+            <div className="mb-4 p-4 rounded-lg border border-pink-200 bg-pink-50">
+              <p className="text-[#D63384] font-bold text-center">⚠️ {error}</p>
             </div>
           )}
 
@@ -189,25 +189,25 @@ export function JoinSessionPage() {
         </div>
 
         {/* 説明 */}
-        <div className="card" style={{background: '#FFE4B5'}}>
+        <div className="card">
           <h3 className="text-xl font-black text-black mb-3" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
             📝 参加後の流れ
           </h3>
           <div className="space-y-2 text-black font-bold">
             <div className="flex items-start gap-2">
-              <span className="text-green-600">✓</span>
+              <span className="text-[#D63384]">✓</span>
               <p>診断画面に移動します</p>
             </div>
             <div className="flex items-start gap-2">
-              <span className="text-green-600">✓</span>
+              <span className="text-[#D63384]">✓</span>
               <p>主催者が「診断開始」を押すまで待機</p>
             </div>
             <div className="flex items-start gap-2">
-              <span className="text-green-600">✓</span>
+              <span className="text-[#D63384]">✓</span>
               <p>全員で同時に質問に答えます</p>
             </div>
             <div className="flex items-start gap-2">
-              <span className="text-green-600">✓</span>
+              <span className="text-[#D63384]">✓</span>
               <p>全員が回答したら自動的に次の質問へ</p>
             </div>
           </div>
@@ -216,6 +216,10 @@ export function JoinSessionPage() {
     </div>
   )
 }
+
+
+
+
 
 
 

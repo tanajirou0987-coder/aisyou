@@ -127,14 +127,14 @@ export function GroupDiagnosisPage() {
           <div className="card p-2 lg:hidden relative" style={{background: '#FFD700'}}>
             <div className="absolute top-1 left-2 text-xs" style={{transform: 'rotate(-15deg)'}}>POW!</div>
             <div className="absolute top-1 right-2 text-xs" style={{transform: 'rotate(15deg)'}}>BANG!</div>
-            <h1 className="text-lg font-black text-black" style={{fontFamily: 'Bangers, sans-serif'}}>酒癖診断</h1>
+            <h1 className="text-lg font-black text-black" style={{fontFamily: 'Bangers, sans-serif'}}>グラスノオト</h1>
             <p className="text-[12px] font-black text-black" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
               今は <span className={`${currentUser.gender === 'male' ? 'text-blue-600' : 'text-pink-600'}`}>{currentUser.gender === 'male' ? '♂' : '♀'} {currentUser.userName}</span> さんの番！
             </p>
           </div>
           <div className="hidden md:flex justify-center items-center gap-6 mb-2">
             <span className="text-5xl" style={{transform: 'rotate(-10deg)'}}>🍺</span>
-            <h1 className="heading-secondary text-5xl" style={{color: '#FF0000', WebkitTextStroke: '2px #000000', textShadow: '3px 3px 0 #FFFFFF'}}>酒癖診断</h1>
+            <h1 className="heading-secondary text-5xl" style={{color: '#FF0000', WebkitTextStroke: '2px #000000', textShadow: '3px 3px 0 #FFFFFF'}}>グラスノオト</h1>
             <span className="text-5xl" style={{transform: 'rotate(10deg)'}}>🍶</span>
           </div>
         </div>

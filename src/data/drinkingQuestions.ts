@@ -1,6 +1,6 @@
 import { Question, AppMode } from '../types'
 
-// 酒癖診断用の質問データ
+// グラスノオト用の質問データ
 export const drinkingQuestions: Question[] = [
   {
     id: 'drinking_1',
@@ -154,7 +154,7 @@ export const drinkingQuestions: Question[] = [
   }
 ]
 
-// 酒癖診断用の質問を取得する関数
+// グラスノオト用の質問を取得する関数
 export function getDrinkingQuestions(mode: AppMode): Question[] {
   if (mode !== 'drinking') return []
   return drinkingQuestions

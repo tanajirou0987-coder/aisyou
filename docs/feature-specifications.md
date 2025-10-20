@@ -74,7 +74,7 @@
 
 ## 2. 酒癖マッチング機能
 
-### 2.1 酒癖診断システム
+### 2.1 酒の場診断システム
 
 #### 2.1.1 質問システム
 - **質問数**: 15問
@@ -148,7 +148,7 @@ interface Option {
 
 ### 3.2 質問セット
 - **相性診断質問**: `psychologyQuestions.ts`
-- **酒癖診断質問**: `drinkingQuestions.ts`
+- **酒の場診断質問**: `drinkingQuestions.ts`
 - **強制選択質問**: `forcedChoiceQuestions.ts`
 - **固定15問**: `fixed15Questions.ts`
 

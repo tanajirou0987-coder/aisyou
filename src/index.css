@@ -1,224 +1,875 @@
-@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Fredoka+One&family=M+PLUS+Rounded+1c:wght@700;800;900&family=Noto+Sans+JP:wght@500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Fredoka+One&family=M+PLUS+Rounded+1c:wght@700;800;900&family=Noto+Sans+JP:wght@500;700;900&family=Comic+Neue:wght@300;400;700&family=Fredoka:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
+/* カラーシステム変数 */
+:root {
+  /* ビューポート高さ */
+  --vh: 1vh;
+  
+  /* バイラルカラー */
+  --viral-hot-pink: #FF1493;
+  --viral-neon-pink: #FF69B4;
+  --viral-lavender: #E0BBE4;
+  --viral-mint: #D4F1F4;
+  --viral-gold: #FFD700;
+  
+  /* グラデーション */
+  --gradient-primary: linear-gradient(135deg, #FF1493 0%, #FF69B4 50%, #FFD700 100%);
+  --gradient-soft: linear-gradient(135deg, #FFB6C1 0%, #E0BBE4 100%);
+  --gradient-share: linear-gradient(90deg, #FF1493, #FF69B4, #FFB6C1);
+  
+  /* グラスモーフィズム */
+  --glass-white: rgba(255, 255, 255, 0.85);
+  --glass-pink: rgba(255, 182, 193, 0.3);
+  
+  /* シャドウ */
+  --shadow-soft: 0 8px 32px rgba(255, 105, 180, 0.15);
+  --shadow-strong: 0 12px 48px rgba(255, 105, 180, 0.35);
+  --shadow-neon: 0 0 20px rgba(255, 20, 147, 0.6);
+  
+  /* スペーシング（画面サイズの％で定義）*/
+  --spacing-xs: max(8px, 1vh);
+  --spacing-sm: max(12px, 1.5vh);
+  --spacing-md: max(16px, 2vh);
+  --spacing-lg: max(24px, 3vh);
+  --spacing-xl: max(32px, 4vh);
+}
+
+/* 完全なCSSリセット + 全画面設定 */
   * {
+  margin: 0;
+  padding: 0;
     box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  /* モバイルブラウザのアドレスバー対策 */
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: fixed;
+  overscroll-behavior: none;
   }
   
   body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Noto Sans JP', sans-serif;
+  width: 100vw;
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100); /* モバイル対応 */
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  
+  /* バイラル配色背景 */
+  background: linear-gradient(
+    135deg, 
+    #FFE5EC 0%, 
+    #FFF0F5 25%, 
+    #E6E6FA 50%, 
+    #FFE5EC 75%, 
+    #FFF0F5 100%
+  );
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+  
+  /* フォント */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans JP', 
+               'Hiragino Sans', 'Yu Gothic', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background: #FFFFFF;
-    background-image: 
-      radial-gradient(circle, #000000 1px, transparent 1px),
-      radial-gradient(circle, #000000 1px, transparent 1px);
-    background-size: 20px 20px;
-    background-position: 0 0, 10px 10px;
-    color: #000000;
-    min-height: 100vh;
+  
+  /* スクロール禁止 */
+  touch-action: none;
+  user-select: none;
+}
+/* 見出しフォントをミチノワ風に */
+h1, h2, h3, .heading-kawaii-primary, .heading-kawaii-secondary, .heading-primary, .heading-secondary {
+  font-family: 'Fredoka', 'Comic Neue', 'Noto Sans JP', sans-serif !important;
+  letter-spacing: 0.5px;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* アプリケーションルートコンテナ */
+#root {
+  width: 100%;
+  height: 100%;
+  height: calc(var(--vh, 1vh) * 100);
+  position: relative;
+  overflow: hidden;
+}
+
+/* スクロール可能エリア */
+.scrollable-area {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  overflow-y: auto !important;
+  height: calc(var(--vh, 1vh) * 100);
+  touch-action: pan-y !important;
+}
+
+/* 全画面体験のための追加スタイル */
+.fullscreen-container {
+  width: 100vw;
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+  position: relative;
+  overflow: hidden;
+}
+
+/* モバイル最適化 */
+@media (max-width: 768px) {
+  .scrollable-area {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* レスポンシブUI強化 */
+@media (max-width: 640px) {
+  .heading-kawaii-primary { font-size: clamp(28px, 8vw, 36px); }
+  .heading-kawaii-secondary { font-size: clamp(18px, 5.5vw, 24px); }
+  .score-kawaii { font-size: clamp(40px, 12vw, 64px); }
+  .card-kawaii { padding: var(--spacing-md); border-radius: 20px; }
+  .btn-kawaii-primary, .btn-kawaii-secondary { padding: 12px 16px; font-size: 16px; }
+  .input-kawaii { padding: 10px 12px; }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .heading-kawaii-primary { font-size: clamp(36px, 5.5vw, 56px); }
+  .heading-kawaii-secondary { font-size: clamp(22px, 3.5vw, 32px); }
+  .score-kawaii { font-size: clamp(56px, 8vw, 88px); }
+  .card-kawaii { padding: calc(var(--spacing-lg)); border-radius: 28px; }
+  .btn-kawaii-primary, .btn-kawaii-secondary { padding: 14px 20px; font-size: 18px; }
+}
+
+@media (min-width: 1025px) {
+  .heading-kawaii-primary { font-size: 72px; }
+  .heading-kawaii-secondary { font-size: 32px; }
+  .score-kawaii { font-size: 112px; }
+}
+
+/* レスポンシブコンテナ */
+.container-responsive {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--spacing-md);
+  padding-right: var(--spacing-md);
+}
+@media (min-width: 640px) { .container-responsive { max-width: 640px; } }
+@media (min-width: 768px) { .container-responsive { max-width: 768px; } }
+@media (min-width: 1024px) { .container-responsive { max-width: 1024px; } }
+@media (min-width: 1280px) { .container-responsive { max-width: 1280px; } }
+
+/* レスポンシブグリッド補助 */
+.grid-responsive {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-md);
+}
+@media (min-width: 768px) { .grid-responsive { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1024px) { .grid-responsive { grid-template-columns: repeat(3, 1fr); } }
+
+/* 旧ポップアートUIのリセット（ページ単位で適用） */
+.kawaii-reset *,
+.kawaii-reset *::before,
+.kawaii-reset *::after {
+  font-family: 'Noto Sans JP', 'Fredoka', 'Comic Neue', sans-serif !important;
+}
+.kawaii-reset { color: #2D2D2D; }
+.kawaii-reset [style*="transform"] { transform: none !important; }
+.kawaii-reset [style*="rotate"] { transform: none !important; }
+.kawaii-reset [style*="box-shadow"] { box-shadow: 0 20px 40px rgba(214,51,132,0.1) !important; }
+/* 背景の強制上書きはテキストの可視性を損なうため撤廃 */
+.kawaii-reset .heading-primary,
+.kawaii-reset .heading-secondary { text-shadow: none !important; }
+/* グラデ見出しの透明文字を可視に戻す */
+.kawaii-reset .heading-kawaii-primary,
+.kawaii-reset .heading-kawaii-secondary {
+  -webkit-text-fill-color: initial !important;
+  background: none !important;
+  background-clip: initial !important;
+  color: #D63384 !important;
+}
+/* 旧エイリアス見出しも透明化を解除 */
+.kawaii-reset .heading-primary,
+.kawaii-reset .heading-secondary {
+  -webkit-text-fill-color: initial !important;
+  background: none !important;
+  background-clip: initial !important;
+  color: #D63384 !important;
+}
+/* テキストを透明にするユーティリティが残っている場合の救済 */
+.kawaii-reset .text-transparent { color: #2D2D2D !important; }
+/* グラデテキストを通常色に */
+.kawaii-reset .kawaii-gradient { background: none !important; -webkit-text-fill-color: initial !important; color: #D63384 !important; }
+/* 白文字は保持 */
+.kawaii-reset .text-white { color: #FFFFFF !important; }
+
+/* 背景エフェクト層 */
+.sparkle-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: calc(var(--vh, 1vh) * 100);
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.sparkle {
+  position: absolute;
+  font-size: clamp(16px, 2.5vw, 24px);
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: sparkleFloat 3s ease-in-out infinite;
+}
+
+@keyframes sparkleFloat {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-15vh) scale(1) rotate(180deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-30vh) scale(0) rotate(360deg);
+  }
+}
+
+/* ハート型浮遊背景 */
+.floating-hearts {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: calc(var(--vh, 1vh) * 100);
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.floating-heart {
+  position: absolute;
+  font-size: clamp(20px, 3vw, 40px);
+  opacity: 0.15;
+  animation: heartFloat 20s ease-in-out infinite;
+}
+
+.floating-heart:nth-child(1) { left: 10%; animation-delay: 0s; }
+.floating-heart:nth-child(2) { left: 30%; animation-delay: 5s; }
+.floating-heart:nth-child(3) { left: 50%; animation-delay: 10s; }
+.floating-heart:nth-child(4) { left: 70%; animation-delay: 15s; }
+.floating-heart:nth-child(5) { left: 90%; animation-delay: 3s; }
+
+@keyframes heartFloat {
+  0% {
+    bottom: -10vh;
+    transform: translateX(0) rotate(0deg) scale(0.5);
+  }
+  50% {
+    transform: translateX(20px) rotate(180deg) scale(1);
+  }
+  100% {
+    bottom: 110vh;
+    transform: translateX(0) rotate(360deg) scale(0.5);
+  }
+}
+
+/* メインコンテンツ層 */
+.screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: calc(var(--vh, 1vh) * 100);
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.screen.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* スタート画面 */
+.start-screen {
+  justify-content: center;
+  align-items: center;
+  padding: var(--spacing-lg);
+  text-align: center;
+}
+
+.start-logo {
+  font-size: clamp(48px, 10vw, 80px);
+  margin-bottom: var(--spacing-lg);
+  animation: logoPulse 2s ease-in-out infinite;
+}
+
+@keyframes logoPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.start-title {
+  font-size: clamp(28px, 6vw, 42px);
+  font-weight: 800;
+  color: #333;
+  margin-bottom: var(--spacing-md);
+  line-height: 1.3;
+}
+
+.start-subtitle {
+  font-size: clamp(16px, 3.5vw, 20px);
+  color: #666;
+  margin-bottom: var(--spacing-xl);
+  line-height: 1.6;
+}
+
+.start-button {
+  width: 90%;
+  max-width: 400px;
+  min-height: max(60px, 8vh);
+  padding: var(--spacing-md) var(--spacing-xl);
+  font-size: clamp(18px, 4vw, 24px);
+  font-weight: 800;
+  color: white;
+  background: var(--gradient-share);
+  background-size: 200% 100%;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: var(--shadow-strong);
+  animation: buttonShine 3s ease-in-out infinite;
+  transition: transform 0.3s ease;
+}
+
+@keyframes buttonShine {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.start-button:active {
+  transform: scale(0.95);
+}
+
+.start-button::before {
+  content: '✨ ';
+  font-size: 1.2em;
+}
+
+.start-button::after {
+  content: ' ✨';
+  font-size: 1.2em;
+}
+
+/* 質問画面 */
+.quiz-screen {
+  padding: 0;
+  overflow: hidden;
+}
+
+.quiz-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: max(env(safe-area-inset-top), var(--spacing-md)) var(--spacing-md) var(--spacing-md);
+  background: var(--glass-white);
+  backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-soft);
+  z-index: 100;
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: max(10px, 1.2vh);
+  background: var(--glass-pink);
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: var(--spacing-sm);
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--gradient-share);
+  background-size: 200% 100%;
+  border-radius: 20px;
+  transition: width 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  animation: progressShine 2s linear infinite;
+  box-shadow: var(--shadow-neon);
+}
+
+@keyframes progressShine {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+.question-counter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: clamp(14px, 3vw, 18px);
+  font-weight: 700;
+  color: var(--viral-hot-pink);
+}
+
+.question-counter::before {
+  content: '💕';
+  font-size: 1.3em;
+  margin-right: 8px;
+}
+
+/* 質問カード - 画面中央に配置 */
+.quiz-content {
+  position: absolute;
+  top: max(80px, 12vh);
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-md);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.question-card {
+  width: 100%;
+  max-width: 600px;
+  background: var(--glass-white);
+  backdrop-filter: blur(20px);
+  border-radius: clamp(24px, 4vw, 40px);
+  padding: clamp(24px, 5vh, 48px) clamp(20px, 4vw, 32px);
+  box-shadow: var(--shadow-strong);
+  border: 3px solid rgba(255, 255, 255, 0.6);
+  animation: cardEnter 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes cardEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(10vh) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.question-title {
+  font-size: clamp(20px, 4.5vw, 28px);
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: center;
+  color: #333;
+  margin-bottom: clamp(20px, 4vh, 36px);
+  position: relative;
+  padding: 0 clamp(20px, 4vw, 32px);
+}
+
+.question-title::before,
+.question-title::after {
+  content: '✨';
+  position: absolute;
+  font-size: clamp(20px, 4vw, 28px);
+  animation: sparkle 1.5s ease-in-out infinite;
+}
+
+.question-title::before {
+  left: 0;
+  top: -5px;
+}
+
+.question-title::after {
+  right: 0;
+  bottom: -5px;
+  animation-delay: 0.7s;
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0.3; transform: scale(0.8) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.2) rotate(180deg); }
+}
+
+/* 回答ボタン */
+.answer-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 2vh, 20px);
+}
+
+.answer-button {
+  position: relative;
+  min-height: max(60px, 8vh);
+  padding: clamp(16px, 2.5vh, 24px) clamp(20px, 4vw, 32px);
+  font-size: clamp(16px, 3.5vw, 20px);
+  font-weight: 700;
+  color: white;
+  background: linear-gradient(135deg, var(--viral-neon-pink), var(--viral-lavender));
+  border: 3px solid rgba(255, 255, 255, 0.6);
+  border-radius: clamp(24px, 4vw, 36px);
+  cursor: pointer;
+  box-shadow: var(--shadow-soft);
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  overflow: hidden;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.answer-button::before {
+  content: attr(data-emoji);
+  font-size: clamp(24px, 5vw, 32px);
+  flex-shrink: 0;
+}
+
+.answer-button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.8), transparent);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.answer-button:active::after {
+  width: 500px;
+  height: 500px;
+}
+
+.answer-button:active {
+  transform: scale(0.95);
+}
+
+.answer-button.selected {
+  background: var(--gradient-primary);
+  animation: buttonPulse 0.6s ease;
+  box-shadow: var(--shadow-neon);
+}
+
+@keyframes buttonPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* タブレット・PC対応 */
+@media (min-width: 768px) {
+  .start-screen {
+    padding: var(--spacing-xl);
+  }
+  
+  .quiz-content {
+    top: max(100px, 14vh);
+  }
+  
+  .answer-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: clamp(16px, 2.5vh, 24px);
+  }
+}
+
+@media (min-width: 1024px) {
+  .quiz-screen {
+    display: grid;
+    grid-template-columns: 45% 55%;
+    gap: 60px;
+    padding: 0 clamp(32px, 5vw, 80px);
+  }
+  
+  .quiz-header {
+    grid-column: 2;
+    position: relative;
+    top: auto;
+    margin-top: max(40px, 5vh);
+  }
+  
+  .quiz-content {
+    position: relative;
+    top: auto;
+    grid-column: 2;
+    padding: 0;
+    align-items: flex-start;
+    padding-top: max(20px, 3vh);
+  }
+  
+  .decoration-area {
+    grid-column: 1;
+    grid-row: 1 / 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: sticky;
+    top: max(80px, 10vh);
+    height: fit-content;
+  }
+  
+  .couple-illustration {
+    width: 100%;
+    max-width: 450px;
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3vh); }
+  }
+  
+  .answer-button {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><text y="24" font-size="24">💕</text></svg>'), auto;
+  }
+  
+  .answer-button:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: var(--shadow-strong);
+    border-color: var(--viral-hot-pink);
   }
 }
 
 @layer components {
-  /* ポップアートカラースタイル */
-  .pop-red {
-    color: #FF0000;
-    -webkit-text-stroke: 2px #000000;
-    text-shadow: 3px 3px 0 #FFD700;
+  /* New Kawaii カラースタイル - 可読性改善 */
+  .kawaii-pink {
+    color: #D63384;
+    text-shadow: 1px 1px 0 #FFB6C1, 2px 2px 0 rgba(255, 182, 193, 0.2);
+    font-weight: 600;
   }
   
-  .pop-blue {
-    color: #0066FF;
-    -webkit-text-stroke: 2px #000000;
-    text-shadow: 3px 3px 0 #FF0000;
+  .kawaii-purple {
+    color: #8B5A9F;
+    text-shadow: 1px 1px 0 #E6E6FA, 2px 2px 0 rgba(230, 230, 250, 0.2);
+    font-weight: 600;
   }
   
-  .pop-yellow {
-    color: #FFD700;
-    -webkit-text-stroke: 2px #000000;
-    text-shadow: 3px 3px 0 #0066FF;
+  .kawaii-light-pink {
+    color: #C2185B;
+    text-shadow: 0.5px 0.5px 0 #FFFFFF, 1px 1px 0 rgba(255, 105, 180, 0.1);
+    font-weight: 500;
   }
   
-  .pop-green {
-    color: #00CC44;
-    -webkit-text-stroke: 2px #000000;
-    text-shadow: 3px 3px 0 #FF0000;
+  .kawaii-gradient {
+    background: linear-gradient(135deg, #FF69B4 0%, #FFB6C1 50%, #E6E6FA 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
   
-  .pop-pink {
-    color: #FF69B4;
-    -webkit-text-stroke: 2px #000000;
-    text-shadow: 3px 3px 0 #0066FF;
-  }
-  
-  .pop-orange {
-    color: #FF6600;
-    -webkit-text-stroke: 2px #000000;
-    text-shadow: 3px 3px 0 #FFD700;
-  }
-  
-  /* ボタンスタイル - ポップアート風 */
-  .btn-primary {
-    @apply font-extrabold py-4 px-10 rounded-xl transition-all duration-200;
-    font-family: 'Bangers', 'M PLUS Rounded 1c', sans-serif;
-    font-size: 1.5rem;
-    background: #FF0000;
-    border: 4px solid #000000;
+  /* ボタンスタイル - New Kawaii風（可読性改善） */
+  .btn-kawaii-primary {
+    @apply font-bold py-4 px-8 rounded-2xl transition-all duration-300;
+    font-family: 'Noto Sans JP', 'Fredoka', sans-serif;
+    font-size: 1.2rem;
+    background: linear-gradient(135deg, #D63384 0%, #C2185B 100%);
+    border: 3px solid #FFFFFF;
     color: #FFFFFF;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    box-shadow: 6px 6px 0 #000000;
-  }
-  
-  .btn-primary:hover {
-    transform: translate(2px, 2px);
-    box-shadow: 4px 4px 0 #000000;
-  }
-  
-  .btn-secondary {
-    @apply font-extrabold py-4 px-10 rounded-xl transition-all duration-200;
-    font-family: 'Bangers', 'M PLUS Rounded 1c', sans-serif;
-    font-size: 1.5rem;
-    background: #0066FF;
-    border: 4px solid #000000;
-    color: #FFFFFF;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    box-shadow: 6px 6px 0 #000000;
-  }
-  
-  .btn-secondary:hover {
-    transform: translate(2px, 2px);
-    box-shadow: 4px 4px 0 #000000;
-  }
-  
-  /* カードスタイル - ポップアート風 */
-  .card {
-    @apply rounded-xl p-8;
-    background: #FFFFFF;
-    border: 6px solid #000000;
-    box-shadow: 8px 8px 0 #000000;
-    transform: rotate(1deg);
-    animation: pop-in 0.6s ease;
-  }
-  
-  .card-dark {
-    @apply rounded-xl p-8;
-    background: #FFD700;
-    border: 6px solid #000000;
-    box-shadow: 8px 8px 0 #000000;
-    transform: rotate(-1deg);
-  }
-  
-  /* 入力フィールド - ポップアート風 */
-  .input-field {
-    @apply w-full px-4 py-3 rounded-lg bg-white;
-    border: 3px solid #000000;
-    box-shadow: 3px 3px 0 #000000;
+    box-shadow: 0 8px 20px rgba(214, 51, 132, 0.3), 0 4px 8px rgba(194, 24, 91, 0.2);
+    position: relative;
+    overflow: hidden;
     font-weight: 700;
-    color: #000000;
   }
   
-  .input-field:focus {
+  .btn-kawaii-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+  }
+  
+  .btn-kawaii-primary:hover::before {
+    left: 100%;
+  }
+  
+  .btn-kawaii-primary:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 12px 25px rgba(255, 105, 180, 0.4), 0 6px 12px rgba(255, 182, 193, 0.3);
+  }
+  
+  .btn-kawaii-secondary {
+    @apply font-bold py-4 px-8 rounded-2xl transition-all duration-300;
+    font-family: 'Noto Sans JP', 'Fredoka', sans-serif;
+    font-size: 1.2rem;
+    background: linear-gradient(135deg, #E6E6FA 0%, #FFB6C1 100%);
+    border: 3px solid #FFFFFF;
+    color: #D63384;
+    box-shadow: 0 8px 20px rgba(230, 230, 250, 0.3), 0 4px 8px rgba(255, 182, 193, 0.2);
+    font-weight: 700;
+  }
+  
+  .btn-kawaii-secondary:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 12px 25px rgba(230, 230, 250, 0.4), 0 6px 12px rgba(255, 182, 193, 0.3);
+  }
+  
+  /* カードスタイル - New Kawaii風（可読性改善） */
+  .card-kawaii {
+    @apply rounded-3xl p-6 transition-all duration-300;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(214, 51, 132, 0.2);
+    box-shadow: 0 20px 40px rgba(214, 51, 132, 0.1), 0 8px 16px rgba(255, 182, 193, 0.05);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .card-kawaii::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #D63384, #C2185B, #8B5A9F);
+  }
+  
+  .card-kawaii:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 25px 50px rgba(214, 51, 132, 0.15), 0 12px 24px rgba(255, 182, 193, 0.1);
+  }
+  
+  .card-kawaii-dark {
+    @apply rounded-3xl p-6 transition-all duration-300;
+    background: linear-gradient(135deg, rgba(255, 182, 193, 0.9) 0%, rgba(230, 230, 250, 0.9) 100%);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(214, 51, 132, 0.2);
+    box-shadow: 0 20px 40px rgba(214, 51, 132, 0.15), 0 8px 16px rgba(255, 182, 193, 0.1);
+  }
+  
+  /* 入力フィールド - New Kawaii風（可読性改善） */
+  .input-kawaii {
+    @apply w-full px-4 py-3 rounded-2xl transition-all duration-300;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(214, 51, 132, 0.3);
+    box-shadow: 0 8px 20px rgba(214, 51, 132, 0.1);
+    font-family: 'Noto Sans JP', 'Fredoka', sans-serif;
+    font-weight: 500;
+    color: #2D2D2D;
+  }
+  
+  .input-kawaii:focus {
     outline: none;
-    border-color: #FF0000;
-    box-shadow: 5px 5px 0 #FF0000;
+    border-color: #D63384;
+    box-shadow: 0 12px 25px rgba(214, 51, 132, 0.2);
+    transform: translateY(-2px);
   }
   
-  /* キーワードタグ - ポップアート風 */
-  .keyword-tag {
-    @apply inline-block px-5 py-2 rounded-full text-sm font-extrabold transition-all duration-200 cursor-default;
-    font-family: 'M PLUS Rounded 1c', 'Noto Sans JP', sans-serif;
-    background: #FFD700;
-    border: 3px solid #000000;
-    color: #000000;
-    box-shadow: 3px 3px 0 #000000;
+  /* キーワードタグ - New Kawaii風（可読性改善） */
+  .tag-kawaii {
+    @apply inline-block px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 cursor-default;
+    font-family: 'Noto Sans JP', 'Fredoka', sans-serif;
+    background: linear-gradient(135deg, #FFB6C1 0%, #E6E6FA 100%);
+    border: 2px solid rgba(214, 51, 132, 0.3);
+    color: #D63384;
+    box-shadow: 0 4px 12px rgba(255, 182, 193, 0.3);
+    font-weight: 600;
   }
   
-  .keyword-tag:hover {
-    transform: scale(1.1) rotate(-3deg);
-    box-shadow: 5px 5px 0 #000000;
+  .tag-kawaii:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 6px 16px rgba(255, 182, 193, 0.4);
+    background: linear-gradient(135deg, #D63384 0%, #C2185B 100%);
+    color: #FFFFFF;
   }
   
-  /* 相性スコア表示 - ポップアート風 */
-  .compatibility-score {
-    @apply text-9xl font-black;
-    font-family: 'Bangers', sans-serif;
-    color: #FF0000;
-    -webkit-text-stroke: 4px #000000;
-    text-shadow: 5px 5px 0 #FFD700;
-    animation: countUp 1s ease, pop-pulse 1.5s infinite;
+  /* 相性スコア表示 - New Kawaii風（可読性改善） */
+  .score-kawaii {
+    @apply text-8xl font-bold;
+    font-family: 'Noto Sans JP', 'Fredoka', sans-serif;
+    background: linear-gradient(135deg, #D63384 0%, #C2185B 50%, #8B5A9F 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 2px 4px rgba(214, 51, 132, 0.2);
+    animation: kawaii-bounce 2s infinite;
+    font-weight: 800;
   }
   
-  /* 見出しスタイル - ポップアート風 */
-  .heading-primary {
-    @apply text-6xl font-black mb-6;
-    font-family: 'Bangers', 'M PLUS Rounded 1c', sans-serif;
-    color: #FF0000;
-    -webkit-text-stroke: 3px #000000;
-    text-shadow: 4px 4px 0 #FFD700;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    animation: pop-bounce 2s infinite;
+  /* 見出しスタイル - New Kawaii風（可読性改善） */
+  .heading-kawaii-primary {
+    @apply text-5xl font-bold mb-6;
+    font-family: 'Noto Sans JP', 'Fredoka', sans-serif;
+    background: linear-gradient(135deg, #D63384 0%, #C2185B 50%, #8B5A9F 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 2px 4px rgba(214, 51, 132, 0.2);
+    animation: kawaii-float 3s ease-in-out infinite;
   }
   
-  .heading-secondary {
-    @apply text-4xl font-black mb-4;
-    font-family: 'Fredoka One', 'M PLUS Rounded 1c', sans-serif;
-    color: #0066FF;
-    -webkit-text-stroke: 2px #000000;
-    text-shadow: 3px 3px 0 #FF69B4;
-    text-transform: uppercase;
+  .heading-kawaii-secondary {
+    @apply text-3xl font-semibold mb-4;
+    font-family: 'Noto Sans JP', 'Fredoka', sans-serif;
+    color: #D63384;
+    text-shadow: 0 1px 2px rgba(255, 182, 193, 0.2);
+    font-weight: 700;
   }
   
-  /* アニメーション */
-  @keyframes pop-in {
-    0% {
-      transform: scale(0) rotate(-180deg);
-      opacity: 0;
-    }
-    70% {
-      transform: scale(1.1) rotate(5deg);
-    }
-    100% {
-      transform: scale(1) rotate(1deg);
-      opacity: 1;
-    }
-  }
-  
-  @keyframes countUp {
-    from {
-      opacity: 0;
-      transform: scale(0.3) rotate(-15deg);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1) rotate(0deg);
-    }
-  }
-  
-  @keyframes pop-bounce {
+  /* New Kawaii アニメーション */
+  @keyframes kawaii-bounce {
     0%, 100% {
-      transform: translateY(0) rotate(-2deg);
+      transform: translateY(0) scale(1);
     }
     50% {
-      transform: translateY(-10px) rotate(2deg);
+      transform: translateY(-8px) scale(1.02);
     }
   }
   
-  @keyframes pop-pulse {
+  @keyframes kawaii-float {
+    0%, 100% {
+      transform: translateY(0) rotate(0deg);
+    }
+    33% {
+      transform: translateY(-5px) rotate(1deg);
+    }
+    66% {
+      transform: translateY(-3px) rotate(-1deg);
+    }
+  }
+  
+  @keyframes kawaii-shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+  
+  @keyframes kawaii-heart {
     0%, 100% {
       transform: scale(1);
     }
     50% {
-      transform: scale(1.05);
+      transform: scale(1.1);
     }
   }
   
@@ -276,5 +927,238 @@
 
   .animate-fadeIn {
     animation: fadeIn 0.3s ease-out;
+  }
+
+  /* 既存クラスのエイリアス（全画面へKawaii適用） */
+  .heading-primary {
+    @apply heading-kawaii-primary;
+  }
+  .heading-secondary {
+    @apply heading-kawaii-secondary;
+  }
+  .btn-primary {
+    @apply btn-kawaii-primary;
+  }
+  .btn-secondary {
+    @apply btn-kawaii-secondary;
+  }
+  .card {
+    @apply card-kawaii;
+    /* 旧UIのインライン指定を強制上書き */
+    background: rgba(255, 255, 255, 0.95) !important;
+    transform: none !important;
+    border-color: rgba(214, 51, 132, 0.2) !important;
+    box-shadow: 0 20px 40px rgba(214, 51, 132, 0.1), 0 8px 16px rgba(255, 182, 193, 0.05) !important;
+  }
+  /* 旧UIの装飾要素は非表示 */
+  .sound-effect { display: none !important; }
+
+  /* すきのおと ロゴスタイル - 強化版 */
+  .logo-suki-no-oto {
+    font-family: 'M PLUS Rounded 1c', 'Noto Sans JP', sans-serif;
+    font-weight: 900;
+    font-size: 4.5rem;
+    background: linear-gradient(135deg, #FFB6C1 0%, #FF69B4 25%, #FF1493 50%, #FF69B4 75%, #FFB6C1 100%);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 6px 12px rgba(255, 105, 180, 0.4), 0 2px 4px rgba(255, 20, 147, 0.6);
+    letter-spacing: 0.15em;
+    position: relative;
+    display: inline-block;
+    animation: logoSparkle 2s ease-in-out infinite, logoGradient 3s ease-in-out infinite;
+    filter: drop-shadow(0 4px 8px rgba(255, 105, 180, 0.3));
+  }
+
+  .logo-suki-no-oto::before {
+    content: '♪';
+    position: absolute;
+    top: -15px;
+    left: -30px;
+    font-size: 2rem;
+    color: #FFB6C1;
+    animation: logoFloat 1.8s ease-in-out infinite, musicNoteBounce 2.5s ease-in-out infinite;
+    filter: drop-shadow(0 2px 4px rgba(255, 105, 180, 0.4));
+  }
+
+  .logo-suki-no-oto::after {
+    content: '♫';
+    position: absolute;
+    top: -15px;
+    right: -30px;
+    font-size: 2rem;
+    color: #FF69B4;
+    animation: logoFloat 1.8s ease-in-out infinite 0.8s, musicNoteBounce 2.5s ease-in-out infinite 1.2s;
+    filter: drop-shadow(0 2px 4px rgba(255, 20, 147, 0.4));
+  }
+
+  .logo-sparkle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: linear-gradient(45deg, #FFD700, #FFA500);
+    border-radius: 50%;
+    animation: sparkleTwinkle 1.2s ease-in-out infinite;
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+  }
+
+  .logo-sparkle:nth-child(1) { top: 8%; left: 15%; animation-delay: 0s; }
+  .logo-sparkle:nth-child(2) { top: 25%; right: 12%; animation-delay: 0.3s; }
+  .logo-sparkle:nth-child(3) { bottom: 15%; left: 8%; animation-delay: 0.6s; }
+  .logo-sparkle:nth-child(4) { bottom: 35%; right: 20%; animation-delay: 0.9s; }
+  .logo-sparkle:nth-child(5) { top: 50%; left: 5%; animation-delay: 1.2s; }
+  .logo-sparkle:nth-child(6) { top: 60%; right: 8%; animation-delay: 1.5s; }
+
+  @keyframes logoSparkle {
+    0%, 100% { transform: scale(1); filter: brightness(1); }
+    50% { transform: scale(1.08); filter: brightness(1.3); }
+  }
+
+  @keyframes logoGradient {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  @keyframes logoFloat {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-12px) rotate(15deg); }
+  }
+
+  @keyframes musicNoteBounce {
+    0%, 100% { transform: translateY(0) scale(1); }
+    25% { transform: translateY(-8px) scale(1.1); }
+    75% { transform: translateY(-4px) scale(0.9); }
+  }
+
+  @keyframes sparkleTwinkle {
+    0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+    50% { opacity: 1; transform: scale(1.2) rotate(180deg); }
+  }
+
+  /* 音楽の波紋エフェクト */
+  .sound-wave {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 200px;
+    border: 3px solid rgba(255, 105, 180, 0.3);
+    border-radius: 50%;
+    animation: soundWave 2s ease-out infinite;
+  }
+
+  .sound-wave:nth-child(2) { animation-delay: 0.5s; }
+  .sound-wave:nth-child(3) { animation-delay: 1s; }
+
+  @keyframes soundWave {
+    0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+  }
+
+  /* ガーリー背景エフェクト */
+  .girly-bg {
+    background: linear-gradient(135deg, #FFE4E1 0%, #FFB6C1 25%, #FFC0CB 50%, #FFB6C1 75%, #FFE4E1 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .girly-bg::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 182, 193, 0.1) 0%, transparent 70%);
+    animation: girlyFloat 8s ease-in-out infinite;
+  }
+
+  .girly-bg::after {
+    content: '♡';
+    position: absolute;
+    top: 20%;
+    right: 10%;
+    font-size: 2rem;
+    color: rgba(255, 105, 180, 0.3);
+    animation: girlyFloat 6s ease-in-out infinite 2s;
+  }
+
+  @keyframes girlyFloat {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(5deg); }
+  }
+
+  /* ハートエフェクト */
+  .heart-effect {
+    position: relative;
+  }
+
+  .heart-effect::before {
+    content: '♡';
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.2rem;
+    color: #FF69B4;
+    animation: heartBounce 2s ease-in-out infinite;
+  }
+
+  @keyframes heartBounce {
+    0%, 100% { transform: translateX(-50%) translateY(0) scale(1); }
+    50% { transform: translateX(-50%) translateY(-10px) scale(1.2); }
+  }
+
+  /* かわいい絵文字ユーティリティ */
+  .emoji-kawaii {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    transform-origin: center;
+    filter: drop-shadow(0 2px 6px rgba(214, 51, 132, 0.25));
+  }
+  .emoji-md { font-size: 1.25rem; }
+  .emoji-lg { font-size: 1.75rem; }
+  .emoji-xl { font-size: 2.25rem; }
+  .emoji-2xl { font-size: 3rem; }
+
+  .emoji-pastel {
+    position: relative;
+  }
+  .emoji-pastel::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 9999px;
+    background: radial-gradient(closest-side, rgba(252, 231, 243, 0.9), rgba(252, 231, 243, 0.0));
+    z-index: -1;
+    filter: blur(2px);
+  }
+
+  .emoji-bounce {
+    animation: emojiBounce 1.8s ease-in-out infinite;
+  }
+  .emoji-float {
+    animation: emojiFloat 3s ease-in-out infinite;
+  }
+  .emoji-wiggle {
+    animation: emojiWiggle 1.2s ease-in-out infinite;
+  }
+
+  @keyframes emojiBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+  @keyframes emojiFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+  @keyframes emojiWiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-6deg); }
+    75% { transform: rotate(6deg); }
   }
 }

@@ -1,6 +1,6 @@
 import { Participant, CompatibilityScore } from '../types'
 
-// 酒癖診断の相性計算
+// グラスノオトの相性計算
 export function calculateDrinkingCompatibility(participants: Participant[]): CompatibilityScore[] {
   const scores: CompatibilityScore[] = []
   

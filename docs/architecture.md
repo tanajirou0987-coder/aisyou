@@ -105,7 +105,7 @@ interface AppState {
   <Route path="/results" element={<ResultsPage />} />
   <Route path="/couple-details" element={<CoupleDetailsPage />} />
   
-  {/* 酒癖診断のルート */}
+  {/* 酒の場診断のルート */}
   <Route path="/group-session-start" element={<GroupSessionStartPage />} />
   <Route path="/group-participant-registration" element={<GroupParticipantRegistrationPage />} />
   <Route path="/group-diagnosis" element={<GroupDiagnosisPage />} />

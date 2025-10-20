@@ -12,6 +12,8 @@ import {
 } from '../utils/scientificDrinkingAnalysis'
 import { getCombinationKeywords } from '../data/drinkingTypeKeywords'
 import { generateCompatibilityText, generateSameTypeCompatibilityText } from '../utils/compatibilityTextGenerator'
+import { generateCompatibilityResult, UserDrinkingProfile } from '../utils/buzzyCompatibilityGenerator'
+import { PageLayout } from '../layouts/PageLayout'
 
 export function PairDetailsPage() {
   const navigate = useNavigate()
@@ -25,10 +27,11 @@ export function PairDetailsPage() {
 
   if ((!maleId || !femaleId) && (!maleNameParam || !femaleNameParam)) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <PageLayout>
+        <div className="min-h-[calc(var(--vh,1vh)*100)] flex items-center justify-center">
         <div className="text-center">
-          <div className="card mb-6" style={{background: '#FF0000'}}>
-            <p className="text-white text-xl font-black" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>⚠️ ペア情報が見つかりません ⚠️</p>
+          <div className="card mb-6">
+            <p className="text-[#D63384] text-xl font-bold">⚠️ ペア情報が見つかりません ⚠️</p>
           </div>
           <button
             onClick={() => navigate('/group-results')}
@@ -37,7 +40,8 @@ export function PairDetailsPage() {
             結果に戻る
           </button>
         </div>
-      </div>
+        </div>
+      </PageLayout>
     )
   }
 
@@ -50,10 +54,11 @@ export function PairDetailsPage() {
 
   if (!maleParticipant || !femaleParticipant) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <PageLayout>
+        <div className="min-h-[calc(var(--vh,1vh)*100)] flex items-center justify-center">
         <div className="text-center">
-          <div className="card mb-6" style={{background: '#FF0000'}}>
-            <p className="text-white text-xl font-black" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>⚠️ 参加者情報が見つかりません ⚠️</p>
+          <div className="card mb-6">
+            <p className="text-[#D63384] text-xl font-bold">⚠️ 参加者情報が見つかりません ⚠️</p>
           </div>
           <button
             onClick={() => navigate('/group-results')}
@@ -62,7 +67,8 @@ export function PairDetailsPage() {
             結果に戻る
           </button>
         </div>
-      </div>
+        </div>
+      </PageLayout>
     )
   }
 
@@ -93,8 +99,167 @@ export function PairDetailsPage() {
   // 二人の組み合わせキーワードを取得
   const combinationKeywords = getCombinationKeywords(maleType, femaleType)
 
+  // 先に科学的相性スコアを計算（後続で参照するため）
+  const scientificScore = calculateScientificCompatibility()
+
+  // スコアに連動したキーワードフィルタ（誇張表現を除外）
+  const getFilteredKeywords = (keywords: string[], score: number) => {
+    const strongPatterns = [
+      '最高',
+      '最強',
+      '抜群',
+      '伝説',
+      '相性メーター振り切れ',
+      '科学的にも最高',
+      '中毒性MAX',
+      '朝まで',
+      '誰も止められない',
+      '大騒ぎ確定'
+    ]
+    const mediumPatterns = [
+      '良好',
+      '理想的',
+      '最高に楽しい',
+      '告白の予感',
+      'ゴールイン'
+    ]
+
+    // スコア帯ごとに除外強度を切替
+    if (score < 40) {
+      // 低スコア: 強い/中程度のポジ表現を幅広く除外
+      return keywords.filter(k => ![...strongPatterns, ...mediumPatterns].some(p => k.includes(p)))
+    }
+    if (score < 60) {
+      // 中低スコア: 強い誇張表現のみ除外
+      return keywords.filter(k => !strongPatterns.some(p => k.includes(p)))
+    }
+    // 60点以上はそのまま
+    return keywords
+  }
+
+  const filteredCombinationKeywords = getFilteredKeywords(
+    combinationKeywords,
+    pairScore?.romanticScore ?? scientificScore
+  )
+
+  // 科学用語を日常表現に置き換える
+  const toEverydayPhrase = (text: string) => {
+    return text
+      .replace(/ドーパミンとオキシトシン全開/g, 'ときめきと優しさが高まる')
+      .replace(/ドーパミンとセロトニン全開/g, '気持ちアガる×落ち着くミックス')
+      .replace(/ドーパミンとセロトニンのバランス/g, 'ノリと落ち着きのバランス')
+      .replace(/ドーパミンとセロトニン/g, 'ノリと落ち着き')
+      .replace(/ドーパミン過剰/g, '勢いが出過ぎ')
+      .replace(/ドーパミン系/g, 'テンション')
+      .replace(/ドーパミン全開/g, '気分アガるモード')
+      .replace(/オキシトシン分泌/g, 'やさしさ増し増し')
+      .replace(/GABA効果全開/g, '心ほぐれるモード')
+      .replace(/GABA効果とドーパミン活性化のバランス/g, '落ち着きと盛り上がりのバランス')
+      .replace(/GABA効果とドーパミンのバランス/g, '落ち着きとノリのいい感じバランス')
+      .replace(/GABA効果と感情表現/g, '落ち着きと素直さ')
+      .replace(/副交感神経と交感神経の調和/g, 'オンとオフの切り替え上手')
+      .replace(/副交感神経優位/g, 'リラックス全開')
+      .replace(/前頭前野の抑制解除/g, 'ブレーキ外れて大胆に')
+      .replace(/前頭前野の活性化と抑制/g, '冴えるときと緩むとき')
+      .replace(/前頭前野の活動/g, '冷静モード')
+      .replace(/前頭前野の機能維持/g, '冷静さキープ')
+      .replace(/前頭前野とドーパミン系が活性化/g, 'テンションとノリがかみ合う')
+      .replace(/恋愛ホルモン大放出/g, '恋のテンション高め')
+  }
+
+  const displayKeywords = filteredCombinationKeywords.map(k => toEverydayPhrase(k))
+
+  // --- バズる文言生成（性格傾向/相性診断/スキンシップ） ---
+  const countStars = (stars: string) => (stars.match(/★/g) || []).length
+
+  const buzzForLead = (level: number) => {
+    switch (true) {
+      case level >= 5: return '主導権ガチ取り勢'
+      case level === 4: return '先導したがりタイプ'
+      case level === 3: return '場面で切り替え型'
+      case level === 2: return '様子見で譲りがち'
+      default: return '受け身寄りで平和主義'
+    }
+  }
+
+  const buzzForActive = (level: number) => {
+    switch (true) {
+      case level >= 5: return '秒で行動'
+      case level === 4: return '決断早い・即実行'
+      case level === 3: return '考えてから動く'
+      case level === 2: return '慎重派'
+      default: return '石橋叩きがち'
+    }
+  }
+
+  const buzzTypeLabel = (type: string) => {
+    if (type.includes('S')) return 'ゴリゴリS系'
+    if (type.includes('M')) return 'やわらかM系'
+    return 'ハイブリッド型'
+  }
+
+  const maleLeadLevel = countStars(getPersonalityTendency(maleParticipant, 'leadership').stars)
+  const femaleLeadLevel = countStars(getPersonalityTendency(femaleParticipant, 'leadership').stars)
+  const maleActiveLevel = countStars(getPersonalityTendency(maleParticipant, 'activity').stars)
+  const femaleActiveLevel = countStars(getPersonalityTendency(femaleParticipant, 'activity').stars)
+
+  const maleTypeBuzz = buzzTypeLabel(getPersonalityTendency(maleParticipant, 'leadership').type)
+  const femaleTypeBuzz = buzzTypeLabel(getPersonalityTendency(femaleParticipant, 'leadership').type)
+
+  const pairSM = (t: string) => t.includes('S') ? 'S' : t.includes('M') ? 'M' : 'B'
+  const pairType = `${pairSM(getPersonalityTendency(maleParticipant, 'leadership').type)}×${pairSM(getPersonalityTendency(femaleParticipant, 'leadership').type)}`
+
+  const buildPairCatch = () => {
+    if (pairType === 'S×S') return '主導権争奪戦勃発'
+    if (pairType === 'S×M' || pairType === 'M×S') return '完璧すぎるバランスで成立'
+    if (pairType === 'M×M') return '誰がリードするねん問題'
+    return '役割入れ替え自由ペア'
+  }
+
+  const buildBoldPhrase = () => {
+    if (pairType === 'S×S') return 'どっちがリードする問題、永遠に解決しない説'
+    if (pairType === 'S×M' || pairType === 'M×S') return 'リードとフォロー、役割分担が神すぎる'
+    if (pairType === 'M×M') return '「どうする？」「いや、そっちが決めて」の無限ループ'
+    return 'その日のノリで役割がスイッチする自由形'
+  }
+
+  const buildExplanation = () => {
+    const lines: string[] = []
+    if (pairType === 'S×S') {
+      lines.push('注文ひとつで火花。席替えの主導権も譲らない。刺激強めでマンネリ無縁。')
+    } else if (pairType === 'S×M' || pairType === 'M×S') {
+      lines.push('乾杯の合図も会計の合図も自然に分担。ストレスゼロで流れる夜。')
+    } else if (pairType === 'M×M') {
+      lines.push('店決めで10分議論→結局いつもの店。優しすぎて決まらない、でも平和。')
+    } else {
+      lines.push('リードもフォローもできる万能型。席次が変わっても成立する安心感。')
+    }
+    if (maleActiveLevel >= 4 && femaleActiveLevel >= 4) lines.push('思い立ったら即移動。待つという概念がない速攻コンビ。')
+    else if (maleActiveLevel <= 2 && femaleActiveLevel <= 2) lines.push('慎重派同士。計画に計画を重ねる安全運転。')
+    else lines.push('「もう行く？」「え、まだ早くない？」テンポのズレがたまにスパイス。')
+    return lines.join('\n')
+  }
+
+  // スキンシップ傾向（タイトル+描写）
+  const mapKiss = (level: string) => {
+    if (level.includes('高')) return { t: '常時キス可能状態', d: '会うたびに秒でキス。周りから「またか」と言われるやつ。' }
+    if (level.includes('じっくり') || level.includes('控')) return { t: 'レアキスだから価値がある派', d: '特別な時だけ。だからこそ一回の重みがすごい。' }
+    return { t: 'ちょうどいいキス頻度', d: 'いいムードの時だけ。多すぎず少なすぎずの絶妙バランス。' }
+  }
+  const mapSweet = (style: string) => {
+    if (style.includes('おねだり')) return { t: 'おねだり上手', d: '「ねぇ」の一言で主導権をさらっと取る。可愛い顔して戦術的。' }
+    if (style.includes('素直')) return { t: 'ストレートに甘えるタイプ', d: '「甘えたい」をそのまま言える。駆け引きなしの正直者。' }
+    if (style.includes('ツン') || style.includes('照')) return { t: '照れ隠し甘え', d: '本当は甘えたいのに「別に…」。でもバレバレで可愛い。' }
+    return { t: '甘えるふりして攻めてくるタイプ', d: '可愛く見せつつ実は要求してくる上級テク。' }
+  }
+  const mapLove = (style: string) => {
+    if (style.includes('雰囲気')) return { t: 'ムード作りプロ', d: 'キャンドルも音楽も照明も計算済み。雰囲気作って落とすタイプ。' }
+    if (style.includes('言葉')) return { t: '言葉でガンガン伝えるタイプ', d: '「好き」「愛してる」を惜しまない。言葉でちゃんと届ける派。' }
+    return { t: '口より行動派', d: '多く語らず行動で示す。黙って尽くして伝わるやつ。' }
+  }
+
   // 科学的な相性スコアを計算
-  const calculateScientificCompatibility = () => {
+  function calculateScientificCompatibility() {
     if (!maleParticipant.diagnosisData || !femaleParticipant.diagnosisData) {
       return pairScore?.romanticScore || 50
     }
@@ -128,15 +293,15 @@ export function PairDetailsPage() {
       ro = new ResizeObserver(() => update())
       ro.observe(el)
     } else {
-      window.addEventListener('resize', update)
+      (window as Window).addEventListener('resize', update)
     }
     return () => {
       if (ro) ro.disconnect()
-      else window.removeEventListener('resize', update)
+      else (window as Window).removeEventListener('resize', update)
     }
   }, [])
 
-  const scientificScore = calculateScientificCompatibility()
+  // scientificScore は上部で定義済み
 
   // ペア相性の詳細分析を生成（個人診断の詳細データをベースに）
   const getPairAnalysis = (maleType: string, femaleType: string, score: number, maleName: string, femaleName: string) => {
@@ -505,8 +670,20 @@ export function PairDetailsPage() {
 
   const analysis = getPairAnalysis(maleType, femaleType, scientificScore, maleParticipant.userName, femaleParticipant.userName)
 
-  // 科学的根拠に基づいた性格傾向を計算する関数
-  const getPersonalityTendency = (participant: any, category: 'leadership' | 'activity') => {
+  // バズる診断結果生成のための簡易プロフィール
+  const toProfile = (p: any): UserDrinkingProfile => ({
+    価値観: p?.valuesPreference || p?.valueStyle || p?.value || '終電まで1軒派',
+    お金の使い方: p?.moneyStyle || '割り勘派',
+    会話スタイル: p?.talkStyle || '哲学的',
+    酔い方: p?.drinkingChange || '変わらない',
+    役割: p?.partyRole || '聞き役',
+    酔いのペース: p?.peakPace || '2時間後ピーク'
+  })
+
+  const buzzy = generateCompatibilityResult(toProfile(maleParticipant), toProfile(femaleParticipant))
+
+  // 科学的根拠に基づいた性格傾向を計算する関数（関数宣言で先に参照可能に）
+  function getPersonalityTendency(participant: any, category: 'leadership' | 'activity') {
     if (!participant.diagnosisData || participant.diagnosisData.length === 0) {
       return { stars: '★★★☆☆', type: 'バランス' }
     }
@@ -608,8 +785,8 @@ export function PairDetailsPage() {
   }
 
   return (
-    <div className="min-h-screen p-3 sm:p-4 md:p-8">
-      <div className="max-w-6xl mx-auto">
+    <PageLayout>
+      <div className="kawaii-reset max-w-6xl mx-auto p-3 sm:p-4 md:p-8">
         {/* ヘッダー - モバイルはコンパクト、PCは従来の演出 */}
         <div className="text-center mb-3 md:mb-8">
           <button
@@ -621,48 +798,38 @@ export function PairDetailsPage() {
             <span className="hidden md:inline">結果に戻る</span>
           </button>
           {/* モバイルタイトル */}
-          <div className="card p-2 lg:hidden" style={{background: '#0066FF'}}>
-            <h1 className="text-lg font-bold text-white mb-1">ペア相性詳細分析</h1>
-            <p className="text-xs font-bold text-white">二人の相性をコンパクト表示</p>
+          <div className="card p-2 lg:hidden">
+            <h1 className="text-lg font-bold heading-secondary mb-1">ペア相性詳細分析</h1>
+            <p className="text-xs text-gray-600">二人の相性をコンパクト表示</p>
           </div>
           {/* PCタイトル */}
-          <div className="hidden lg:block card relative" style={{background: '#0066FF', transform: 'rotate(-2deg)'}}>
-            <span className="sound-effect pop-yellow absolute top-2 left-4" style={{transform: 'rotate(-15deg)', fontSize: '1.5rem'}}>💘</span>
-            <span className="sound-effect pop-pink absolute top-2 right-4" style={{transform: 'rotate(15deg)', fontSize: '1.5rem'}}>LOVE!</span>
-            <h1 className="heading-primary text-6xl mb-3" style={{color: '#FF69B4', WebkitTextStroke: '3px #000000', textShadow: '5px 5px 0 #FFD700'}}>
-              ペア相性詳細分析
-            </h1>
-            <p className="text-xl font-black text-white" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
-              ★ この二人の相性を詳しく分析しました ★
-            </p>
+          <div className="hidden lg:block card relative">
+            <h1 className="heading-secondary text-4xl mb-1 text-[#D63384]"><span className="emoji-kawaii emoji-lg emoji-pastel">💞</span> ペア相性詳細分析</h1>
+            <p className="text-xl font-semibold text-gray-700">この二人の相性を詳しく分析しました</p>
           </div>
         </div>
 
         {/* ペア情報 - モバイルは簡潔表示 */}
-        <div className="card mb-3 md:mb-6 p-3 md:p-6" style={{background: '#FFFFFF'}}>
+        <div className="card mb-3 md:mb-6 p-3 md:p-6">
           <div className="text-center mb-3 md:mb-6">
             <div className="flex justify-center mb-2 md:mb-4">
-              <div className="relative p-2 md:p-4 bg-pink-500 rounded-full border-2 md:border-5 border-black" style={{boxShadow: '2px 2px 0 #000000, 6px 6px 0 #000000'}}>
-                <Users className="w-6 h-6 md:w-12 md:h-12 text-white" />
-                <Heart className="w-3 h-3 md:w-7 md:h-7 text-red-600 absolute -top-1 -right-1 animate-pulse" />
+              <div className="relative p-2 md:p-4 bg-pink-100 rounded-full border border-pink-200">
+                <Users className="w-6 h-6 md:w-12 md:h-12 text-[#D63384]" />
+                <Heart className="w-3 h-3 md:w-7 md:h-7 text-pink-400 absolute -top-1 -right-1 animate-pulse" />
               </div>
             </div>
             <h2 className="text-sm font-bold md:heading-secondary mb-2 md:mb-6">
               <span className="lg:hidden">このペアの相性</span>
-              <span className="hidden md:inline">💥 このペアの酒癖相性分析 💥</span>
+              <span className="hidden md:inline"><span className="emoji-kawaii emoji-md emoji-bounce">✨</span> このペアの酒癖相性分析 <span className="emoji-kawaii emoji-md emoji-bounce">✨</span></span>
             </h2>
             <div className="flex justify-center items-center gap-2 md:gap-6 mb-3 md:mb-6">
               <div className="text-center">
-                <div className={`inline-block px-2 md:px-4 py-1 md:py-2 rounded-lg md:rounded-xl font-black text-white border-2 md:border-4 border-black text-sm md:text-xl ${maleParticipant.gender === 'male' ? 'bg-blue-500' : 'bg-pink-500'}`} style={{boxShadow: '2px 2px 0 #000000, 4px 4px 0 #000000', fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
-                  {maleParticipant.gender === 'male' ? '♂' : '♀'} {maleParticipant.userName}
-                </div>
+                <span className="tag-kawaii text-sm md:text-xl">{maleParticipant.gender === 'male' ? '♂' : '♀'} {maleParticipant.userName}</span>
                 <div className="text-xs md:text-sm text-black font-bold mt-1 md:mt-2">{maleType}</div>
               </div>
-              <div className="text-2xl md:text-5xl font-black" style={{fontFamily: 'Bangers, sans-serif', WebkitTextStroke: '0 md:2px #000000', color: '#FF0000'}}>×</div>
+              <div className="text-2xl md:text-5xl font-black text-gray-600">×</div>
               <div className="text-center">
-                <div className={`inline-block px-2 md:px-4 py-1 md:py-2 rounded-lg md:rounded-xl font-black text-white border-2 md:border-4 border-black text-sm md:text-xl ${femaleParticipant.gender === 'male' ? 'bg-blue-500' : 'bg-pink-500'}`} style={{boxShadow: '2px 2px 0 #000000, 4px 4px 0 #000000', fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
-                  {femaleParticipant.gender === 'male' ? '♂' : '♀'} {femaleParticipant.userName}
-                </div>
+                <span className="tag-kawaii text-sm md:text-xl">{femaleParticipant.gender === 'male' ? '♂' : '♀'} {femaleParticipant.userName}</span>
                 <div className="text-xs md:text-sm text-black font-bold mt-1 md:mt-2">{femaleType}</div>
               </div>
             </div>
@@ -675,48 +842,28 @@ export function PairDetailsPage() {
               <div className="flex items-start gap-2 md:gap-4">
                 {/* イキリスのキャラクター */}
                 <div className="flex-shrink-0">
-                  <div className="relative w-12 h-12 md:w-24 md:h-24 rounded-full flex items-center justify-center transform hover:scale-110 transition-transform" style={{
-                    background: '#00CC44',
-                    border: '2px md:border-4 solid #000000',
-                    boxShadow: '2px 2px 0 #000000, 5px 5px 0 #000000'
-                  }}>
+                  <div className="relative w-12 h-12 md:w-24 md:h-24 rounded-full flex items-center justify-center bg-pink-100 border border-pink-200">
                     <span className="text-xl md:text-4xl">🐿️</span>
                     <span className="absolute -right-0.5 md:-right-1 bottom-1 md:bottom-2 text-sm md:text-2xl transform rotate-12">🍺</span>
                   </div>
-                  <div className="text-center mt-1 md:mt-2 px-1 md:px-2 py-0.5 md:py-1 bg-black rounded md:rounded-lg border border-black md:border-2" style={{boxShadow: '1px 1px 0 #FF0000, 2px 2px 0 #FF0000'}}>
-                    <p className="text-xs font-black text-white" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>イキリス</p>
+                  <div className="text-center mt-1 md:mt-2">
+                    <span className="tag-kawaii text-xs">イキリス</span>
                   </div>
                 </div>
                 
                 {/* 吹き出し */}
                 <div className="flex-1 relative">
-                  <div className="rounded-lg md:rounded-2xl p-3 md:p-6 relative" style={{
-                    background: '#FFFFFF',
-                    border: '2px md:border-5 solid #000000',
-                    boxShadow: '3px 3px 0 #000000, 6px 6px 0 #000000'
-                  }}>
+                  <div className="card p-3 md:p-6">
                     {/* 吹き出しの三角形（PCのみ） */}
-                    <div className="hidden lg:block absolute left-0 top-8 transform -translate-x-4">
-                      <div className="w-0 h-0" style={{
-                        borderTop: '15px solid transparent',
-                        borderRight: '15px solid #FFFFFF',
-                        borderBottom: '15px solid transparent'
-                      }}></div>
-                      <div className="w-0 h-0 absolute top-0 left-0 transform -translate-x-1" style={{
-                        borderTop: '16px solid transparent',
-                        borderRight: '16px solid #000000',
-                        borderBottom: '16px solid transparent'
-                      }}></div>
-                    </div>
                     
                     <div className="flex items-start gap-1 md:gap-2 mb-2 md:mb-3">
-                      <Sparkles className="w-4 h-4 md:w-6 md:h-6 text-yellow-500 flex-shrink-0 mt-0.5 md:mt-1" style={{filter: 'drop-shadow(1px 1px 0 #000000)'}} />
-                      <h3 className="text-sm md:text-2xl font-black text-black" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
-                        💥 {analysis.relationshipType} 💥
+                      <Sparkles className="w-4 h-4 md:w-6 md:h-6 text-pink-400 flex-shrink-0 mt-0.5 md:mt-1" />
+                      <h3 className="text-sm md:text-2xl font-bold text-gray-800">
+                        <span className="emoji-kawaii emoji-md emoji-bounce">💥</span> {analysis.relationshipType} <span className="emoji-kawaii emoji-md emoji-bounce">💥</span>
                       </h3>
                     </div>
                     
-                    <p className="text-black leading-relaxed text-xs md:text-base font-bold pl-0 md:pl-7" style={{fontFamily: 'Noto Sans JP, sans-serif'}}>
+                    <p className="text-gray-700 leading-relaxed text-xs md:text-base font-bold pl-0 md:pl-7">
                       {analysis.coupleDescription}
                     </p>
                   </div>
@@ -727,9 +874,9 @@ export function PairDetailsPage() {
         </div>
 
         {/* 相性スコア詳細 - ポップアート風 */}
-        <div className="card mb-6" style={{background: '#FFFFFF', transform: 'rotate(1deg)'}}>
-          <h3 className="text-3xl font-black mb-6 flex items-center gap-2" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif', WebkitTextStroke: '1px #000000', color: '#00CC44', textShadow: '3px 3px 0 #FFD700'}}>
-            <TrendingUp className="w-7 h-7 text-green-600" style={{filter: 'drop-shadow(2px 2px 0 #000000)'}} />
+        <div className="card mb-6">
+          <h3 className="heading-secondary mb-3 flex items-center gap-2 text-[#D63384]">
+            <TrendingUp className="w-7 h-7 text-[#D63384]" />
             ★ 相性スコア詳細 ★
           </h3>
           
@@ -739,18 +886,18 @@ export function PairDetailsPage() {
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
             {Object.entries(analysis.detailedScores).map(([category, score]) => {
               const clampScore = Math.max(0, Math.min(100, Number(score)))
-              const conic = `conic-gradient(#FF3B30 ${clampScore * 3.6}deg, #FEE2E2 0deg)`
+              const conic = `conic-gradient(#D63384 ${clampScore * 3.6}deg, #FCE7F3 0deg)`
               return (
-                <div key={category} className="p-2 md:p-3 rounded-lg border-2 md:border-3 border-black bg-white" style={{boxShadow: '2px 2px 0 #000000'}}>
+                <div key={category} className="card p-2 md:p-3">
                   <div className="flex items-center gap-2">
                     <div className="relative shrink-0" style={{ width: '48px', height: '48px' }}>
-                      <div className="w-full h-full rounded-full border border-black" style={{ background: conic }}></div>
-                      <div className="absolute inset-1.5 bg-white rounded-full border border-black flex items-center justify-center">
-                        <span className="text-[10px] md:text-xs font-bold" style={{fontFamily: 'Bangers, sans-serif'}}>{clampScore}</span>
+                      <div className="w-full h-full rounded-full border border-pink-200" style={{ background: conic }}></div>
+                      <div className="absolute inset-1.5 bg-white rounded-full border border-pink-200 flex items-center justify-center">
+                        <span className="text-[10px] md:text-xs font-bold">{clampScore}</span>
                       </div>
                     </div>
                     <div className="min-w-0">
-                      <div className="text-[11px] md:text-sm font-black text-black leading-tight truncate" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>{category}</div>
+                      <div className="text-[11px] md:text-sm font-bold text-gray-800 leading-tight truncate">{category}</div>
                       <div className="text-[10px] md:text-xs text-gray-600">{clampScore}点</div>
                     </div>
                   </div>
@@ -760,33 +907,51 @@ export function PairDetailsPage() {
           </div>
         </div>
 
+        {/* 診断ハイライト - SNS向け要約 */}
+        <div className="card mb-6">
+          <h3 className="heading-secondary mb-3">今夜の相性ハイライト</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {(['価値観の一致','会話のテンポ','居心地','補完関係'] as const).map((key) => (
+              <div key={key} className="card p-3">
+                <div className="font-black mb-1">{(buzzy as any)[key].タイトル}</div>
+                <div className="text-sm whitespace-pre-line">{(buzzy as any)[key].解説}</div>
+                <div className="text-right text-xs mt-1">{(buzzy as any)[key].相性スコア}点</div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-4 card p-3">
+            <div className="font-black">総合：{buzzy.総合相性.タイトル}</div>
+            <div className="text-right text-sm mt-1">{buzzy.総合相性.スコア}点</div>
+          </div>
+        </div>
+
         {/* 今夜の恋愛可能性詳細分析 - ポップアート風 */}
         {analysis.romanticDetailAnalysis && (
-          <div className="card mb-6" style={{background: '#FF69B4', transform: 'rotate(-1deg)'}}>
-            <h3 className="text-3xl font-black text-white mb-6 flex items-center gap-2" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif', WebkitTextStroke: '1px #000000'}}>
-              <Heart className="w-7 h-7 text-red-600 animate-pulse" style={{filter: 'drop-shadow(2px 2px 0 #000000)'}} />
-              💘 今夜の恋愛可能性詳細分析 💘
-          </h3>
+          <div className="card mb-6">
+            <h3 className="heading-secondary mb-3 flex items-center gap-2">
+              <Heart className="w-7 h-7 text-pink-400 animate-pulse" />
+              <span className="emoji-kawaii emoji-md emoji-bounce">💘</span> 今夜の恋愛可能性詳細分析 <span className="emoji-kawaii emoji-md emoji-bounce">💘</span>
+            </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {Object.entries(analysis.romanticDetailAnalysis).map(([key, value]: [string, any]) => (
-                <div key={key} className="p-5 rounded-xl border-4 border-black" style={{background: '#FFFFFF', boxShadow: '4px 4px 0 #000000'}}>
+                <div key={key} className="card p-5">
                   <div className="flex justify-between items-center mb-3">
-                    <span className="font-black text-black">
+                    <span className="font-bold text-gray-800">
                       {key === 'excitementLevel' ? '盛り上がり度' :
                        key === 'closenessSpeed' ? '親密度上昇' :
                        key === 'confessionChance' ? '告白チャンス' :
                        key === 'physicalContact' ? 'スキンシップ' :
                        '翌日継続性'}
                     </span>
-                    <span className="text-2xl font-black text-red-600" style={{fontFamily: 'Bangers, sans-serif', WebkitTextStroke: '1px #000000'}}>{value.score}点</span>
+                    <span className="text-2xl font-bold text-[#D63384]">{value.score}点</span>
             </div>
-                  <div className="w-full bg-gray-300 rounded-full h-3 border-2 border-black">
+                  <div className="w-full bg-gray-200 rounded-full h-3">
                     <div 
-                      className="h-3 rounded-full transition-all duration-500"
-                      style={{ width: `${value.score}%`, background: '#FF0000', boxShadow: 'inset 0 -2px 4px rgba(0,0,0,0.3)' }}
+                      className="h-3 rounded-full transition-all duration-500 bg-[#D63384]"
+                      style={{ width: `${value.score}%` }}
                     ></div>
                   </div>
-                  <p className="text-sm text-black mt-2 font-bold">{value.text}</p>
+                  <p className="text-sm text-gray-700 mt-2 font-bold">{value.text}</p>
                 </div>
               ))}
             </div>
@@ -794,20 +959,20 @@ export function PairDetailsPage() {
         )}
 
         {/* 二人を表す30のキーワード - ポップアート風（モバイルは極小タグ） */}
-        <div className="card mb-4 md:mb-6 p-3 md:p-6" style={{background: '#FFFFFF'}}>
+        <div className="card mb-4 md:mb-6 p-3 md:p-6">
           <h3 className="text-sm md:heading-secondary font-extrabold mb-2 md:mb-4 flex items-center gap-1 md:gap-2">
-            <Tag className="w-4 h-4 md:w-7 md:h-7 text-yellow-500" style={{filter: 'drop-shadow(1px 1px 0 #000000)'}} />
+            <Tag className="w-4 h-4 md:w-7 md:h-7 text-pink-400" />
             <span className="lg:hidden">🏷️ 30キーワード</span>
             <span className="hidden md:inline">🏷️ 二人の組み合わせを表す30のキーワード 🏷️</span>
           </h3>
-          <p className="text-xs md:text-lg text-black font-black mb-2 md:mb-6" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif'}}>
+          <p className="text-xs md:text-lg text-gray-700 font-bold mb-2 md:mb-6">
             科学的根拠に基づいた、{maleParticipant.userName}さん×{femaleParticipant.userName}さんの特徴的なキーワードです 💥
           </p>
           <div className="flex flex-wrap gap-1.5 md:gap-3">
-            {combinationKeywords.map((keyword: string, index: number) => (
+            {displayKeywords.map((keyword: string, index: number) => (
               <span
                 key={index}
-                className="keyword-tag text-[10px] md:text-sm px-1 py-0.5 md:px-2 md:py-1"
+                className="tag-kawaii text-[10px] md:text-sm px-1 py-0.5 md:px-2 md:py-1"
               >
                 {keyword}
               </span>
@@ -817,27 +982,27 @@ export function PairDetailsPage() {
 
         {/* 今夜のおすすめアクション提案 - ポップアート風 */}
         {analysis.romanticActionRecommendations && (
-          <div className="card mb-6" style={{background: '#FFFFFF', transform: 'rotate(-1deg)'}}>
+          <div className="card mb-6">
             <h3 className="heading-secondary mb-6 flex items-center gap-2">
-              <Sparkles className="w-7 h-7 text-yellow-400 animate-pulse" style={{filter: 'drop-shadow(2px 2px 0 #000000)'}} />
+              <Sparkles className="w-7 h-7 text-pink-400 animate-pulse" />
               💡 今夜のおすすめアクション提案 💡
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="p-5 rounded-xl border-4 border-black" style={{background: '#00CC44', boxShadow: '4px 4px 0 #000000'}}>
-                <h4 className="font-black text-white mb-3 text-xl" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif', WebkitTextStroke: '1px #000000'}}>✅ 今夜やるべきこと</h4>
-                <p className="text-white font-bold">{analysis.romanticActionRecommendations.whatToDoTonight}</p>
+              <div className="card p-5">
+                <h4 className="font-bold text-[#D63384] mb-3 text-xl">✅ 今夜やるべきこと</h4>
+                <p className="text-gray-700 font-bold">{analysis.romanticActionRecommendations.whatToDoTonight}</p>
               </div>
-              <div className="p-5 rounded-xl border-4 border-black" style={{background: '#FF0000', boxShadow: '4px 4px 0 #000000'}}>
-                <h4 className="font-black text-white mb-3 text-xl" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif', WebkitTextStroke: '1px #000000'}}>❌ 今夜避けるべきこと</h4>
-                <p className="text-white font-bold">{analysis.romanticActionRecommendations.whatNotToDo}</p>
+              <div className="card p-5">
+                <h4 className="font-bold text-[#D63384] mb-3 text-xl">❌ 今夜避けるべきこと</h4>
+                <p className="text-gray-700 font-bold">{analysis.romanticActionRecommendations.whatNotToDo}</p>
               </div>
-              <div className="p-5 rounded-xl border-4 border-black" style={{background: '#0066FF', boxShadow: '4px 4px 0 #000000'}}>
-                <h4 className="font-black text-white mb-3 text-xl" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif', WebkitTextStroke: '1px #000000'}}>💡 おすすめの動き</h4>
-                <p className="text-white font-bold">{analysis.romanticActionRecommendations.recommendedMove}</p>
+              <div className="card p-5">
+                <h4 className="font-bold text-[#D63384] mb-3 text-xl">💡 おすすめの動き</h4>
+                <p className="text-gray-700 font-bold">{analysis.romanticActionRecommendations.recommendedMove}</p>
               </div>
-              <div className="p-5 rounded-xl border-4 border-black" style={{background: '#FF69B4', boxShadow: '4px 4px 0 #000000'}}>
-                <h4 className="font-black text-white mb-3 text-xl" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif', WebkitTextStroke: '1px #000000'}}>📅 翌日のフォロー</h4>
-                <p className="text-white font-bold">{analysis.romanticActionRecommendations.nextDayFollow}</p>
+              <div className="card p-5">
+                <h4 className="font-bold text-[#D63384] mb-3 text-xl">📅 翌日のフォロー</h4>
+                <p className="text-gray-700 font-bold">{analysis.romanticActionRecommendations.nextDayFollow}</p>
               </div>
             </div>
           </div>
@@ -845,126 +1010,84 @@ export function PairDetailsPage() {
 
         {/* おすすめの席の配置と飲み物 - ポップアート風 */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <div className="card" style={{background: '#FFD700', transform: 'rotate(1deg)'}}>
-            <h3 className="text-2xl font-black text-black mb-4 flex items-center gap-2" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif', WebkitTextStroke: '1px #000000'}}>
-              <Star className="w-6 h-6 text-red-600" style={{filter: 'drop-shadow(2px 2px 0 #000000)'}} />
-              ★ おすすめの席の配置 ★
+          <div className="card">
+            <h3 className="heading-secondary mb-4 flex items-center gap-2">
+              <Star className="w-6 h-6 text-[#D63384]" />
+              🔥 ふたりの性格傾向 🔥
             </h3>
-            <p className="text-black leading-relaxed font-bold">
-              {analysis.recommendedSeating}
-            </p>
+            <div className="text-gray-700 leading-relaxed font-bold space-y-3">
+              <div>
+                <div>【{maleParticipant.userName}】</div>
+                <div>- 主導権レベル：{'★'.repeat(maleLeadLevel)}{'☆'.repeat(5 - maleLeadLevel)}（{buzzForLead(maleLeadLevel)}）</div>
+                <div>- 攻め度：{'★'.repeat(maleActiveLevel)}{'☆'.repeat(5 - maleActiveLevel)}（{buzzForActive(maleActiveLevel)}）</div>
+                <div>- タイプ：{maleTypeBuzz}</div>
+              </div>
+              <div>
+                <div>【{femaleParticipant.userName}】</div>
+                <div>- 主導権レベル：{'★'.repeat(femaleLeadLevel)}{'☆'.repeat(5 - femaleLeadLevel)}（{buzzForLead(femaleLeadLevel)}）</div>
+                <div>- 攻め度：{'★'.repeat(femaleActiveLevel)}{'☆'.repeat(5 - femaleActiveLevel)}（{buzzForActive(femaleActiveLevel)}）</div>
+                <div>- タイプ：{femaleTypeBuzz}</div>
+              </div>
+            </div>
           </div>
 
-          <div className="card" style={{background: '#FF69B4', transform: 'rotate(-1deg)'}}>
-            <h3 className="text-2xl font-black text-white mb-4 flex items-center gap-2" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif', WebkitTextStroke: '1px #000000'}}>
-              <Wine className="w-6 h-6 text-purple-900" style={{filter: 'drop-shadow(2px 2px 0 #000000)'}} />
-              🍷 おすすめの飲み物 🍷
+          <div className="card">
+            <h3 className="heading-secondary mb-4 flex items-center gap-2">
+              <Wine className="w-6 h-6 text-pink-400" />
+              <span className="emoji-kawaii emoji-md emoji-bounce">💡</span> 相性診断結果 <span className="emoji-kawaii emoji-md emoji-bounce">💡</span>
             </h3>
-            <p className="text-white leading-relaxed font-bold">
-              {analysis.drinkRecommendations}
-            </p>
+            <div className="text-gray-700 font-bold whitespace-pre-line">
+              🔥「{buildPairCatch()}」
+
+              **{buildBoldPhrase()}**
+
+              {buildExplanation()}
+            </div>
           </div>
         </div>
 
         {/* 会話のトピック - ポップアート風 */}
-        <div className="card mb-6" style={{background: '#0066FF', transform: 'rotate(-1deg)'}}>
-          <h3 className="text-2xl font-black text-white mb-4 flex items-center gap-2" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif', WebkitTextStroke: '1px #000000'}}>
-            <MessageCircle className="w-6 h-6 text-yellow-300" style={{filter: 'drop-shadow(2px 2px 0 #000000)'}} />
-            💬 おすすめの会話トピック 💬
+        <div className="card mb-6">
+          <h3 className="heading-secondary mb-4 flex items-center gap-2">
+            <MessageCircle className="w-6 h-6 text-pink-400" />
+            <span className="emoji-kawaii emoji-md emoji-bounce">💬</span> おすすめの会話トピック <span className="emoji-kawaii emoji-md emoji-bounce">💬</span>
           </h3>
-          <p className="text-white leading-relaxed font-bold">
+          <p className="text-gray-700 leading-relaxed font-bold">
             {analysis.conversationTopics}
           </p>
         </div>
 
-        {/* 性格傾向 - ポップアート風 */}
-        <div className="card mb-6" style={{background: '#FFFFFF'}}>
-          <h3 className="heading-secondary mb-6 flex items-center gap-2">
-            🔥 ふたりの性格傾向 🔥
-          </h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
-            {/* 男性の性格傾向 */}
-            <div className="p-5 rounded-xl border-4 border-black" style={{background: '#0066FF', boxShadow: '4px 4px 0 #000000'}}>
-              <h4 className="font-black text-white mb-4 text-center text-xl" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif', WebkitTextStroke: '1px #000000'}}>
-                {maleParticipant.userName}
-              </h4>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-lg font-black text-white">リード度：</span>
-                  <div className="flex">
-                    {getPersonalityTendency(maleParticipant, 'leadership').stars}
-                  </div>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-lg font-black text-white">積極度：</span>
-                  <div className="flex">
-                    {getPersonalityTendency(maleParticipant, 'activity').stars}
-                  </div>
-                </div>
-                <div className="text-sm text-yellow-300 text-center mt-2 font-black">
-                  {getPersonalityTendency(maleParticipant, 'leadership').type}
-                </div>
-              </div>
-            </div>
 
-            {/* 女性の性格傾向 */}
-            <div className="p-5 rounded-xl border-4 border-black" style={{background: '#FF69B4', boxShadow: '4px 4px 0 #000000'}}>
-              <h4 className="font-black text-white mb-4 text-center text-xl" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif', WebkitTextStroke: '1px #000000'}}>
-                {femaleParticipant.userName}
-              </h4>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-lg font-black text-white">リード度：</span>
-                  <div className="flex">
-                    {getPersonalityTendency(femaleParticipant, 'leadership').stars}
-                  </div>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-lg font-black text-white">積極度：</span>
-                  <div className="flex">
-                    {getPersonalityTendency(femaleParticipant, 'activity').stars}
-                  </div>
-                </div>
-                <div className="text-sm text-yellow-300 text-center mt-2 font-black">
-                  {getPersonalityTendency(femaleParticipant, 'leadership').type}
-                </div>
-              </div>
-            </div>
-          </div>
+        
 
-          {/* 相性診断結果 */}
-          <div className="p-5 rounded-xl border-4 border-black mt-6" style={{background: '#FFD700', boxShadow: '4px 4px 0 #000000'}}>
-            <h4 className="font-black text-red-600 mb-3 flex items-center gap-2 text-xl" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif', WebkitTextStroke: '1px #000000'}}>
-              💡 相性診断結果 💡
-            </h4>
-            <p className="text-black leading-relaxed font-bold">
-              {getPersonalityCompatibility(maleParticipant, femaleParticipant)}
-            </p>
-          </div>
-        </div>
-
-        {/* スキンシップ傾向 - ポップアート風 */}
-        <div className="card mb-6" style={{background: '#FFFFFF', transform: 'rotate(1deg)'}}>
-          <h3 className="heading-secondary mb-6 flex items-center gap-2">
-            💕 スキンシップ傾向 💕
-          </h3>
-          
+        {/* スキンシップ傾向 - バズる表現 */}
+        <div className="card mb-6">
+          <h3 className="heading-secondary mb-6 flex items-center gap-2"><span className="emoji-kawaii emoji-md emoji-bounce">💕</span> スキンシップ傾向 <span className="emoji-kawaii emoji-md emoji-bounce">💕</span></h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="p-5 rounded-xl border-4 border-black" style={{background: '#FF0000', boxShadow: '4px 4px 0 #000000'}}>
-              <h4 className="font-black text-white mb-3 text-lg" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif', WebkitTextStroke: '1px #000000'}}>💋 キス頻度</h4>
-              <p className="text-white font-bold">{getSkinShipTendency(maleType, femaleType, 'kiss')}</p>
+            {(() => {
+              const kiss = mapKiss(getSkinShipTendency(maleType, femaleType, 'kiss'))
+              const sweet = mapSweet(getSkinShipTendency(maleType, femaleType, 'sweetness'))
+              const love = mapLove(getSkinShipTendency(maleType, femaleType, 'love'))
+              return (
+                <>
+            <div className="card p-5">
+                    <h4 className="font-bold text-[#D63384] mb-1 text-lg">💋 キス頻度</h4>
+                    <div className="text-gray-700 font-bold">{kiss.t}</div>
+                    <p className="text-gray-700 font-bold mt-1">{kiss.d}</p>
             </div>
-            
-            <div className="p-5 rounded-xl border-4 border-black" style={{background: '#FF69B4', boxShadow: '4px 4px 0 #000000'}}>
-              <h4 className="font-black text-white mb-3 text-lg" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif', WebkitTextStroke: '1px #000000'}}>🥰 甘え方</h4>
-              <p className="text-white font-bold">{getSkinShipTendency(maleType, femaleType, 'sweetness')}</p>
+            <div className="card p-5">
+                    <h4 className="font-bold text-[#D63384] mb-1 text-lg">🥰 甘え方</h4>
+                    <div className="text-gray-700 font-bold">{sweet.t}</div>
+                    <p className="text-gray-700 font-bold mt-1">{sweet.d}</p>
             </div>
-            
-            <div className="p-5 rounded-xl border-4 border-black" style={{background: '#FF6600', boxShadow: '4px 4px 0 #000000'}}>
-              <h4 className="font-black text-white mb-3 text-lg" style={{fontFamily: 'M PLUS Rounded 1c, sans-serif', WebkitTextStroke: '1px #000000'}}>❤️ 愛情表現</h4>
-              <p className="text-white font-bold">{getSkinShipTendency(maleType, femaleType, 'love')}</p>
+            <div className="card p-5">
+                    <h4 className="font-bold text-[#D63384] mb-1 text-lg">❤️ 愛情表現</h4>
+                    <div className="text-gray-700 font-bold">{love.t}</div>
+                    <p className="text-gray-700 font-bold mt-1">{love.d}</p>
             </div>
+                </>
+              )
+            })()}
           </div>
         </div>
 
@@ -980,14 +1103,13 @@ export function PairDetailsPage() {
           <div>
             <button
               onClick={() => navigate('/')}
-              className="text-black hover:text-blue-700 text-base font-semibold underline"
-              style={{fontFamily: 'Noto Sans JP, sans-serif'}}
-            >
-              ミチノワトップに戻る
-            </button>
+              className="text-gray-600 hover:text-gray-800 text-base font-semibold underline"
+             >
+               すきのおとトップに戻る
+             </button>
           </div>
         </div>
       </div>
-    </div>
+    </PageLayout>
   )
 }
