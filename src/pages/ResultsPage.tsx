@@ -268,6 +268,31 @@ export function ResultsPage() {
               </div>
             </div>
 
+            {/* 再掲: 14項目の詳細分析（下部にも表示して見落とし防止） */}
+            <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
+              <h3 className="text-2xl font-bold text-center text-gray-800 mb-6">
+                📊 14の詳細分析（再掲） 📊
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {fourteenMetrics.map(item => (
+                  <div key={`${item.key}-bottom`} className="border border-pink-100 rounded-xl p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="text-gray-800 font-semibold truncate">
+                        <span className="mr-2">{item.emoji}</span>{item.label}
+                      </div>
+                      <div className="text-[#FF1493] font-bold">{item.score}%</div>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-3">
+                      <div
+                        className={`h-3 rounded-full transition-all duration-500 ${item.color}`}
+                        style={{ width: `${item.score}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
             {/* ナビゲーションボタン */}
             <div className="flex justify-center gap-4">
               <Button
