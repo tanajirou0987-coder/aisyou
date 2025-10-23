@@ -113,3 +113,6 @@ export function IkirisuSpeechBubble({ title, children, showIcon = true }: Ikiris
 
 
 
+
+
+

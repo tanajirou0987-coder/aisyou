@@ -4,7 +4,6 @@ import { BaseLayout } from './layouts'
 import { TopPage } from './pages/TopPage'
 import { HomePage } from './pages/HomePage'
 import { QuestionPage } from './pages/QuestionPage'
-import { ResultsPage } from './pages/ResultsPage'
 import { GroupSessionStartPage } from './pages/GroupSessionStartPage'
 import { MultiDeviceSessionStartPage } from './pages/MultiDeviceSessionStartPage'
 import { JoinSessionPage } from './pages/JoinSessionPage'
@@ -13,8 +12,8 @@ import { GroupParticipantRegistrationPage } from './pages/GroupParticipantRegist
 import { GroupDiagnosisPage } from './pages/GroupDiagnosisPage'
 import { GroupCompletionWaitingPage } from './pages/GroupCompletionWaitingPage'
 import { GroupResultsPage } from './pages/GroupResultsPage'
-import { DrinkingDetailsPage } from './pages/DrinkingDetailsPage'
 import { PairDetailsPage } from './pages/PairDetailsPage'
+import { KokoroPairDetailsPage } from './pages/KokoroPairDetailsPage'
 import { AppProvider } from './context/AppContext'
 
 function App() {
@@ -30,7 +29,6 @@ function App() {
             {/* 相性診断のルート */}
             <Route path="/compatibility" element={<HomePage />} />
             <Route path="/questions" element={<QuestionPage />} />
-            <Route path="/results" element={<ResultsPage />} />
             
             {/* グラスノオトのルート */}
             <Route path="/group-session-start" element={<GroupSessionStartPage />} />
@@ -41,8 +39,8 @@ function App() {
             <Route path="/group-diagnosis" element={<GroupDiagnosisPage />} />
             <Route path="/group-completion-waiting" element={<GroupCompletionWaitingPage />} />
             <Route path="/group-results" element={<GroupResultsPage />} />
-            <Route path="/drinking-details" element={<DrinkingDetailsPage />} />
             <Route path="/pair-details" element={<PairDetailsPage />} />
+            <Route path="/kokoro-pair-details" element={<KokoroPairDetailsPage />} />
             {/* 互換用: 古いリンクのリダイレクト/エイリアス */}
             <Route path="/drinking-results" element={<GroupResultsPage />} />
             {/* 不明なパスはトップへリダイレクト */}

@@ -6,7 +6,11 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 3000,
-    host: true
+    host: true,
+    strictPort: true,
+    hmr: {
+      port: 3001
+    }
   },
   define: {
     'import.meta.env': {}

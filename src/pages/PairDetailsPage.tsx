@@ -137,6 +137,21 @@ export function PairDetailsPage() {
     return keywords
   }
 
+  // スコアに応じたコメント調整関数
+  const getScoreBasedComment = (baseComment: string, score: number) => {
+    if (score >= 85) {
+      return baseComment.replace(/楽しい/g, '最高に楽しい').replace(/良い/g, '抜群に良い')
+    } else if (score >= 70) {
+      return baseComment.replace(/最高/g, 'とても').replace(/抜群/g, '良好')
+    } else if (score >= 55) {
+      return baseComment.replace(/最高/g, '良い').replace(/抜群/g, 'まあまあ')
+    } else if (score >= 40) {
+      return baseComment.replace(/最高/g, '普通').replace(/抜群/g, 'そこそこ')
+    } else {
+      return baseComment.replace(/最高/g, '控えめ').replace(/抜群/g, '慎重')
+    }
+  }
+
   const filteredCombinationKeywords = getFilteredKeywords(
     combinationKeywords,
     pairScore?.romanticScore ?? scientificScore
@@ -302,6 +317,51 @@ export function PairDetailsPage() {
   }, [])
 
   // scientificScore は上部で定義済み
+
+  // スコアに応じた関係性タイプと説明文を生成
+  const getScoreBasedRelationship = (score: number) => {
+    if (score >= 85) {
+      return {
+        type: '最強の飲み友カップル',
+        description: 'あなたたちは「最強の飲み友カップル」です！科学的根拠に基づいた相性の良さで、お互いの魅力を引き出し合える理想的な組み合わせです！',
+        excitementLevel: '今夜の盛り上がり度は最高レベル！二人の相性が最高潮に達します。',
+        closenessSpeed: '距離を縮めるスピードが早く、自然に親密になれます。',
+        confessionChance: '告白のチャンスが高く、お互いの気持ちを伝えやすい雰囲気です。'
+      }
+    } else if (score >= 70) {
+      return {
+        type: '深い絆のカップル',
+        description: 'あなたたちは「深い絆のカップル」です！お互いの本音を引き出し合える深い関係を築けます。',
+        excitementLevel: '落ち着いた雰囲気で、深い会話を楽しめます。',
+        closenessSpeed: '本音で話し合えるため、親密度が急速に上がります。',
+        confessionChance: '深い会話の中で自然に気持ちを伝えやすい雰囲気です。'
+      }
+    } else if (score >= 55) {
+      return {
+        type: '落ち着いた癒しカップル',
+        description: 'あなたたちは「落ち着いた癒しカップル」です！お互いのペースを尊重し合える落ち着いた関係を築けます。',
+        excitementLevel: '落ち着いた雰囲気で、ゆっくりと時間を過ごせます。',
+        closenessSpeed: 'ゆっくりとしたペースで、自然に親密になれます。',
+        confessionChance: '落ち着いた雰囲気で、自然に気持ちを伝えやすい環境です。'
+      }
+    } else if (score >= 40) {
+      return {
+        type: 'バランス型飲み友カップル',
+        description: 'あなたたちは「バランス型飲み友カップル」です！お互いの個性を活かしながら、楽しい関係を築いていける相性です。',
+        excitementLevel: 'バランスの取れた雰囲気で、楽しい時間を過ごせます。',
+        closenessSpeed: 'お互いの個性を理解し合えるため、自然に親密になれます。',
+        confessionChance: 'お互いのペースを尊重しながら、自然に気持ちを伝えやすい雰囲気です。'
+      }
+    } else {
+      return {
+        type: '慎重な関係構築カップル',
+        description: 'あなたたちは「慎重な関係構築カップル」です！時間をかけてお互いを理解し合い、安定した関係を築いていける相性です。',
+        excitementLevel: '控えめな雰囲気で、慎重に時間を過ごせます。',
+        closenessSpeed: '時間をかけて、ゆっくりと親密になれます。',
+        confessionChance: '慎重な雰囲気で、時間をかけて気持ちを伝えやすい環境です。'
+      }
+    }
+  }
 
   // ペア相性の詳細分析を生成（個人診断の詳細データをベースに）
   const getPairAnalysis = (maleType: string, femaleType: string, score: number, maleName: string, femaleName: string) => {
@@ -571,15 +631,13 @@ export function PairDetailsPage() {
     }
 
     // デフォルトの分析（組み合わせが見つからない場合）
-    // 動的に相性解説文を生成
-    const dynamicCoupleDescription = maleType === femaleType 
-      ? generateSameTypeCompatibilityText(maleType, Math.round(score), maleName, femaleName)
-      : generateCompatibilityText(maleType, femaleType, Math.round(score), maleName, femaleName)
+    // スコアに基づいた関係性を取得
+    const scoreBasedRelationship = getScoreBasedRelationship(Math.round(score))
     
     const defaultAnalysis = {
       compatibilityScore: Math.round(score),
-      relationshipType: 'バランス型飲み友カップル',
-      coupleDescription: dynamicCoupleDescription,
+      relationshipType: scoreBasedRelationship.type,
+      coupleDescription: getScoreBasedComment(scoreBasedRelationship.description, Math.round(score)),
       detailedScores: {
         '盛り上がり度': Math.round(Math.min(85, score + 5)),
         '会話の相性': Math.round(Math.min(90, score + 10)),
@@ -641,26 +699,35 @@ export function PairDetailsPage() {
       ],
       // 今夜の恋愛可能性詳細分析
       romanticDetailAnalysis: {
-        excitementLevel: { score: Math.round(Math.min(85, score + 5)), text: 'バランスの取れた雰囲気で、楽しい時間を過ごせます。' },
-        closenessSpeed: { score: Math.round(Math.min(90, score + 10)), text: 'お互いの個性を理解し合えるため、自然に親密になれます。' },
-        confessionChance: { score: Math.round(Math.min(80, score)), text: 'お互いのペースを尊重しながら、自然に気持ちを伝えやすい雰囲気です。' },
+        excitementLevel: { 
+          score: Math.round(Math.min(85, score + 5)), 
+          text: getScoreBasedComment(scoreBasedRelationship.excitementLevel, Math.round(score))
+        },
+        closenessSpeed: { 
+          score: Math.round(Math.min(90, score + 10)), 
+          text: getScoreBasedComment(scoreBasedRelationship.closenessSpeed, Math.round(score))
+        },
+        confessionChance: { 
+          score: Math.round(Math.min(80, score)), 
+          text: getScoreBasedComment(scoreBasedRelationship.confessionChance, Math.round(score))
+        },
         physicalContact: { score: Math.round(Math.min(85, score + 5)), text: 'お互いの個性を活かしながら、自然なスキンシップができます。' },
         nextDayContinuity: { score: Math.round(Math.min(90, score + 10)), text: 'バランスの取れた関係を築きやすく、長期的な関係に発展する可能性が高いです。' }
       },
       // 今夜のおすすめアクション提案
       romanticActionRecommendations: {
-        whatToDoTonight: 'お互いの個性を活かしながら、楽しい時間を過ごしましょう。新しいことに一緒に挑戦したり、お互いの違いを楽しむことが大切です。',
-        whatNotToDo: 'お互いのペースを乱さないよう注意。無理に合わせようとせず、自然体でいることが大切です。',
-        recommendedMove: 'お互いの個性を尊重し、新しいことに一緒に挑戦する。お互いの違いを楽しみながら、自然な関係を築くことが重要です。',
-        nextDayFollow: '今夜の楽しい時間を翌日も続けるため、一緒に朝食を取ったり、次のデートの約束をすることをおすすめします。'
+        whatToDoTonight: getScoreBasedComment('お互いの個性を活かしながら、楽しい時間を過ごしましょう。新しいことに一緒に挑戦したり、お互いの違いを楽しむことが大切です。', Math.round(score)),
+        whatNotToDo: getScoreBasedComment('お互いのペースを乱さないよう注意。無理に合わせようとせず、自然体でいることが大切です。', Math.round(score)),
+        recommendedMove: getScoreBasedComment('お互いの個性を尊重し、新しいことに一緒に挑戦する。お互いの違いを楽しみながら、自然な関係を築くことが重要です。', Math.round(score)),
+        nextDayFollow: getScoreBasedComment('今夜の楽しい時間を翌日も続けるため、一緒に朝食を取ったり、次のデートの約束をすることをおすすめします。', Math.round(score))
       },
       // 今夜起こりそうな恋愛シーン予測
       romanticScenePredictions: [
-        'お互いの個性を活かしながら楽しい会話を楽しむ',
-        '新しいことに一緒に挑戦して新鮮な発見を共有する',
-        'お互いの違いを楽しみながら自然体で過ごす',
-        '男性が女性の個性に興味を持ち「面白い人だね」と感じる',
-        '女性が男性の特徴に安心し「一緒にいると楽しい」と感じる'
+        getScoreBasedComment('お互いの個性を活かしながら楽しい会話を楽しむ', Math.round(score)),
+        getScoreBasedComment('新しいことに一緒に挑戦して新鮮な発見を共有する', Math.round(score)),
+        getScoreBasedComment('お互いの違いを楽しみながら自然体で過ごす', Math.round(score)),
+        getScoreBasedComment('男性が女性の個性に興味を持ち「面白い人だね」と感じる', Math.round(score)),
+        getScoreBasedComment('女性が男性の特徴に安心し「一緒にいると楽しい」と感じる', Math.round(score))
       ]
     }
 
@@ -1043,6 +1110,222 @@ export function PairDetailsPage() {
 
               {buildExplanation()}
             </div>
+          </div>
+        </div>
+
+        {/* 2人の性格深掘り - Love Type 16風 */}
+        <div className="card mb-6">
+          <h3 className="heading-secondary mb-6 text-center">
+            <span className="emoji-kawaii emoji-lg emoji-bounce">💫</span> 2人の本当の姿を深掘り <span className="emoji-kawaii emoji-lg emoji-bounce">💫</span>
+          </h3>
+          
+          {/* {男性名}の深掘り */}
+          <div className="mb-8">
+            <h4 className="font-bold text-pink-600 mb-4 flex items-center gap-2 text-xl">
+              <span className="text-2xl">🌟</span> {maleParticipant.userName}の本当の姿
+            </h4>
+            <div className="bg-white rounded-lg p-6 space-y-4 text-gray-700 leading-relaxed">
+              <p>お酒が入ると、普段は見せない素直な一面が顔を出します。みんなを笑わせるのが好きなのは、実は自分が一番笑顔でいたいから。誰かが楽しそうにしているのを見ると、心の奥で「よかった」って思ってるんです。</p>
+              
+              <p>家に帰った後、一人になると急に静かになります。今日の出来事を思い返しながら、「あの時、もっとこう言えたら良かったな」って考えてる。完璧主義なところがあって、みんなに喜んでもらいたい気持ちが強いんです。</p>
+              
+              <p>本当は認められたい気持ちが人一倍強くて、でもそれを素直に言えない。だからこそ、相手の反応をすごく気にしてる。褒められると照れちゃうけど、内心はすごく嬉しいタイプ。</p>
+              
+              <p>寂しがり屋な一面もあって、一人の時間が長いと「誰かと話したいな」って思う。でも、いざ誰かと一緒になると、今度は「邪魔しちゃったかな」って心配になる。そんな繊細なバランスを保ちながら生きてるんです。</p>
+            </div>
+          </div>
+
+          {/* {女性名}の深掘り */}
+          <div className="mb-8">
+            <h4 className="font-bold text-blue-600 mb-4 flex items-center gap-2 text-xl">
+              <span className="text-2xl">💎</span> {femaleParticipant.userName}の本当の姿
+            </h4>
+            <div className="bg-white rounded-lg p-6 space-y-4 text-gray-700 leading-relaxed">
+              <p>お酒が入ると、普段は隠してる甘えん坊な部分が出てきます。でも、それを素直に表現するのがちょっと恥ずかしくて、つい「大丈夫、大丈夫」って言っちゃう。本当は甘えたい気持ちがいっぱいあるんです。</p>
+              
+              <p>家に帰った後、今日の出来事を一人で反芻してます。「あの時、もっと素直に甘えられたら良かったな」って。でも、相手に迷惑をかけたくない気持ちが強くて、つい我慢しちゃうんです。</p>
+              
+              <p>実はすごく愛情深くて、相手のことを思う気持ちが人一倍強い。でも、それを上手く伝えられなくて、時々「本当に私の気持ち、伝わってるかな？」って不安になる。そんな優しさが詰まった人なんです。</p>
+              
+              <p>本当は「私だけの特別な人」が欲しくて、でもそれを言うのが恥ずかしい。だから、さりげないスキンシップや、ちょっとした気遣いで愛情を表現してる。そんな奥ゆかしい魅力を持ってるんです。</p>
+            </div>
+          </div>
+
+          <div className="text-center text-gray-600 font-semibold">
+            お互いの本当の姿を知ることで、もっと深い関係になれるはず💕
+          </div>
+        </div>
+
+        {/* 意外な共通点 - Love Type 16風 */}
+        <div className="card mb-6">
+          <h3 className="heading-secondary mb-6 text-center">
+            <span className="emoji-kawaii emoji-lg emoji-bounce">🎁</span> 意外な共通点を発見！ <span className="emoji-kawaii emoji-lg emoji-bounce">🎁</span>
+          </h3>
+          <div className="text-center text-gray-700 mb-6 font-bold">実は二人とも、こんな気持ちを抱えてるんです</div>
+          
+          <div className="space-y-6">
+            <div className="bg-pink-50 rounded-lg p-6">
+              <h4 className="text-lg font-bold text-pink-600 mb-3">💝 本当の自分を守ってる</h4>
+              <p className="text-gray-700 mb-3">二人とも、本音を出すのがちょっと苦手。でも、お互いの前では自然体でいられる。</p>
+              <div className="bg-pink-100 rounded p-3 text-sm text-gray-700">
+                <strong>今夜、こんな会話が出たら：</strong><br />
+                「実は私、本当はもっと素直になりたいんだ」「私も！一緒にいると自然になれる」
+              </div>
+            </div>
+
+            <div className="bg-blue-50 rounded-lg p-6">
+              <h4 className="text-lg font-bold text-blue-600 mb-3">🌟 認められたい気持ちが強い</h4>
+              <p className="text-gray-700 mb-3">褒められると照れちゃうけど、内心はすごく嬉しい。お互いを認め合える関係。</p>
+              <div className="bg-blue-100 rounded p-3 text-sm text-gray-700">
+                <strong>今夜、こんな会話が出たら：</strong><br />
+                「あなたのそういうところ、すごく好き」「え、本当？嬉しい...」
+              </div>
+            </div>
+
+            <div className="bg-green-50 rounded-lg p-6">
+              <h4 className="text-lg font-bold text-green-600 mb-3">🏠 寂しがり屋な一面がある</h4>
+              <p className="text-gray-700 mb-3">一人の時間も大切だけど、誰かと一緒にいる時間が何より幸せ。</p>
+              <div className="bg-green-100 rounded p-3 text-sm text-gray-700">
+                <strong>今夜、こんな会話が出たら：</strong><br />
+                「たまには一人の時間も必要だけど、あなたといる時間が一番楽しい」
+              </div>
+            </div>
+
+            <div className="bg-purple-50 rounded-lg p-6">
+              <h4 className="text-lg font-bold text-purple-600 mb-3">💕 愛情表現が上手じゃない</h4>
+              <p className="text-gray-700 mb-3">「好き」って言うのは恥ずかしいけど、行動で愛情を表現してる。</p>
+              <div className="bg-purple-100 rounded p-3 text-sm text-gray-700">
+                <strong>今夜、こんな会話が出たら：</strong><br />
+                「言葉じゃうまく言えないけど、あなたといると幸せ」「私も...」
+              </div>
+            </div>
+
+            <div className="bg-yellow-50 rounded-lg p-6">
+              <h4 className="text-lg font-bold text-yellow-600 mb-3">🎭 完璧主義なところがある</h4>
+              <p className="text-gray-700 mb-3">相手に喜んでもらいたくて、つい頑張りすぎちゃう。でも、お互いの前ではリラックスできる。</p>
+              <div className="bg-yellow-100 rounded p-3 text-sm text-gray-700">
+                <strong>今夜、こんな会話が出たら：</strong><br />
+                「無理しなくていいよ、ありのままで」「ありがとう、あなたといると自然になれる」
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 今夜使える一言集 - Love Type 16風 */}
+        <div className="card mb-6">
+          <h3 className="heading-secondary mb-6 text-center">
+            <span className="emoji-kawaii emoji-lg emoji-bounce">💬</span> 今夜使える一言集 <span className="emoji-kawaii emoji-lg emoji-bounce">💬</span>
+          </h3>
+          <div className="text-center text-gray-700 mb-6 font-bold">自然な流れで使える、心に響くフレーズ</div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* {男性名}→{女性名} */}
+            <div>
+              <h4 className="text-xl font-bold text-pink-600 mb-4 flex items-center gap-2">
+                <span className="text-2xl">🌟</span> {maleParticipant.userName}から{femaleParticipant.userName}へ
+              </h4>
+              <div className="space-y-4">
+                <div className="bg-pink-50 rounded-lg p-4">
+                  <p className="text-gray-800 font-semibold mb-2">「あなたといると、自然と笑顔になっちゃう」</p>
+                  <p className="text-gray-600 text-sm">照れながら言うと、相手も照れちゃう。自然な流れで使える。</p>
+                </div>
+                <div className="bg-pink-50 rounded-lg p-4">
+                  <p className="text-gray-800 font-semibold mb-2">「今日、すごく楽しかった」</p>
+                  <p className="text-gray-600 text-sm">帰り際にサラッと言うと、相手も嬉しそうな顔をする。</p>
+                </div>
+                <div className="bg-pink-50 rounded-lg p-4">
+                  <p className="text-gray-800 font-semibold mb-2">「また今度、一緒に飲まない？」</p>
+                  <p className="text-gray-600 text-sm">次の約束を自然に提案。相手も「うん、いいね」って言ってくれる。</p>
+                </div>
+                <div className="bg-pink-50 rounded-lg p-4">
+                  <p className="text-gray-800 font-semibold mb-2">「あなたのそういうところ、好きだな」</p>
+                  <p className="text-gray-600 text-sm">相手の良いところを具体的に褒めると、すごく喜んでくれる。</p>
+                </div>
+              </div>
+            </div>
+
+            {/* {女性名}→{男性名} */}
+            <div>
+              <h4 className="text-xl font-bold text-blue-600 mb-4 flex items-center gap-2">
+                <span className="text-2xl">💎</span> {femaleParticipant.userName}から{maleParticipant.userName}へ
+              </h4>
+              <div className="space-y-4">
+                <div className="bg-blue-50 rounded-lg p-4">
+                  <p className="text-gray-800 font-semibold mb-2">「あなたといると、安心する」</p>
+                  <p className="text-gray-600 text-sm">素直な気持ちを伝えると、相手も嬉しそうな表情になる。</p>
+                </div>
+                <div className="bg-blue-50 rounded-lg p-4">
+                  <p className="text-gray-800 font-semibold mb-2">「今日はありがとう」</p>
+                  <p className="text-gray-600 text-sm">感謝の気持ちを伝えると、相手も温かい気持ちになる。</p>
+                </div>
+                <div className="bg-blue-50 rounded-lg p-4">
+                  <p className="text-gray-800 font-semibold mb-2">「また会いたいな」</p>
+                  <p className="text-gray-600 text-sm">素直に気持ちを伝えると、相手も「私も」って言ってくれる。</p>
+                </div>
+                <div className="bg-blue-50 rounded-lg p-4">
+                  <p className="text-gray-800 font-semibold mb-2">「あなたの笑顔、好き」</p>
+                  <p className="text-gray-600 text-sm">相手の良いところを褒めると、照れながらも嬉しそう。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 今夜の展開予想 - Love Type 16風 */}
+        <div className="card mb-6">
+          <h3 className="heading-secondary mb-6 text-center">
+            <span className="emoji-kawaii emoji-lg emoji-bounce">🌙</span> 今夜の展開予想 <span className="emoji-kawaii emoji-lg emoji-bounce">🌙</span>
+          </h3>
+          <div className="text-center text-gray-700 mb-6 font-bold">1次会から帰り道まで、自然な流れでの距離の縮め方</div>
+          
+          <div className="space-y-6">
+            {/* 1次会 */}
+            <div className="bg-white rounded-lg p-6">
+              <h4 className="text-lg font-bold text-pink-600 mb-3 flex items-center gap-2">
+                <span className="text-xl">🍻</span> 1次会：お互いを探り合う時間
+              </h4>
+              <p className="text-gray-700 mb-3">最初は緊張してるけど、お酒が入ると自然に話せるように。お互いの趣味や仕事の話で盛り上がって、「この人、面白いな」って思う。</p>
+              <div className="bg-pink-50 rounded p-3 text-sm text-gray-700">
+                <strong>この段階での心境：</strong>「この人、もっと知りたいな」「また会いたいな」
+              </div>
+            </div>
+
+            {/* 2次会 */}
+            <div className="bg-white rounded-lg p-6">
+              <h4 className="text-lg font-bold text-blue-600 mb-3 flex items-center gap-2">
+                <span className="text-xl">🍸</span> 2次会：距離が縮まる時間
+              </h4>
+              <p className="text-gray-700 mb-3">少し酔いが回って、本音が出始める。「実は私、こういう人なんだ」って素の自分を見せ合う。お互いの意外な一面を発見して、もっと親近感を感じる。</p>
+              <div className="bg-blue-50 rounded p-3 text-sm text-gray-700">
+                <strong>この段階での心境：</strong>「この人、特別だな」「もっと一緒にいたい」
+              </div>
+            </div>
+
+            {/* 3次会・帰り道 */}
+            <div className="bg-white rounded-lg p-6">
+              <h4 className="text-lg font-bold text-green-600 mb-3 flex items-center gap-2">
+                <span className="text-xl">🚶‍♀️</span> 3次会・帰り道：特別な関係への転換点
+              </h4>
+              <p className="text-gray-700 mb-3">時間を忘れて話し込んで、「もうこんな時間！？」って驚く。帰り道は自然と歩くペースが合って、時々肩が触れ合う。「今日、すごく楽しかった」って素直に伝え合える。</p>
+              <div className="bg-green-50 rounded p-3 text-sm text-gray-700">
+                <strong>この段階での心境：</strong>「この人と一緒にいると幸せ」「もっと深い関係になりたい」
+              </div>
+            </div>
+
+            {/* 次の約束 */}
+            <div className="bg-white rounded-lg p-6">
+              <h4 className="text-lg font-bold text-purple-600 mb-3 flex items-center gap-2">
+                <span className="text-xl">💕</span> 次の約束：特別な関係の始まり
+              </h4>
+              <p className="text-gray-700 mb-3">「また今度、一緒に飲まない？」って自然に提案して、「うん、いいね」って返事をもらう。LINEの交換も自然な流れで。「今度は〇〇に行こうか」って具体的な計画も立てる。</p>
+              <div className="bg-purple-50 rounded p-3 text-sm text-gray-700">
+                <strong>この段階での心境：</strong>「この人と一緒にいると幸せ」「もっと深い関係になりたい」
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center text-gray-600 font-semibold mt-6">
+            自然な流れで、きっと素敵な関係になれるはず💕
           </div>
         </div>
 

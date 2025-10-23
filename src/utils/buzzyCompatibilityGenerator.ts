@@ -139,3 +139,6 @@ export function generateCompatibilityResult(user1: UserDrinkingProfile, user2: U
 
 
 
+
+
+

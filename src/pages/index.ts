@@ -9,10 +9,6 @@ export { HomePage } from './HomePage'
 
 // 診断ページ
 export { QuestionPage } from './QuestionPage'
-export { ResultsPage } from './ResultsPage'
-
-// 飲み会診断ページ
-export { DrinkingDetailsPage } from './DrinkingDetailsPage'
 
 // グループ診断ページ
 export { GroupSessionStartPage } from './GroupSessionStartPage'
@@ -26,5 +22,6 @@ export { JoinSessionPage } from './JoinSessionPage'
 export { MultiDeviceSessionStartPage } from './MultiDeviceSessionStartPage'
 export { MultiDeviceDiagnosisPage } from './MultiDeviceDiagnosisPage'
 export { PairDetailsPage } from './PairDetailsPage'
+export { KokoroPairDetailsPage } from './KokoroPairDetailsPage'
 
 
