@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Users, ArrowRight } from 'lucide-react'
-import { joinSession, watchSession, SessionData } from '../utils/sessionManager'
+import { joinSession, watchSession, SessionData } from '../../../utils/sessionManager'
 
 export function JoinSessionPage() {
   const navigate = useNavigate()
@@ -52,7 +52,7 @@ export function JoinSessionPage() {
       await joinSession(sessionId, userId, userName.trim(), gender)
       
       // 診断画面へ
-      navigate(`/multi-device-diagnosis/${sessionId}/${userId}`)
+      navigate(`/glass-multi-device-diagnosis/${sessionId}/${userId}`)
     } catch (err) {
       console.error(err)
       setError('参加に失敗しました')

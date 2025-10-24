@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useApp } from '../context/AppContext'
+import { useApp } from '../../../context/AppContext'
 import { CheckCircle, Users, Clock, Sparkles } from 'lucide-react'
 
-export function GroupCompletionWaitingPage() {
+export function CompletionWaitingPage() {
   const navigate = useNavigate()
   const { state, calculateGroupResults } = useApp()
 
@@ -14,7 +14,7 @@ export function GroupCompletionWaitingPage() {
       calculateGroupResults()
       // 少し待ってから結果画面に遷移
       setTimeout(() => {
-        navigate('/group-results')
+        navigate('/glass-results')
       }, 2000)
     }
   }, [state.groupParticipants, calculateGroupResults, navigate])

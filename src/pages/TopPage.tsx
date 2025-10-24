@@ -10,48 +10,17 @@ export function TopPage() {
   const [showDebugPanel, setShowDebugPanel] = useState(false)
 
   // 管理者用のショートカット関数
-  const goToDrinkingDetails = () => {
-    // モックデータを設定して直接詳細ページに遷移
-    setMockData('drinking')
-    navigate('/drinking-details')
-  }
-
-
   const goToGroupResults = () => {
     setGroupMockData()
-    navigate('/group-results')
+    navigate('/glass-results')
   }
 
-  // グラスノオト詳細分析画面へのショートカット関数
-  const goToGroupDetailedAnalysis = () => {
-    // グループ診断のモックデータを設定
-    setGroupMockData()
-    // グラスノオト結果画面に遷移
-    navigate('/group-results')
-  }
-
-  // ペア詳細分析画面への直接ショートカット関数
-  const goToPairDetails = () => {
-    // グループ診断のモックデータを設定
-    setGroupMockData()
-    // ペア詳細分析画面に直接遷移（モックデータを使用）
-    navigate('/pair-details?maleId=mock_male_1&femaleId=mock_female_1')
-  }
-
-  // ココロノオト（複数人相性診断）のショートカット関数
   const goToKokoroGroupResults = () => {
-    // ココロノオト用のグループ診断モックデータを設定
-    setGroupMockData()
-    // ココロノオト結果画面に遷移（グラスノオトと同じ仕組み）
-    navigate('/group-results')
+    navigate('/kokoro-results')
   }
 
-  // ココロノオトペア詳細分析画面へのショートカット関数
   const goToKokoroPairDetails = () => {
-    // ココロノオト用のグループ診断モックデータを設定
-    setGroupMockData()
-    // ココロノオト専用ペア詳細分析画面に直接遷移
-    navigate('/kokoro-pair-details?maleId=mock_male_1&femaleId=mock_female_1')
+    navigate('/kokoro-pair-details?maleName=太郎&femaleName=花子')
   }
 
   return (
@@ -73,47 +42,18 @@ export function TopPage() {
               開発者ショートカット
             </h3>
             <div className="space-y-2">
+              {/* グラスノオト */}
               <button
-                onClick={goToDrinkingDetails}
+                onClick={() => navigate('/glass-session-start')}
                 className="w-full text-left px-3 py-2 bg-purple-50 hover:bg-purple-100 rounded text-sm text-purple-700 transition-colors"
               >
-                🍷 酒癖詳細ページ
+                🍻 グラスノオト開始
               </button>
               <button
-                onClick={goToGroupDetailedAnalysis}
-                className="w-full text-left px-3 py-2 bg-green-50 hover:bg-green-100 rounded text-sm text-green-700 transition-colors"
-              >
-                👥 グラスノオト結果画面
-              </button>
-              <button
-                onClick={goToPairDetails}
-                className="w-full text-left px-3 py-2 bg-pink-50 hover:bg-pink-100 rounded text-sm text-pink-700 transition-colors"
-              >
-                💕 ペア詳細分析画面
-              </button>
-              <button
-                onClick={goToKokoroGroupResults}
-                className="w-full text-left px-3 py-2 bg-red-50 hover:bg-red-100 rounded text-sm text-red-700 transition-colors"
-              >
-                💖 ココロノオト結果画面（複数人）
-              </button>
-              <button
-                onClick={goToKokoroPairDetails}
-                className="w-full text-left px-3 py-2 bg-rose-50 hover:bg-rose-100 rounded text-sm text-rose-700 transition-colors"
-              >
-                💕 ココロノオトペア詳細分析
-              </button>
-              <button
-                onClick={() => navigate('/kokoro-pair-details?maleId=mock_male_1&femaleId=mock_female_1')}
-                className="w-full text-left px-3 py-2 bg-pink-50 hover:bg-pink-100 rounded text-sm text-pink-700 transition-colors"
-              >
-                🎀 ココロノオト詳細分析（18画面版）
-              </button>
-              <button
-                onClick={() => navigate('/group-session-start')}
+                onClick={() => navigate('/glass-dev-quick-diagnosis')}
                 className="w-full text-left px-3 py-2 bg-purple-50 hover:bg-purple-100 rounded text-sm text-purple-700 transition-colors"
               >
-                👥 グラスノオト開始
+                🔧 グラスノオト診断ショートカット
               </button>
               <button
                 onClick={goToGroupResults}
@@ -121,11 +61,25 @@ export function TopPage() {
               >
                 🎭 グラスノオト結果デモ
               </button>
+              
+              {/* ココロノオト */}
               <button
-                onClick={goToGroupDetailedAnalysis}
-                className="w-full text-left px-3 py-2 bg-orange-50 hover:bg-orange-100 rounded text-sm text-orange-700 transition-colors"
+                onClick={() => navigate('/kokoro-gender-selection')}
+                className="w-full text-left px-3 py-2 bg-pink-50 hover:bg-pink-100 rounded text-sm text-pink-700 transition-colors"
               >
-                🍻 グループ詳細分析画面
+                💕 ココロノオト開始
+              </button>
+              <button
+                onClick={goToKokoroGroupResults}
+                className="w-full text-left px-3 py-2 bg-rose-50 hover:bg-rose-100 rounded text-sm text-rose-700 transition-colors"
+              >
+                💕 ココロノオト結果デモ
+              </button>
+              <button
+                onClick={goToKokoroPairDetails}
+                className="w-full text-left px-3 py-2 bg-pink-50 hover:bg-pink-100 rounded text-sm text-pink-700 transition-colors"
+              >
+                🎀 ココロノオト詳細分析
               </button>
             </div>
             <div className="mt-3 pt-3 border-t text-xs text-gray-500">
@@ -236,7 +190,7 @@ export function TopPage() {
             </div>
 
             <button
-              onClick={() => navigate('/group-session-start')}
+              onClick={() => navigate('/glass-session-start')}
               className="w-full btn-kawaii-primary py-4 px-6 text-lg font-bold"
             >
               🍻 グラスノオトを始める

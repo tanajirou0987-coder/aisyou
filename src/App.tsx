@@ -4,16 +4,30 @@ import { BaseLayout } from './layouts'
 import { TopPage } from './pages/TopPage'
 import { HomePage } from './pages/HomePage'
 import { QuestionPage } from './pages/QuestionPage'
-import { GroupSessionStartPage } from './pages/GroupSessionStartPage'
-import { MultiDeviceSessionStartPage } from './pages/MultiDeviceSessionStartPage'
-import { JoinSessionPage } from './pages/JoinSessionPage'
-import { MultiDeviceDiagnosisPage } from './pages/MultiDeviceDiagnosisPage'
-import { GroupParticipantRegistrationPage } from './pages/GroupParticipantRegistrationPage'
-import { GroupDiagnosisPage } from './pages/GroupDiagnosisPage'
-import { GroupCompletionWaitingPage } from './pages/GroupCompletionWaitingPage'
-import { GroupResultsPage } from './pages/GroupResultsPage'
-import { PairDetailsPage } from './pages/PairDetailsPage'
-import { KokoroPairDetailsPage } from './pages/KokoroPairDetailsPage'
+// グラスノオト専用ページ
+import { 
+  SessionStartPage as GlassSessionStartPage,
+  CoupleRegistrationPage as GlassCoupleRegistrationPage,
+  ModeSelectionPage as GlassModeSelectionPage,
+  DiagnosisPage as GlassDiagnosisPage,
+  CompletionWaitingPage as GlassCompletionWaitingPage,
+  ResultsPage as GlassResultsPage,
+  PairDetailsPage as GlassPairDetailsPage,
+  PunishmentGamePage as GlassPunishmentGamePage,
+  VotingPage as GlassVotingPage,
+  MultiDeviceSessionStartPage as GlassMultiDeviceSessionStartPage,
+  NewMultiDeviceSessionStartPage as GlassNewMultiDeviceSessionStartPage,
+  QuickDiagnosisPage as GlassQuickDiagnosisPage,
+  DevQuickDiagnosisPage as GlassDevQuickDiagnosisPage,
+  JoinSessionPage as GlassJoinSessionPage,
+  MultiDeviceDiagnosisPage as GlassMultiDeviceDiagnosisPage
+} from './apps/glass-note/pages'
+// ココロノオト専用ページ
+import { 
+  GenderSelectionPage as KokoroGenderSelectionPage,
+  ResultsPage as KokoroResultsPage,
+  PairDetailsPage as KokoroPairDetailsPage
+} from './apps/kokoro-note/pages'
 import { AppProvider } from './context/AppContext'
 
 function App() {
@@ -30,19 +44,27 @@ function App() {
             <Route path="/compatibility" element={<HomePage />} />
             <Route path="/questions" element={<QuestionPage />} />
             
-            {/* グラスノオトのルート */}
-            <Route path="/group-session-start" element={<GroupSessionStartPage />} />
-            <Route path="/multi-device-session-start" element={<MultiDeviceSessionStartPage />} />
-            <Route path="/join-session/:sessionId" element={<JoinSessionPage />} />
-            <Route path="/multi-device-diagnosis/:sessionId/:userId" element={<MultiDeviceDiagnosisPage />} />
-            <Route path="/group-participant-registration" element={<GroupParticipantRegistrationPage />} />
-            <Route path="/group-diagnosis" element={<GroupDiagnosisPage />} />
-            <Route path="/group-completion-waiting" element={<GroupCompletionWaitingPage />} />
-            <Route path="/group-results" element={<GroupResultsPage />} />
-            <Route path="/pair-details" element={<PairDetailsPage />} />
+            {/* グラスノオト専用ルート */}
+            <Route path="/glass-session-start" element={<GlassSessionStartPage />} />
+            <Route path="/glass-couple-registration" element={<GlassCoupleRegistrationPage />} />
+            <Route path="/glass-mode-selection" element={<GlassModeSelectionPage />} />
+            <Route path="/glass-multi-device-session-start" element={<GlassNewMultiDeviceSessionStartPage />} />
+            <Route path="/glass-join-session/:sessionId" element={<GlassJoinSessionPage />} />
+            <Route path="/glass-multi-device-diagnosis/:sessionId/:userId" element={<GlassMultiDeviceDiagnosisPage />} />
+            <Route path="/glass-quick-diagnosis/:sessionId/:userId" element={<GlassQuickDiagnosisPage />} />
+            <Route path="/glass-dev-quick-diagnosis" element={<GlassDevQuickDiagnosisPage />} />
+            <Route path="/glass-diagnosis" element={<GlassDiagnosisPage />} />
+            <Route path="/glass-completion-waiting" element={<GlassCompletionWaitingPage />} />
+            <Route path="/glass-results" element={<GlassResultsPage />} />
+            <Route path="/glass-pair-details" element={<GlassPairDetailsPage />} />
+            <Route path="/glass-punishment-game" element={<GlassPunishmentGamePage />} />
+            <Route path="/glass-voting" element={<GlassVotingPage />} />
+            
+            {/* ココロノオト専用ルート */}
+            <Route path="/kokoro-gender-selection" element={<KokoroGenderSelectionPage />} />
+            <Route path="/kokoro-results" element={<KokoroResultsPage />} />
             <Route path="/kokoro-pair-details" element={<KokoroPairDetailsPage />} />
-            {/* 互換用: 古いリンクのリダイレクト/エイリアス */}
-            <Route path="/drinking-results" element={<GroupResultsPage />} />
+            
             {/* 不明なパスはトップへリダイレクト */}
             <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>

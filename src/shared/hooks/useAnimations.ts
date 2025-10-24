@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { createStaggeredDelay } from '../utils/animations'
+import { createStaggeredDelay } from '../../utils/animations'
 
 export function useStaggeredAnimation(items: any[], baseDelay: number = 0.1) {
   const refs = useRef<(HTMLElement | null)[]>([])
@@ -40,6 +40,7 @@ export function useIntersectionObserver(
 
   return ref
 }
+
 
 
 

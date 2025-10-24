@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Clock, Users, CheckCircle } from 'lucide-react'
-import { watchSession, submitAnswer, checkAllAnswered, moveToNextQuestion, updateSessionStatus, SessionData } from '../utils/sessionManager'
-import { romanceQuestions as questions } from '../data/questions'
+import { watchSession, submitAnswer, checkAllAnswered, moveToNextQuestion, updateSessionStatus, SessionData } from '../../../utils/sessionManager'
+import { romanceQuestions as questions } from '../../../data/questions'
 
 export function MultiDeviceDiagnosisPage() {
   const navigate = useNavigate()
@@ -48,7 +48,7 @@ export function MultiDeviceDiagnosisPage() {
       // 診断完了チェック
       if (data.currentQuestionIndex >= questions.length) {
         // 全質問完了
-        navigate(`/multi-device-results/${sessionId}`)
+        navigate(`/glass-multi-device-results/${sessionId}`)
       }
     })
 

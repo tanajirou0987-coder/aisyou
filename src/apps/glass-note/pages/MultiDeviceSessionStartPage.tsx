@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { QRCodeSVG } from 'qrcode.react'
-import { ArrowLeft, Users, Copy, Check, PlayCircle } from 'lucide-react'
-import { createSession, watchSession, updateSessionStatus, joinSession, SessionData } from '../utils/sessionManager'
+import { ArrowLeft, Users, Copy, Check, PlayCircle, Eye, EyeOff } from 'lucide-react'
+import { createSession, watchSession, updateSessionStatus, joinSession, SessionData } from '../../../utils/sessionManager'
 
 export function MultiDeviceSessionStartPage() {
   const navigate = useNavigate()
   const location = useLocation()
-  const groupName = location.state?.groupName || '今夜の飲み会'
   
   // セッションIDを生成（ランダムな6桁の英数字）
   const [sessionId] = useState(() => Math.random().toString(36).substr(2, 6).toUpperCase())
@@ -15,19 +14,76 @@ export function MultiDeviceSessionStartPage() {
   const [copied, setCopied] = useState(false)
   const [sessionData, setSessionData] = useState<SessionData | null>(null)
   const [participantList, setParticipantList] = useState<any[]>([])
+  const [loggedInPersons, setLoggedInPersons] = useState<string[]>([])
+  const [showHostModal, setShowHostModal] = useState(false)
+  const [isHostJoined, setIsHostJoined] = useState(false)
   
-  // 主催者の情報
-  const [hostName, setHostName] = useState('')
-  const [hostGender, setHostGender] = useState<'male' | 'female' | ''>('')
-  const [isHostRegistered, setIsHostRegistered] = useState(false)
+  // 参加者データを取得
+  const [participants, setParticipants] = useState(() => {
+    const sessionData = localStorage.getItem('glassSessionData')
+    if (sessionData) {
+      const data = JSON.parse(sessionData)
+      return data.participants || { males: [], females: [] }
+    }
+    return { males: [], females: [] }
+  })
+  
+  // 全組み合わせを計算
+  const [allCombinations] = useState(() => {
+    const combinations = []
+    participants.males.forEach((male: string) => {
+      participants.females.forEach((female: string) => {
+        combinations.push({ male, female })
+      })
+    })
+    return combinations
+  })
+  
+  // 全参加者リスト
+  const allPersons = [...participants.males, ...participants.females]
   
   // セッションURLを生成
   const sessionUrl = `${window.location.origin}/join-session/${sessionId}`
   
   // セッションを作成
   useEffect(() => {
-    createSession(sessionId, groupName).catch(console.error)
-  }, [sessionId, groupName])
+    const sessionData = {
+      participants,
+      allCombinations,
+      allPersons: [...participants.males, ...participants.females],
+      mode: 'multi-device',
+      loggedInPersons: []
+    }
+    createSession(sessionId, sessionData).catch(console.error)
+  }, [sessionId, participants, allCombinations])
+  
+  // ホスト自身の名前選択
+  const handleHostJoin = () => {
+    setShowHostModal(true)
+  }
+  
+  const handleHostNameSelect = (personName: string) => {
+    setLoggedInPersons(prev => [...prev, personName])
+    setIsHostJoined(true)
+    setShowHostModal(false)
+  }
+  
+  // 診断開始
+  const handleStartDiagnosis = () => {
+    if (loggedInPersons.length === allPersons.length) {
+      navigate('/glass-multi-device-diagnosis', { 
+        state: { 
+          sessionId, 
+          participants, 
+          allCombinations,
+          allPersons 
+        } 
+      })
+    }
+  }
+  
+  // 全員ログイン完了チェック
+  const isAllLoggedIn = loggedInPersons.length === allPersons.length
   
   // セッションをリアルタイムで監視
   useEffect(() => {
@@ -46,42 +102,10 @@ export function MultiDeviceSessionStartPage() {
     }
   }, [sessionId])
   
-  // 主催者を参加者として登録
-  const registerHost = async () => {
-    if (!hostName.trim()) {
-      alert('名前を入力してください')
-      return
-    }
-    if (!hostGender) {
-      alert('性別を選択してください')
-      return
-    }
-    
-    try {
-      await joinSession(sessionId, hostUserId, hostName.trim(), hostGender)
-      setIsHostRegistered(true)
-    } catch (err) {
-      console.error(err)
-      alert('登録に失敗しました')
-    }
-  }
-
   const handleCopyUrl = () => {
     navigator.clipboard.writeText(sessionUrl)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
-  }
-
-  const handleStartDiagnosis = async () => {
-    if (!isHostRegistered) {
-      alert('まずあなたの情報を登録してください')
-      return
-    }
-    
-    // 診断を開始
-    await updateSessionStatus(sessionId, 'in_progress')
-    // 主催者も診断画面へ遷移（参加者と同じ画面）
-    navigate(`/multi-device-diagnosis/${sessionId}/${hostUserId}`)
   }
 
   return (
@@ -90,7 +114,7 @@ export function MultiDeviceSessionStartPage() {
         {/* ヘッダー */}
         <div className="text-center mb-8">
           <button
-            onClick={() => navigate('/group-session-start')}
+            onClick={() => navigate('/glass-session-start')}
             className="btn-secondary text-sm flex items-center gap-2 mx-auto mb-6"
           >
             <ArrowLeft className="w-5 h-5" />
@@ -245,6 +269,9 @@ export function MultiDeviceSessionStartPage() {
             </div>
             <p className="text-6xl font-black text-green-600 mb-4" style={{fontFamily: 'Bangers, sans-serif', WebkitTextStroke: '2px #000000'}}>
               {participantList.length}人
+            </p>
+            <p className="text-lg font-black text-orange-600 mb-4">
+              診断する組み合わせ: {allCombinations.length} 通り
             </p>
             
             {/* 参加者一覧 */}

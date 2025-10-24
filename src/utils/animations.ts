@@ -1,63 +1,84 @@
 /**
- * アニメーション用のキーフレームを生成
+ * アニメーション関連のユーティリティ関数
  */
-export const createKeyframes = (name: string, frames: Record<string, any>) => {
-  return `
-    @keyframes ${name} {
-      ${Object.entries(frames)
-        .map(([key, value]) => `${key} { ${Object.entries(value)
-          .map(([prop, val]) => `${prop}: ${val}`)
-          .join('; ')} }`)
-        .join('\n')}
-    }
-  `
-}
 
 /**
  * フェードインアニメーション
  */
-export const fadeIn = (duration: number = 0.3, delay: number = 0) => ({
-  animation: `fadeIn ${duration}s ease-in-out ${delay}s both`
-})
+export const fadeIn = {
+  from: { opacity: 0 },
+  to: { opacity: 1 }
+}
 
 /**
- * スライドインアニメーション
+ * スライドアップアニメーション
  */
-export const slideIn = (direction: 'up' | 'down' | 'left' | 'right' = 'up', duration: number = 0.5) => ({
-  animation: `slideIn${direction.charAt(0).toUpperCase() + direction.slice(1)} ${duration}s ease-out both`
-})
+export const slideUp = {
+  from: { 
+    opacity: 0, 
+    transform: 'translateY(20px)' 
+  },
+  to: { 
+    opacity: 1, 
+    transform: 'translateY(0)' 
+  }
+}
+
+/**
+ * スケールアニメーション
+ */
+export const scaleIn = {
+  from: { 
+    opacity: 0, 
+    transform: 'scale(0.9)' 
+  },
+  to: { 
+    opacity: 1, 
+    transform: 'scale(1)' 
+  }
+}
 
 /**
  * バウンスアニメーション
  */
-export const bounce = (intensity: 'light' | 'medium' | 'strong' = 'medium') => {
-  const durations = { light: '0.5s', medium: '1s', strong: '1.5s' }
-  return {
-    animation: `bounce ${durations[intensity]} ease-in-out infinite`
+export const bounce = {
+  from: { 
+    opacity: 0, 
+    transform: 'translateY(-20px)' 
+  },
+  to: { 
+    opacity: 1, 
+    transform: 'translateY(0)' 
+  }
+}
+
+/**
+ * 回転アニメーション
+ */
+export const rotate = {
+  from: { 
+    opacity: 0, 
+    transform: 'rotate(-180deg)' 
+  },
+  to: { 
+    opacity: 1, 
+    transform: 'rotate(0deg)' 
   }
 }
 
 /**
  * パルスアニメーション
  */
-export const pulse = (duration: number = 2) => ({
-  animation: `pulse ${duration}s ease-in-out infinite`
-})
-
-/**
- * 回転アニメーション
- */
-export const rotate = (duration: number = 1, direction: 'clockwise' | 'counterclockwise' = 'clockwise') => ({
-  animation: `rotate${direction === 'clockwise' ? '' : 'Reverse'} ${duration}s linear infinite`
-})
-
-/**
- * スケールアニメーション
- */
-export const scale = (from: number = 0.8, to: number = 1.1, duration: number = 0.6) => ({
-  animation: `scale ${duration}s ease-in-out infinite alternate`,
-  transformOrigin: 'center'
-})
+export const pulse = {
+  from: { 
+    opacity: 0, 
+    transform: 'scale(0.8)' 
+  },
+  to: { 
+    opacity: 1, 
+    transform: 'scale(1)' 
+  }
+}
 
 /**
  * アニメーション遅延を段階的に設定
@@ -65,5 +86,3 @@ export const scale = (from: number = 0.8, to: number = 1.1, duration: number = 0
 export const createStaggeredDelay = (index: number, baseDelay: number = 0.1, step: number = 0.1) => ({
   animationDelay: `${baseDelay + (index * step)}s`
 })
-
-

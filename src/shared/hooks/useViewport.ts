@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { setViewportHeight } from '../utils/layout'
+import { setViewportHeight } from '../../utils/layout'
 
 export function useViewport() {
   const [dimensions, setDimensions] = useState({
