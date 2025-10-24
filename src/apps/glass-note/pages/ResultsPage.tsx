@@ -4,6 +4,7 @@ import { useApp } from '../../../context/AppContext'
 import { calculateLoveStyleType, LoveStyleResult } from '../../../utils/loveStyleCalculator'
 import { calculateCompatibilityScore } from '../../../utils/loveCompatibilityMatrix'
 import { calculateScientificCompatibility, ScientificCompatibilityResult } from '../../../utils/scientificCompatibilitySystem'
+import { ImageShareButton } from '../../../components/ImageShareButton'
 
 export function ResultsPage() {
   const navigate = useNavigate()
@@ -488,13 +489,21 @@ export function ResultsPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl">
+      <div id="diagnosis-results" className="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-purple-600 mb-2">
             🍻 グラスノオト
           </h1>
           <div className="text-sm text-gray-500 mb-6">
             今夜の診断結果
+          </div>
+          
+          {/* 画像シェアボタン */}
+          <div className="mb-4">
+            <ImageShareButton 
+              targetElementId="diagnosis-results"
+              fileName="glass-note-results"
+            />
           </div>
           
           {/* デバッグ情報（開発時のみ表示） */}

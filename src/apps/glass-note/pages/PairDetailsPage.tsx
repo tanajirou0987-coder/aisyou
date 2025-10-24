@@ -4,6 +4,7 @@ import { useApp } from '../../../context/AppContext'
 import { calculateLoveStyleType, LoveStyleResult } from '../../../utils/loveStyleCalculator'
 import { calculateCompatibilityScore } from '../../../utils/loveCompatibilityMatrix'
 import { calculateScientificCompatibility, ScientificCompatibilityResult } from '../../../utils/scientificCompatibilitySystem'
+import { ImageShareButton } from '../../../components/ImageShareButton'
 
 export function PairDetailsPage() {
   const navigate = useNavigate()
@@ -285,14 +286,16 @@ export function PairDetailsPage() {
             </select>
           </div>
           
-          <button className="share-button bg-purple-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-purple-600 transition-colors">
-            シェア
-          </button>
+          <ImageShareButton 
+            targetElementId="pair-details-content"
+            fileName={`glass-note-${selectedCouple?.couple.male}-${selectedCouple?.couple.female}`}
+            className=""
+          />
         </div>
       </header>
 
       <div className="pt-20 pb-8">
-        <div className="max-w-4xl mx-auto px-4 space-y-8">
+        <div id="pair-details-content" className="max-w-4xl mx-auto px-4 space-y-8">
           
           {/* サマリーカード */}
           <div className="summary-card bg-white rounded-3xl p-8 shadow-2xl">
