@@ -340,6 +340,10 @@ export function calculateComprehensiveCompatibility(
   femaleLoveStyle: LoveStyleResult,
   weights: ScientificWeights = DEFAULT_WEIGHTS
 ): ComprehensiveCompatibilityResult {
+  console.log('=== COMPREHENSIVE COMPATIBILITY CALCULATION START ===')
+  console.log('Male love style:', maleLoveStyle)
+  console.log('Female love style:', femaleLoveStyle)
+  console.log('Weights:', weights)
   
   // 各要素を推定
   const maleBigFive = estimateBigFiveFromLoveStyle(maleLoveStyle)
@@ -381,31 +385,57 @@ export function calculateComprehensiveCompatibility(
     lifestyleScore * weights.lifestyle
   )
   
-  // 個別性を追加するためのランダム要素（参加者名ベース）
-  const maleName = maleLoveStyle.type?.name || 'Unknown'
-  const femaleName = femaleLoveStyle.type?.name || 'Unknown'
+  // 科学的根拠に基づく個別性要素（実際の性格特性に基づく）
+  const maleScores = maleLoveStyle.scores
+  const femaleScores = femaleLoveStyle.scores
   
-  // 名前の文字数と文字の種類に基づく個別性要素
-  const maleLength = maleName.length
-  const femaleLength = femaleName.length
-  const maleVowels = (maleName.match(/[あいうえおアイウエオ]/g) || []).length
-  const femaleVowels = (femaleName.match(/[あいうえおアイウエオ]/g) || []).length
+  // 価値観の類似性を評価（スコアの差が小さいほど相性が良い）
+  const maleScoreSum = Object.values(maleScores).reduce((sum, score) => sum + score, 0)
+  const femaleScoreSum = Object.values(femaleScores).reduce((sum, score) => sum + score, 0)
+  const scoreDifference = Math.abs(maleScoreSum - femaleScoreSum)
   
-  // 個別性スコア（-8から+8の範囲でより分散）
-  const individualityScore = 
-    (maleLength % 4) + (femaleLength % 4) + 
-    (maleVowels % 3) + (femaleVowels % 3) - 6
+  // 類似性ボーナス（価値観が近いほど高スコア）
+  const similarityBonus = Math.max(0, 8 - scoreDifference * 0.5)
   
-  // 音韻的相性要素（-5から+5の範囲）
-  const maleConsonants = maleName.replace(/[あいうえおアイウエオ]/g, '').length
-  const femaleConsonants = femaleName.replace(/[あいうえおアイウエオ]/g, '').length
-  const consonantScore = Math.max(-5, Math.min(5, (maleConsonants - femaleConsonants) % 10 - 5))
+  // 回答の一貫性を評価（分散が小さいほど一貫した価値観）
+  const maleVariance = Object.values(maleScores).reduce((sum, score) => sum + Math.pow(score - 2.5, 2), 0) / 6
+  const femaleVariance = Object.values(femaleScores).reduce((sum, score) => sum + Math.pow(score - 2.5, 2), 0) / 6
+  const consistencyBonus = Math.max(0, 5 - Math.abs(maleVariance - femaleVariance) * 3)
   
-  // 微細なランダム要素（診断の不確実性を表現）
-  const randomFactor = (Math.random() - 0.5) * 10 // -5から+5の範囲
+  // 恋愛スタイルの相補性を評価
+  const maleMainScore = maleScores[maleLoveStyle.mainStyle] || 0
+  const femaleMainScore = femaleScores[femaleLoveStyle.mainStyle] || 0
+  const complementaryBonus = Math.max(0, 3 - Math.abs(maleMainScore - femaleMainScore) * 0.5)
   
-  // 最終スコアに個別性とランダム要素を追加
-  totalScore = Math.round(totalScore + individualityScore + consonantScore + randomFactor)
+  // ランダム要素を完全に削除（科学的診断のため）
+  
+  // 最終スコアに科学的個別性要素のみを追加
+  const originalTotalScore = totalScore
+  totalScore = Math.round(totalScore + similarityBonus + consistencyBonus + complementaryBonus)
+  
+  console.log('Score calculation details:', {
+    originalTotalScore,
+    similarityBonus,
+    consistencyBonus,
+    complementaryBonus,
+    finalTotalScore: totalScore
+  })
+  
+  // スコアが有効かチェック
+  if (typeof totalScore !== 'number' || isNaN(totalScore) || totalScore < 0 || totalScore > 100) {
+    console.log('Invalid totalScore, using base calculation')
+    totalScore = Math.round(
+      loveStyleScore * weights.loveStyle +
+      personalityScore * weights.personality +
+      attachmentScore * weights.attachment +
+      communicationScore * weights.communication +
+      valuesScore * weights.values +
+      lifestyleScore * weights.lifestyle
+    )
+  }
+  
+  console.log('Final total score:', totalScore)
+  console.log('=== COMPREHENSIVE COMPATIBILITY CALCULATION END ===')
   
   // 詳細分析を生成
   const detailedAnalysis = generateDetailedAnalysis(

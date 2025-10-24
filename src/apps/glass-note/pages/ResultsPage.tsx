@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useApp } from '../../../context/AppContext'
 import { calculateLoveStyleType, LoveStyleResult } from '../../../utils/loveStyleCalculator'
 import { calculateCompatibilityScore } from '../../../utils/loveCompatibilityMatrix'
-import { calculateComprehensiveCompatibility, ComprehensiveCompatibilityResult } from '../../../utils/scientificCompatibilityCalculator'
+import { calculateScientificCompatibility, ScientificCompatibilityResult } from '../../../utils/scientificCompatibilitySystem'
 
 export function ResultsPage() {
   const navigate = useNavigate()
@@ -32,23 +32,55 @@ export function ResultsPage() {
 
   // 実際の回答データを使用した相性計算関数
   const calculateRealCompatibilityScore = (maleName: string, femaleName: string, sessionData: any): number => {
-    // セッションデータから回答データを取得
+    console.log('ResultsPage - Calculating compatibility for:', maleName, femaleName) // デバッグ用
+    console.log('ResultsPage - Session data answers:', sessionData.answers) // デバッグ用
+    
     const answers = sessionData.answers || {}
+    console.log('ResultsPage - Answers object:', answers) // デバッグ用
     
-    // 男性と女性の回答データを取得
-    const maleAnswers = Object.values(answers).find((userAnswers: any) => {
-      // 参加者名から回答者を特定（簡易的な方法）
-      return userAnswers && Object.keys(userAnswers).length > 0
-    }) as any
+    // 回答データの構造を確認
+    const answerKeys = Object.keys(answers)
+    console.log('ResultsPage - Answer keys:', answerKeys) // デバッグ用
     
-    const femaleAnswers = Object.values(answers).find((userAnswers: any, index: number) => {
-      // 2番目の回答者を女性として扱う（簡易的な方法）
-      return userAnswers && Object.keys(userAnswers).length > 0 && index === 1
-    }) as any
+    // 回答データの構造を詳細に確認
+    const answerValues = Object.values(answers)
+    console.log('ResultsPage - Answer values:', answerValues) // デバッグ用
+    console.log('ResultsPage - Answer values length:', answerValues.length) // デバッグ用
     
-    if (!maleAnswers || !femaleAnswers) {
-      console.log('No answer data found, using fallback calculation')
-      // 回答データがない場合はフォールバック計算
+    // 回答データが存在するかチェック
+    if (answerValues.length === 0) {
+      console.log('ResultsPage - No answer values found, using fallback calculation')
+      return calculateFallbackScore(maleName, femaleName)
+    }
+    
+    // 参加者データの構造を確認
+    console.log('ResultsPage - Participants structure:', {
+      participants: sessionData.participants,
+      males: sessionData.participants?.males,
+      females: sessionData.participants?.females
+    })
+    
+    // シンプルに最初の2つの回答を使用（参加者順序に基づく）
+    if (answerValues.length < 2) {
+      console.log('ResultsPage - Not enough answers, using fallback calculation')
+      return calculateFallbackScore(maleName, femaleName)
+    }
+    
+    const maleAnswers = answerValues[0] as any
+    const femaleAnswers = answerValues[1] as any
+    
+    console.log('ResultsPage - Using first two answers:', { maleAnswers, femaleAnswers })
+    
+    console.log('ResultsPage - Male answers (index 0):', maleAnswers) // デバッグ用
+    console.log('ResultsPage - Female answers (index 1):', femaleAnswers) // デバッグ用
+    
+    // 回答データの内容をチェック
+    if (!maleAnswers || !femaleAnswers || 
+        typeof maleAnswers !== 'object' || typeof femaleAnswers !== 'object' ||
+        Object.keys(maleAnswers).length === 0 || Object.keys(femaleAnswers).length === 0) {
+      console.log('ResultsPage - Invalid answer data structure, using fallback calculation')
+      console.log('ResultsPage - Male answers valid:', maleAnswers && typeof maleAnswers === 'object' && Object.keys(maleAnswers).length > 0)
+      console.log('ResultsPage - Female answers valid:', femaleAnswers && typeof femaleAnswers === 'object' && Object.keys(femaleAnswers).length > 0)
       return calculateFallbackScore(maleName, femaleName)
     }
     
@@ -68,72 +100,79 @@ export function ResultsPage() {
         timestamp: Date.now()
       }))
       
+      console.log('ResultsPage - Male answer array length:', maleAnswerArray.length) // デバッグ用
+      console.log('ResultsPage - Female answer array length:', femaleAnswerArray.length) // デバッグ用
+      console.log('ResultsPage - Male answer array:', maleAnswerArray) // デバッグ用
+      console.log('ResultsPage - Female answer array:', femaleAnswerArray) // デバッグ用
+      
       // 恋愛スタイルタイプを計算
+      console.log('ResultsPage - Attempting to calculate love style types...')
       const maleType = calculateLoveStyleType(maleAnswerArray, 'male')
       const femaleType = calculateLoveStyleType(femaleAnswerArray, 'female')
       
-      console.log('Calculated types:', { maleType, femaleType })
+      console.log('ResultsPage - Calculated types:', { maleType, femaleType })
       
-      // 包括的科学的相性計算
-      const comprehensiveResult = calculateComprehensiveCompatibility(maleType, femaleType)
+      // 新しい科学的相性計算システムを使用
+      const scientificResult = calculateScientificCompatibility(maleAnswers, femaleAnswers)
       
-      console.log('Comprehensive compatibility result:', comprehensiveResult)
+      console.log('ResultsPage - Scientific compatibility result:', scientificResult)
+      console.log('ResultsPage - Final score:', scientificResult.totalScore)
       
-      return comprehensiveResult.totalScore
+      return scientificResult.totalScore
     } catch (error) {
-      console.error('Error calculating compatibility:', error)
-      return calculateFallbackScore(maleName, femaleName)
+      console.error('ResultsPage - Error calculating compatibility:', error)
+      const fallbackScore = calculateFallbackScore(maleName, femaleName)
+      console.log('ResultsPage - Error fallback score:', fallbackScore) // デバッグ用
+      return fallbackScore
     }
   }
   
   // フォールバック計算（回答データがない場合）
   const calculateFallbackScore = (maleName: string, femaleName: string): number => {
-    // 名前の文字数と文字の種類に基づく基本的な相性計算
-    const maleLength = maleName.length
-    const femaleLength = femaleName.length
-    const maleVowels = (maleName.match(/[あいうえおアイウエオ]/g) || []).length
-    const femaleVowels = (femaleName.match(/[あいうえおアイウエオ]/g) || []).length
+    console.log('=== ResultsPage FALLBACK CALCULATION START ===')
+    console.log('Male:', maleName, 'Female:', femaleName)
+    console.log('WARNING: Using fallback calculation - no answer data available')
     
-    // 基本的な相性スコア（45-95の範囲でより分散）
-    let baseScore = 45
+    // 回答データがない場合の固定スコア（科学的根拠なし）
+    // 実際の診断では使用されるべきではない
+    const fallbackScore = 70 // 中程度の相性として固定
     
-    // 名前の長さの差が小さいほど相性が良い（最大+20点）
-    const lengthDiff = Math.abs(maleLength - femaleLength)
-    baseScore += Math.max(0, 20 - lengthDiff * 3)
+    console.log('Fallback score (fixed):', fallbackScore)
+    console.log('=== ResultsPage FALLBACK CALCULATION END ===')
     
-    // 母音の数の差が小さいほど相性が良い（最大+15点）
-    const vowelDiff = Math.abs(maleVowels - femaleVowels)
-    baseScore += Math.max(0, 15 - vowelDiff * 3)
-    
-    // 名前の文字の種類の多様性（最大+12点）
-    const maleUniqueChars = new Set(maleName).size
-    const femaleUniqueChars = new Set(femaleName).size
-    const charDiversity = Math.abs(maleUniqueChars - femaleUniqueChars)
-    baseScore += Math.max(0, 12 - charDiversity * 2)
-    
-    // 個別性を高めるための名前ベースの計算（最大+15点）
-    const maleHash = maleName.split('').reduce((hash, char) => hash + char.charCodeAt(0), 0)
-    const femaleHash = femaleName.split('').reduce((hash, char) => hash + char.charCodeAt(0), 0)
-    const hashDiff = Math.abs(maleHash - femaleHash) % 25
-    baseScore += Math.max(0, 15 - hashDiff)
-    
-    // 文字の音韻的相性（最大+10点）
-    const maleConsonants = maleName.replace(/[あいうえおアイウエオ]/g, '').length
-    const femaleConsonants = femaleName.replace(/[あいうえおアイウエオ]/g, '').length
-    const consonantDiff = Math.abs(maleConsonants - femaleConsonants)
-    baseScore += Math.max(0, 10 - consonantDiff * 2)
-    
-    // ランダム要素（お酒の場での相性の不確実性を表現）
-    const randomFactor = (Math.random() - 0.5) * 12 // -6 から +6
-    baseScore += randomFactor
-    
-    // スコアを45-95の範囲に収める（より広い分散）
-    return Math.max(45, Math.min(95, Math.round(baseScore)))
+    return fallbackScore
   }
 
   // 診断結果を生成
   const generateDiagnosisResults = (data: any) => {
     console.log('Generating diagnosis results for:', data) // デバッグ用
+    
+    // 既に計算済みの結果があるかチェック（一貫性を保つため）
+    if (data.diagnosisResults && data.diagnosisResults.length > 0) {
+      console.log('Using cached diagnosis results for consistency')
+      setDiagnosisResults(data.diagnosisResults)
+      return
+    }
+    
+    // セッションデータに診断結果が保存されているかチェック
+    const savedResults = localStorage.getItem('glassDiagnosisResults')
+    if (savedResults) {
+      try {
+        const parsedResults = JSON.parse(savedResults)
+        console.log('Using saved diagnosis results from localStorage')
+        setDiagnosisResults(parsedResults)
+        
+        // セッションデータにも保存
+        const updatedSessionData = {
+          ...data,
+          diagnosisResults: parsedResults
+        }
+        localStorage.setItem('glassSessionData', JSON.stringify(updatedSessionData))
+        return
+      } catch (error) {
+        console.error('Error parsing saved results:', error)
+      }
+    }
     
     let combinations = []
     
@@ -158,6 +197,7 @@ export function ResultsPage() {
     const results = combinations.map((combo: any, index: number) => {
       // 実際の相性計算を使用（セッションデータを渡す）
       const score = calculateRealCompatibilityScore(combo.male, combo.female, data)
+      console.log('Calculated score for', combo.male, '&', combo.female, ':', score)
       const types = ['CAPO', 'BEST', 'COOL', 'HOT', 'SWEET']
       const characters = [
         'ほろ酔いロマンチスト',
@@ -171,8 +211,8 @@ export function ResultsPage() {
         id: index + 1,
         couple: { male: combo.male, female: combo.female },
         score: score,
-        type: types[Math.floor(Math.random() * types.length)],
-        character: characters[Math.floor(Math.random() * characters.length)],
+        type: types[index % types.length],
+        character: characters[index % characters.length],
         points: [
           'お互いの魅力を引き出す',
           '今夜は特別な時間を',
@@ -203,6 +243,15 @@ export function ResultsPage() {
 
     // スコア順にソート
     results.sort((a, b) => b.score - a.score)
+    
+    // 計算結果をセッションデータに保存（一貫性を保つため）
+    const updatedSessionData = {
+      ...data,
+      diagnosisResults: results
+    }
+    localStorage.setItem('glassSessionData', JSON.stringify(updatedSessionData))
+    localStorage.setItem('glassDiagnosisResults', JSON.stringify(results))
+    
     setDiagnosisResults(results)
     
     console.log('Generated diagnosis results:', results) // デバッグ用

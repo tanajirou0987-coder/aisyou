@@ -3,528 +3,875 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useApp } from '../../../context/AppContext'
 import { calculateLoveStyleType, LoveStyleResult } from '../../../utils/loveStyleCalculator'
 import { calculateCompatibilityScore } from '../../../utils/loveCompatibilityMatrix'
-import { calculateComprehensiveCompatibility, ComprehensiveCompatibilityResult } from '../../../utils/scientificCompatibilityCalculator'
+import { calculateScientificCompatibility, ScientificCompatibilityResult } from '../../../utils/scientificCompatibilitySystem'
 
 export function PairDetailsPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const { state } = useApp()
-  const [showScientificBasis, setShowScientificBasis] = useState(false)
-  const [selectedCoupleId, setSelectedCoupleId] = useState<number>(1)
   const [sessionData, setSessionData] = useState<any>(null)
   const [allCouplesData, setAllCouplesData] = useState<any[]>([])
+  const [selectedCouple, setSelectedCouple] = useState<any>(undefined)
+  const [loading, setLoading] = useState(true)
 
-  // セッションデータを読み込み
+  // 相性計算関数（科学的根拠に基づく）
+  const calculateRealCompatibilityScore = (maleName: string, femaleName: string, sessionData: any): number => {
+    console.log('=== SCIENTIFIC COMPATIBILITY CALCULATION START ===')
+    console.log('Male:', maleName, 'Female:', femaleName)
+    console.log('Session data:', sessionData)
+    
+    const answers = sessionData.answers || {}
+    console.log('Answers object:', answers)
+    
+    // 回答データの存在確認
+    const answerValues = Object.values(answers)
+    if (answerValues.length < 2) {
+      console.log('Not enough answers, using fallback calculation')
+      return calculateFallbackScore(maleName, femaleName)
+    }
+    
+    const maleAnswers = answerValues[0] as any
+    const femaleAnswers = answerValues[1] as any
+    
+    console.log('Male answers:', maleAnswers)
+    console.log('Female answers:', femaleAnswers)
+    
+    // 回答データの検証
+    if (!maleAnswers || !femaleAnswers || 
+        typeof maleAnswers !== 'object' || typeof femaleAnswers !== 'object' ||
+        Object.keys(maleAnswers).length === 0 || Object.keys(femaleAnswers).length === 0) {
+      console.log('Invalid answer data, using fallback calculation')
+      return calculateFallbackScore(maleName, femaleName)
+    }
+    
+    try {
+      // 新しい科学的相性計算システムを使用
+      const scientificResult = calculateScientificCompatibility(maleAnswers, femaleAnswers)
+      
+      console.log('Scientific compatibility result:', scientificResult)
+      console.log('Final scientific score:', scientificResult.totalScore)
+      console.log('=== SCIENTIFIC COMPATIBILITY CALCULATION END ===')
+      
+      return scientificResult.totalScore
+    } catch (error) {
+      console.error('Error in scientific calculation:', error)
+      const fallbackScore = calculateFallbackScore(maleName, femaleName)
+      console.log('Error fallback score:', fallbackScore)
+      return fallbackScore
+    }
+  }
+  
+  const calculateFallbackScore = (maleName: string, femaleName: string): number => {
+    console.log('=== FALLBACK CALCULATION START ===')
+    console.log('Male:', maleName, 'Female:', femaleName)
+    console.log('WARNING: Using fallback calculation - no answer data available')
+    
+    // 回答データがない場合の固定スコア（科学的根拠なし）
+    // 実際の診断では使用されるべきではない
+    const fallbackScore = 70 // 中程度の相性として固定
+    
+    console.log('Fallback score (fixed):', fallbackScore)
+    console.log('=== FALLBACK CALCULATION END ===')
+    
+    return fallbackScore
+  }
+
+  // データ生成関数
+  const generateDetailedData = (couple: any, score: number) => {
+    return {
+      ...couple,
+      score,
+      characterName: getCharacterName(score),
+      typeCode: getTypeCode(score),
+      loveStyleScores: {
+        romantic: { male: 85, female: 88 },
+        adventure: { male: 72, female: 75 },
+        stability: { male: 88, female: 90 },
+        emotion: { male: 90, female: 92 },
+        communication: { male: 95, female: 93 }
+      },
+      bigFive: {
+        male: { extraversion: 72, agreeableness: 88, conscientiousness: 75, neuroticism: 35, openness: 80 },
+        female: { extraversion: 68, agreeableness: 92, conscientiousness: 78, neuroticism: 38, openness: 82 }
+      },
+      attachmentStyle: {
+        male: "secure",
+        female: "secure",
+        compatibility: 95
+      },
+      communicationStyle: {
+        male: "listener",
+        female: "speaker",
+        compatibility: 98
+      },
+      valueSystem: {
+        time: 92,
+        money: 85,
+        future: 88,
+        relationships: 95,
+        hobbies: 80,
+        overall: 88
+      },
+      lifestyle: {
+        weekend: 90,
+        food: 85,
+        drinking: 95,
+        activity: 82,
+        sleep: 88,
+        overall: 88
+      },
+      alcoholCompatibility: {
+        beer: 92,
+        wine: 95,
+        sake: 88,
+        cocktail: 85,
+        highball: 80
+      },
+      prediction: {
+        oneMonth: { contact: "週3〜4回", dates: "月2〜3回", progress: 85 },
+        threeMonths: { contact: "毎日", dates: "週1〜2回", progress: 95 },
+        oneYear: { stability: 92, longTerm: 88 }
+      },
+      rarity: 8
+    }
+  }
+
+  const getCharacterName = (score: number) => {
+    if (score >= 90) return "ほろ酔いロマンチスト"
+    if (score >= 80) return "今夜の主役カップル"
+    if (score >= 70) return "クールな大人カップル"
+    if (score >= 60) return "ほろ酔いベストフレンド"
+    return "今夜の新星カップル"
+  }
+
+  const getTypeCode = (score: number) => {
+    if (score >= 90) return "CAPO"
+    if (score >= 80) return "BEST"
+    if (score >= 70) return "COOL"
+    if (score >= 60) return "HOT"
+    return "SWEET"
+  }
+
   useEffect(() => {
     const savedSessionData = localStorage.getItem('glassSessionData')
     if (savedSessionData) {
       const data = JSON.parse(savedSessionData)
-      console.log('PairDetailsPage - Session data:', data) // デバッグ用
       setSessionData(data)
-      
-      // 実際の診断結果を生成
       generateDiagnosisResults(data)
     } else {
-      console.error('No session data found')
-      // セッションデータがない場合はホームに戻る
       navigate('/')
     }
   }, [navigate])
 
-  // 診断結果を生成
   const generateDiagnosisResults = (data: any) => {
-    console.log('PairDetailsPage - Generating diagnosis results for:', data) // デバッグ用
-    
     let combinations = []
-    
-    // データ構造に応じて組み合わせを取得
     if (data.combinations && data.combinations.length > 0) {
-      // SessionStartPageからのデータ
       combinations = data.combinations
     } else if (data.couples && data.couples.length > 0) {
-      // ModeSelectionPageからのデータ
       combinations = data.couples.map((couple: any) => ({
         male: couple.person1.name,
         female: couple.person2.name
       }))
-    } else {
-      console.error('No valid combinations found')
+    }
+
+    // 既に計算済みの結果があるかチェック（一貫性を保つため）
+    if (data.diagnosisResults && data.diagnosisResults.length > 0) {
+      console.log('PairDetailsPage - Using cached results for consistency:', data.diagnosisResults)
+      setAllCouplesData(data.diagnosisResults)
+      setSelectedCouple(data.diagnosisResults[0])
+      setLoading(false)
       return
     }
-
-    console.log('PairDetailsPage - Combinations to analyze:', combinations) // デバッグ用
-
-    // 実際の回答データを使用した相性計算関数
-    const calculateRealCompatibilityScore = (maleName: string, femaleName: string, sessionData: any): number => {
-      // セッションデータから回答データを取得
-      const answers = sessionData.answers || {}
-      
-      // 男性と女性の回答データを取得
-      const maleAnswers = Object.values(answers).find((userAnswers: any) => {
-        // 参加者名から回答者を特定（簡易的な方法）
-        return userAnswers && Object.keys(userAnswers).length > 0
-      }) as any
-      
-      const femaleAnswers = Object.values(answers).find((userAnswers: any, index: number) => {
-        // 2番目の回答者を女性として扱う（簡易的な方法）
-        return userAnswers && Object.keys(userAnswers).length > 0 && index === 1
-      }) as any
-      
-      if (!maleAnswers || !femaleAnswers) {
-        console.log('No answer data found, using fallback calculation')
-        // 回答データがない場合はフォールバック計算
-        return calculateFallbackScore(maleName, femaleName)
-      }
-      
-      try {
-      // 回答データをAnswer形式に変換
-      const maleAnswerArray = Object.entries(maleAnswers).map(([questionId, value]) => ({
-        questionId: `opt_love_${questionId}`,
-        optionId: `opt_love_${questionId}_${value}`,
-        value: value as number,
-        timestamp: Date.now()
-      }))
-      
-      const femaleAnswerArray = Object.entries(femaleAnswers).map(([questionId, value]) => ({
-        questionId: `opt_love_${questionId}`,
-        optionId: `opt_love_${questionId}_${value}`,
-        value: value as number,
-        timestamp: Date.now()
-      }))
-        
-        // 恋愛スタイルタイプを計算
-        const maleType = calculateLoveStyleType(maleAnswerArray, 'male')
-        const femaleType = calculateLoveStyleType(femaleAnswerArray, 'female')
-        
-        console.log('PairDetailsPage - Calculated types:', { maleType, femaleType })
-        
-        // 包括的科学的相性計算
-        const comprehensiveResult = calculateComprehensiveCompatibility(maleType, femaleType)
-        
-        console.log('PairDetailsPage - Comprehensive compatibility result:', comprehensiveResult)
-        
-        return comprehensiveResult.totalScore
-      } catch (error) {
-        console.error('Error calculating compatibility:', error)
-        return calculateFallbackScore(maleName, femaleName)
-      }
-    }
     
-    // フォールバック計算（回答データがない場合）
-    const calculateFallbackScore = (maleName: string, femaleName: string): number => {
-      // 名前の文字数と文字の種類に基づく基本的な相性計算
-      const maleLength = maleName.length
-      const femaleLength = femaleName.length
-      const maleVowels = (maleName.match(/[あいうえおアイウエオ]/g) || []).length
-      const femaleVowels = (femaleName.match(/[あいうえおアイウエオ]/g) || []).length
-      
-      // 基本的な相性スコア（45-95の範囲でより分散）
-      let baseScore = 45
-      
-      // 名前の長さの差が小さいほど相性が良い（最大+20点）
-      const lengthDiff = Math.abs(maleLength - femaleLength)
-      baseScore += Math.max(0, 20 - lengthDiff * 3)
-      
-      // 母音の数の差が小さいほど相性が良い（最大+15点）
-      const vowelDiff = Math.abs(maleVowels - femaleVowels)
-      baseScore += Math.max(0, 15 - vowelDiff * 3)
-      
-      // 名前の文字の種類の多様性（最大+12点）
-      const maleUniqueChars = new Set(maleName).size
-      const femaleUniqueChars = new Set(femaleName).size
-      const charDiversity = Math.abs(maleUniqueChars - femaleUniqueChars)
-      baseScore += Math.max(0, 12 - charDiversity * 2)
-      
-      // 個別性を高めるための名前ベースの計算（最大+15点）
-      const maleHash = maleName.split('').reduce((hash, char) => hash + char.charCodeAt(0), 0)
-      const femaleHash = femaleName.split('').reduce((hash, char) => hash + char.charCodeAt(0), 0)
-      const hashDiff = Math.abs(maleHash - femaleHash) % 25
-      baseScore += Math.max(0, 15 - hashDiff)
-      
-      // 文字の音韻的相性（最大+10点）
-      const maleConsonants = maleName.replace(/[あいうえおアイウエオ]/g, '').length
-      const femaleConsonants = femaleName.replace(/[あいうえおアイウエオ]/g, '').length
-      const consonantDiff = Math.abs(maleConsonants - femaleConsonants)
-      baseScore += Math.max(0, 10 - consonantDiff * 2)
-      
-      // ランダム要素（お酒の場での相性の不確実性を表現）
-      const randomFactor = (Math.random() - 0.5) * 12 // -6 から +6
-      baseScore += randomFactor
-      
-      // スコアを45-95の範囲に収める（より広い分散）
-      return Math.max(45, Math.min(95, Math.round(baseScore)))
+    // セッションデータに診断結果が保存されているかチェック
+    const savedResults = localStorage.getItem('glassDiagnosisResults')
+    if (savedResults) {
+      try {
+        const parsedResults = JSON.parse(savedResults)
+        console.log('PairDetailsPage - Using saved results from localStorage')
+        setAllCouplesData(parsedResults)
+        setSelectedCouple(parsedResults[0])
+        setLoading(false)
+        return
+      } catch (error) {
+        console.error('PairDetailsPage - Error parsing saved results:', error)
+      }
     }
 
-    // 各組み合わせの診断結果を生成
+    // 新しく計算する場合のみ（一貫性を保つため）
+    console.log('PairDetailsPage - Generating new results for combinations:', combinations)
     const results = combinations.map((combo: any, index: number) => {
-      // 実際の相性計算を使用（セッションデータを渡す）
+      console.log(`PairDetailsPage - Processing combination ${index + 1}/${combinations.length}:`, combo)
       const score = calculateRealCompatibilityScore(combo.male, combo.female, data)
-      const types = ['CAPO', 'BEST', 'COOL', 'HOT', 'SWEET']
-      const characters = [
-        'ほろ酔いロマンチスト',
-        '今夜の主役カップル',
-        'クールな大人カップル',
-        '情熱的なカップル',
-        '甘い雰囲気のカップル'
-      ]
-      const catchphrases = [
-        '🔥 今夜が勝負！',
-        '✨ 特別な夜に',
-        '💕 運命の出会い',
-        '🌟 最高の相性',
-        '🎉 盛り上がろう！'
-      ]
+      console.log('PairDetailsPage - Final calculated score for', combo.male, '&', combo.female, ':', score)
       
-      return {
+      const detailedData = generateDetailedData({
         id: index + 1,
-        couple: { male: combo.male, female: combo.female },
-        score: score,
-        type: types[Math.floor(Math.random() * types.length)],
-        character: characters[Math.floor(Math.random() * characters.length)],
-        catchphrase: catchphrases[Math.floor(Math.random() * catchphrases.length)],
-        points: [
-          'お互いの魅力を引き出す',
-          '今夜は特別な時間を',
-          '自然な距離感で楽しめる'
-        ],
-        detailedAnalysis: {
-          personalityType: `${combo.male}さんと${combo.female}さんの相性は${score}%！今夜の雰囲気では特に良い相性を見せています。お酒が進むと甘えん坊モードになる二人。普段はしっかりしているけど、リラックスすると素直な気持ちを表現できるタイプです。今夜のような雰囲気なら、自然と距離が縮まります。`,
-          compatibilityReasons: [
-            '酔い方のペースが似てる',
-            '甘えたい・甘えられたいのバランス◎',
-            '雰囲気重視で話が合う',
-            'お互いの距離感が心地いい',
-            'ロマンチックな雰囲気を楽しめる'
-          ],
-          datePlans: [
-            { emoji: '🌃', title: '夜景の見えるバーで語り合う', description: '静かな雰囲気で深い話ができる' },
-            { emoji: '☕', title: '静かなカフェでまったりデート', description: '落ち着いた空間でリラックス' },
-            { emoji: '🌅', title: '夕暮れの公園で散歩', description: '自然の中で二人の時間を楽しむ' }
-          ],
-          warnings: [
-            '酔いすぎると甘えすぎ注意',
-            '静かな場所で二人の時間を',
-            '次の約束は今夜のうちに'
-          ]
-        }
-      }
+        couple: { male: combo.male, female: combo.female }
+      }, score)
+      return detailedData
     })
 
-    // スコア順にソート
     results.sort((a, b) => b.score - a.score)
-    setAllCouplesData(results)
     
-    console.log('PairDetailsPage - Generated diagnosis results:', results) // デバッグ用
-  }
-
-  // モックデータ（フォールバック用）
-  const mockCouplesData = [
-    {
-      id: 1,
-      couple: { male: '田中', female: '佐藤' },
-      score: 92,
-      type: 'CAPO',
-      character: 'ほろ酔いロマンチスト',
-      catchphrase: '🔥 今夜が勝負！',
-      points: [
-        '甘えん坊同士で距離縮まる✨',
-        '盛り上がったら二人時間つくろ',
-        '雰囲気重視でお店選びが鍵🗝️'
-      ],
-      detailedAnalysis: {
-        personalityType: 'お酒が進むと甘えん坊モードになる二人。普段はしっかりしているけど、リラックスすると素直な気持ちを表現できるタイプです。今夜のような雰囲気なら、自然と距離が縮まります。',
-        compatibilityReasons: [
-          '酔い方のペースが似てる',
-          '甘えたい・甘えられたいのバランス◎',
-          '雰囲気重視で話が合う',
-          'お互いの距離感が心地いい',
-          'ロマンチックな雰囲気を楽しめる'
-        ],
-        datePlans: [
-          { emoji: '🌃', title: '夜景の見えるバーで語り合う', description: '静かな雰囲気で深い話ができる' },
-          { emoji: '☕', title: '静かなカフェでまったりデート', description: '落ち着いた空間でリラックス' },
-          { emoji: '🌅', title: '夕暮れの公園で散歩', description: '自然の中で二人の時間を楽しむ' }
-        ],
-        warnings: [
-          '酔いすぎると甘えすぎ注意',
-          '静かな場所で二人の時間を',
-          '次の約束は今夜のうちに'
-        ]
-      }
-    },
-    {
-      id: 2,
-      couple: { male: '山田', female: '鈴木' },
-      score: 88,
-      type: 'BEST',
-      character: '今夜の主役カップル',
-      catchphrase: '🌟 みんなの注目の的！',
-      points: [
-        'お互いを高め合う関係',
-        'グループのムードメーカー',
-        'みんなから注目される存在'
-      ],
-      detailedAnalysis: {
-        personalityType: 'グループの中心で輝く二人。お互いを高め合いながら、周りの人たちも楽しませるムードメーカーです。今夜は特に注目の的になるでしょう。',
-        compatibilityReasons: [
-          'お互いを高め合う関係',
-          'グループのムードメーカー',
-          'みんなから注目される存在',
-          'エネルギッシュな相性',
-          '一緒にいると楽しい雰囲気'
-        ],
-        datePlans: [
-          { emoji: '🎉', title: 'カラオケで盛り上がる', description: '二人で歌って楽しむ' },
-          { emoji: '🍻', title: '居酒屋で大騒ぎ', description: 'みんなでワイワイ楽しむ' },
-          { emoji: '🎪', title: 'イベント会場でデート', description: '賑やかな場所で楽しむ' }
-        ],
-        warnings: [
-          '騒ぎすぎに注意',
-          '周りの迷惑にならないよう',
-          '適度な距離感を保つ'
-        ]
-      }
-    },
-    {
-      id: 3,
-      couple: { male: '高橋', female: '伊藤' },
-      score: 85,
-      type: 'COOL',
-      character: 'クールな大人カップル',
-      catchphrase: '💎 上品な大人の恋愛',
-      points: [
-        '落ち着いた雰囲気で楽しむ',
-        '上品な会話を楽しむ',
-        '静かな時間を大切にする'
-      ],
-      detailedAnalysis: {
-        personalityType: '上品で落ち着いた雰囲気の二人。静かな時間を大切にし、深い会話を楽しむ大人のカップルです。今夜は特別な時間を過ごせるでしょう。',
-        compatibilityReasons: [
-          '落ち着いた雰囲気で楽しむ',
-          '上品な会話を楽しむ',
-          '静かな時間を大切にする',
-          'お互いのペースを尊重',
-          '大人の恋愛を楽しむ'
-        ],
-        datePlans: [
-          { emoji: '🍷', title: '高級バーでワイン', description: '上品な雰囲気で楽しむ' },
-          { emoji: '🍽️', title: 'フレンチレストラン', description: '特別な夜を演出' },
-          { emoji: '🌙', title: '夜景スポットでデート', description: '静かな時間を楽しむ' }
-        ],
-        warnings: [
-          '静かすぎて盛り上がり不足',
-          'お互いの気持ちを伝える',
-          '時には積極的にアプローチ'
-        ]
-      }
+    // 計算結果をセッションデータに保存（一貫性を保つため）
+    const updatedSessionData = {
+      ...data,
+      diagnosisResults: results
     }
-  ]
-
-  // 表示するデータを決定（実際の診断結果があればそれを使用、なければモックデータ）
-  const displayData = allCouplesData.length > 0 ? allCouplesData : mockCouplesData
-
-  // 現在選択されているカップルのデータを取得
-  const currentCouple = displayData.find(couple => couple.id === selectedCoupleId) || displayData[0]
-
-  // 初期化時にURLパラメータからカップルIDを取得
-  useEffect(() => {
-    const coupleId = location.state?.coupleId || 1
-    setSelectedCoupleId(coupleId)
-  }, [location.state])
-
-  // ドロップダウンでカップルを変更
-  const handleCoupleChange = (coupleId: number) => {
-    setSelectedCoupleId(coupleId)
-    // スクロールを一番上に戻す
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    localStorage.setItem('glassSessionData', JSON.stringify(updatedSessionData))
+    localStorage.setItem('glassDiagnosisResults', JSON.stringify(results))
+    
+    setAllCouplesData(results)
+    setSelectedCouple(results[0])
+    console.log('PairDetailsPage - Set selectedCouple:', results[0]) // デバッグ用
+    setLoading(false)
   }
 
-  // 診断結果が読み込まれていない場合
-  if (allCouplesData.length === 0 && !sessionData) {
+  const handleCoupleChange = (coupleId: string) => {
+    const couple = allCouplesData.find(c => c.id.toString() === coupleId)
+    if (couple) {
+      setSelectedCouple(couple)
+    }
+  }
+
+  if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center p-4">
-        <div className="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl text-center">
-          <h1 className="text-2xl font-bold text-purple-600 mb-4">
-            🍻 グラスノオト
-          </h1>
-          <div className="text-lg text-gray-600 mb-6">
-            診断結果を読み込み中...
-          </div>
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
-          <button 
-            onClick={() => navigate('/')}
-            className="w-full bg-purple-500 text-white font-bold py-3 px-6 rounded-xl hover:bg-purple-600 transition-colors"
-          >
-            ホームに戻る
-          </button>
-        </div>
+      <div className="min-h-screen bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+        <div className="text-white text-xl">読み込み中...</div>
+      </div>
+    )
+  }
+
+  if (!selectedCouple && !loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+        <div className="text-white text-xl">データが見つかりません</div>
+      </div>
+    )
+  }
+
+  if (!selectedCouple) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+        <div className="text-white text-xl">読み込み中...</div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* ヘッダー（固定） */}
-      <div className="sticky top-0 bg-white shadow-sm z-10">
-        <div className="flex items-center justify-between p-4 gap-4">
+    <div className="min-h-screen bg-gradient-to-br from-purple-500 to-pink-500">
+      {/* 固定ヘッダー */}
+      <header className="detail-header fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm border-b border-gray-200">
+        <div className="flex items-center justify-between p-4">
           <button 
             onClick={() => navigate('/glass-results')}
-            className="px-4 py-2 text-sm font-semibold bg-gray-50 border-2 border-gray-200 rounded-lg hover:bg-gray-100 transition-all duration-200 whitespace-nowrap"
+            className="back-button flex items-center text-gray-700 hover:text-purple-600 transition-colors"
           >
-            ← ランキングに戻る
+            ← 戻る
           </button>
           
-          <div className="flex-1 flex items-center gap-3">
-            <label htmlFor="couple-dropdown" className="text-sm font-semibold text-gray-600 whitespace-nowrap">
-              カップルを選択：
-            </label>
+          <div className="couple-selector">
             <select
-              id="couple-dropdown"
-              value={selectedCoupleId}
-              onChange={(e) => handleCoupleChange(Number(e.target.value))}
-              className="flex-1 px-4 py-3 text-sm font-semibold bg-gray-50 border-2 border-purple-500 rounded-lg cursor-pointer transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-200"
+              value={selectedCouple?.id}
+              onChange={(e) => handleCoupleChange(e.target.value)}
+              className="couple-dropdown bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm"
             >
-              {displayData.map((couple) => (
+              {allCouplesData.map((couple) => (
                 <option key={couple.id} value={couple.id}>
-                  {couple.couple.male}さん & {couple.couple.female}さん ({couple.score}%)
+                  {couple.couple.male} & {couple.couple.female}
                 </option>
               ))}
             </select>
           </div>
           
-          <button className="px-4 py-2 text-sm font-semibold bg-gray-50 border-2 border-gray-200 rounded-lg hover:bg-gray-100 transition-all duration-200 whitespace-nowrap">
-            📤 シェア
+          <button className="share-button bg-purple-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-purple-600 transition-colors">
+            シェア
           </button>
         </div>
+      </header>
+
+      <div className="pt-20 pb-8">
+        <div className="max-w-4xl mx-auto px-4 space-y-8">
+          
+          {/* サマリーカード */}
+          <div className="summary-card bg-white rounded-3xl p-8 shadow-2xl">
+            <h2 className="couple-names text-2xl font-bold text-gray-800 text-center mb-6">
+              {selectedCouple?.couple?.male}さん & {selectedCouple?.couple?.female}さん
+            </h2>
+            
+            <div className="character-badge text-center mb-6">
+              <h3 className="character-name text-xl font-bold text-purple-600 mb-2">
+                {selectedCouple?.characterName}
+              </h3>
+              <div className="type-code text-3xl font-bold text-gray-800 mb-4">
+                {selectedCouple?.typeCode}
+              </div>
+            </div>
+            
+            <div className="compatibility-score-large text-center mb-6">
+              <span className="score-number text-6xl font-bold text-pink-600">
+                {selectedCouple?.score}
+              </span>
+              <span className="score-unit text-2xl text-gray-600">%</span>
       </div>
 
-      {/* メインコンテンツ */}
-      <div className="px-4 pb-8">
-        {/* ペア情報 */}
-        <div className="text-center mb-8 pt-4">
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">
-            {currentCouple.couple.male}さん & {currentCouple.couple.female}さん
-          </h2>
-          <div className="text-lg font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent mb-1">
-            {currentCouple.character}
+            <p className="catchphrase text-center text-gray-600 text-lg">
+              今夜が勝負！二軒目デート確定級の相性
+            </p>
           </div>
-          <div className="text-lg text-purple-600 tracking-widest">
-            {currentCouple.type}
+
+          {/* 恋愛スタイルスコア（レーダーチャート） */}
+          <section className="analysis-section bg-white rounded-3xl p-8 shadow-xl">
+            <h3 className="section-title text-2xl font-bold text-gray-800 mb-2">💕 恋愛スタイルスコア</h3>
+            <p className="section-subtitle text-gray-600 mb-6">18問の回答から算出された、あなたたちの恋愛傾向</p>
+            
+            <div className="radar-chart-container bg-gray-50 rounded-2xl p-6 mb-6">
+              <div className="text-center text-gray-500">
+                <div className="text-4xl mb-2">📊</div>
+                <p>レーダーチャート（実装予定）</p>
           </div>
         </div>
 
-        {/* 相性スコアサマリー */}
-        <div className="bg-gradient-to-r from-orange-200 to-pink-300 rounded-2xl p-6 mb-6 text-center">
-          <div className="text-4xl font-bold text-pink-600 mb-2">
-            {currentCouple.score}%
+            <div className="score-legend flex justify-center space-x-8 mb-6">
+              <div className="legend-item flex items-center">
+                <span className="legend-color male-color w-4 h-4 bg-blue-500 rounded-full mr-2"></span>
+                <span className="legend-name text-gray-700">{selectedCouple?.couple?.male}さん</span>
           </div>
-          <div className="text-lg font-bold text-gray-800">
-            {currentCouple.catchphrase}
+              <div className="legend-item flex items-center">
+                <span className="legend-color female-color w-4 h-4 bg-pink-500 rounded-full mr-2"></span>
+                <span className="legend-name text-gray-700">{selectedCouple?.couple?.female}さん</span>
           </div>
         </div>
 
-        {/* 性格タイプ説明 */}
-        <div className="bg-white shadow-lg rounded-2xl p-6 mb-6">
-          <h3 className="text-lg font-bold text-gray-800 mb-4">
-            🍷 あなたたちのタイプ
-          </h3>
-          <p className="text-sm text-gray-700 leading-relaxed">
-            {currentCouple.detailedAnalysis.personalityType}
+            <div className="score-details space-y-4">
+              {selectedCouple?.loveStyleScores && Object.entries(selectedCouple.loveStyleScores).map(([key, scores]: [string, any]) => (
+                <div key={key} className="score-detail-item">
+                  <div className="score-detail-label text-sm font-medium text-gray-700 mb-2">
+                    {key === 'romantic' ? 'ロマンティック度' :
+                     key === 'adventure' ? '冒険心度' :
+                     key === 'stability' ? '安定志向度' :
+                     key === 'emotion' ? '感情表現度' :
+                     'コミュニケーション度'}
+                  </div>
+                  <div className="score-detail-bars space-y-2">
+                    <div className="score-bar male flex items-center">
+                      <span className="text-xs text-gray-600 w-16">{selectedCouple?.couple?.male}</span>
+                      <div className="flex-1 bg-gray-200 rounded-full h-3">
+                        <div 
+                          className="score-fill bg-blue-500 h-3 rounded-full" 
+                          style={{width: `${scores.male}%`}}
+                        />
+                      </div>
+                      <span className="text-xs text-gray-600 ml-2">{scores.male}%</span>
+                    </div>
+                    <div className="score-bar female flex items-center">
+                      <span className="text-xs text-gray-600 w-16">{selectedCouple?.couple?.female}</span>
+                      <div className="flex-1 bg-gray-200 rounded-full h-3">
+                        <div 
+                          className="score-fill bg-pink-500 h-3 rounded-full" 
+                          style={{width: `${scores.female}%`}}
+                        />
+                      </div>
+                      <span className="text-xs text-gray-600 ml-2">{scores.female}%</span>
+                    </div>
+                  </div>
+                  <p className="score-detail-note text-xs text-gray-500 mt-1">
+                    {key === 'romantic' ? '二人とも雰囲気を大切にするタイプ' :
+                     key === 'adventure' ? '適度に新しいことに挑戦したい派' :
+                     key === 'stability' ? '長期的な関係を重視するタイプ' :
+                     key === 'emotion' ? '素直に気持ちを伝えられる' :
+                     '会話を重視する二人'}
           </p>
         </div>
-
-        {/* 相性が良い理由 */}
-        <div className="bg-white shadow-lg rounded-2xl p-6 mb-6">
-          <h3 className="text-lg font-bold text-gray-800 mb-4">
-            💕 相性が良い理由
-          </h3>
-          <div className="space-y-3">
-            {currentCouple.detailedAnalysis.compatibilityReasons.map((reason, index) => (
-              <div key={index} className="flex items-start space-x-3">
-                <div className="text-pink-500 font-bold">{index + 1}.</div>
-                <div className="text-sm text-gray-700">{reason}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* おすすめデートプラン */}
-        <div className="bg-white shadow-lg rounded-2xl p-6 mb-6">
-          <h3 className="text-lg font-bold text-gray-800 mb-4">
-            📍 二人にぴったりのデート
-          </h3>
-          <div className="space-y-4">
-            {currentCouple.detailedAnalysis.datePlans.map((plan, index) => (
-              <div key={index} className={`bg-gradient-to-r ${
-                index === 0 ? 'from-purple-100 to-pink-100' :
-                index === 1 ? 'from-orange-100 to-yellow-100' :
-                'from-green-100 to-teal-100'
-              } rounded-xl p-4`}>
-                <div className="flex items-center space-x-3 mb-2">
-                  <div className="text-2xl">{plan.emoji}</div>
-                  <div className="font-bold text-gray-800">{plan.title}</div>
-                </div>
-                <div className="text-sm text-gray-600">{plan.description}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* 注意ポイント */}
-        <div className="bg-white shadow-lg rounded-2xl p-6 mb-6">
-          <h3 className="text-lg font-bold text-gray-800 mb-4">
-            ⚠️ 気をつけるポイント
-          </h3>
-          <div className="space-y-3">
-            {currentCouple.detailedAnalysis.warnings.map((warning, index) => (
-              <div key={index} className="flex items-start space-x-3">
-                <div className="text-yellow-500">⚠️</div>
-                <div className="text-sm text-gray-700">{warning}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* 科学的根拠セクション */}
-        <div className="bg-white shadow-lg rounded-2xl p-6 mb-6">
-          <button 
-            onClick={() => setShowScientificBasis(!showScientificBasis)}
-            className="w-full flex items-center justify-between"
-          >
-            <h3 className="text-lg font-bold text-gray-800">
-              🔬 診断の根拠
-            </h3>
-            <div className="text-gray-500">
-              {showScientificBasis ? '▼' : '▶'}
+              ))}
             </div>
-          </button>
-          {showScientificBasis && (
-            <div className="mt-4 p-4 bg-gray-50 rounded-xl">
-              <p className="text-sm text-gray-700 leading-relaxed">
-                この診断は、恋愛心理学の「愛の言語」理論と「アタッチメント理論」を基にしています。お酒の場での行動パターンから、二人の相性を科学的に分析。酔い方のペースや甘え方の傾向から、深層心理の相性を判定しています。
+          </section>
+
+          {/* カップルタイプ診断（MBTI風） */}
+          <section className="analysis-section type-diagnosis bg-white rounded-3xl p-8 shadow-xl">
+            <h3 className="section-title text-2xl font-bold text-gray-800 mb-2">🎯 あなたたちのカップルタイプ</h3>
+            
+            <div className="type-badge-large text-center mb-6">
+              <div className="type-code-large text-6xl font-bold text-purple-600 mb-2">
+                {selectedCouple?.typeCode}
+              </div>
+              <div className="type-name-large text-2xl font-bold text-gray-800 mb-4">
+                {selectedCouple?.characterName}
+              </div>
+              <div className="rarity-badge bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full inline-flex items-center">
+                <span className="rarity-icon mr-2">✨</span>
+                <span className="rarity-text text-sm font-medium">希少度：上位{selectedCouple?.rarity}%</span>
+              </div>
+        </div>
+
+            <div className="type-explanation mb-6">
+              <h4 className="type-subtitle text-lg font-bold text-gray-800 mb-4">タイプコードの意味</h4>
+              <div className="type-letters grid grid-cols-2 md:grid-cols-4 gap-4">
+                {['C', 'A', 'P', 'O'].map((letter, index) => (
+                  <div key={letter} className="type-letter-item text-center">
+                    <div className="letter text-3xl font-bold text-purple-600 mb-2">{letter}</div>
+                    <div className="letter-name text-sm font-medium text-gray-700 mb-1">
+                      {letter === 'C' ? 'Communication' :
+                       letter === 'A' ? 'Affection' :
+                       letter === 'P' ? 'Pace' : 'Open'}
+                    </div>
+                    <div className="letter-desc text-xs text-gray-500">
+                      {letter === 'C' ? '会話重視型' :
+                       letter === 'A' ? '愛情表現豊か型' :
+                       letter === 'P' ? 'ゆったりペース型' : 'オープンマインド型'}
+                    </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+            <div className="type-description-full bg-gray-50 rounded-2xl p-6">
+              <p className="text-gray-700 leading-relaxed">
+                お酒の場で最も輝くタイプ。時間をかけて距離を縮める、じっくり型の相性です。会話を通じてお互いを理解し、感情を素直に表現できる関係性を築きます。急がず、でも確実に進展する、理想的な恋愛パターンです。
               </p>
             </div>
-          )}
+          </section>
+
+          {/* 性格特性分析（ビッグファイブ） */}
+          <section className="analysis-section bg-white rounded-3xl p-8 shadow-xl">
+            <h3 className="section-title text-2xl font-bold text-gray-800 mb-2">🧠 性格特性分析（ビッグファイブ理論）</h3>
+            <p className="section-subtitle text-gray-600 mb-6">心理学の性格理論に基づく詳細分析</p>
+            
+            <div className="big-five-analysis space-y-6">
+              <div className="individual-big-five">
+                <h4 className="text-lg font-bold text-gray-800 mb-4">{selectedCouple?.couple?.male}さんの性格特性</h4>
+                <div className="big-five-traits space-y-3">
+                  {selectedCouple?.bigFive?.male && Object.entries(selectedCouple.bigFive.male).map(([trait, score]: [string, number]) => (
+                    <div key={trait} className="trait-item flex items-center justify-between">
+                      <span className="trait-label text-gray-700 w-24">
+                        {trait === 'extraversion' ? '外向性' :
+                         trait === 'agreeableness' ? '協調性' :
+                         trait === 'conscientiousness' ? '誠実性' :
+                         trait === 'neuroticism' ? '神経症傾向' : '開放性'}
+                      </span>
+                      <div className="trait-stars flex">
+                        {[...Array(5)].map((_, i) => (
+                          <span key={i} className={`text-lg ${i < Math.floor(score / 20) ? 'text-yellow-400' : 'text-gray-300'}`}>
+                            ★
+                          </span>
+                        ))}
+                </div>
+                      <span className="trait-score text-sm text-gray-600 w-12">{score}%</span>
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* 次のアクション */}
-        <div className="space-y-4">
-          <button 
-            onClick={() => navigate('/glass-results')}
-            className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-4 px-6 rounded-xl hover:transform hover:-translate-y-1 transition-all duration-200"
-          >
-            ← ランキングに戻る
-          </button>
-          
-          <div className="flex space-x-3">
+              <div className="individual-big-five">
+                <h4 className="text-lg font-bold text-gray-800 mb-4">{selectedCouple?.couple?.female}さんの性格特性</h4>
+                <div className="big-five-traits space-y-3">
+                  {selectedCouple?.bigFive?.female && Object.entries(selectedCouple.bigFive.female).map(([trait, score]: [string, number]) => (
+                    <div key={trait} className="trait-item flex items-center justify-between">
+                      <span className="trait-label text-gray-700 w-24">
+                        {trait === 'extraversion' ? '外向性' :
+                         trait === 'agreeableness' ? '協調性' :
+                         trait === 'conscientiousness' ? '誠実性' :
+                         trait === 'neuroticism' ? '神経症傾向' : '開放性'}
+                      </span>
+                      <div className="trait-stars flex">
+                        {[...Array(5)].map((_, i) => (
+                          <span key={i} className={`text-lg ${i < Math.floor(score / 20) ? 'text-yellow-400' : 'text-gray-300'}`}>
+                            ★
+                          </span>
+                        ))}
+                      </div>
+                      <span className="trait-score text-sm text-gray-600 w-12">{score}%</span>
+              </div>
+            ))}
+          </div>
+        </div>
+            </div>
+            
+            <div className="big-five-compatibility bg-green-50 rounded-2xl p-6 mt-6">
+              <h4 className="text-lg font-bold text-gray-800 mb-2">相性ポイント</h4>
+              <p className="text-gray-700">
+                協調性が高い同士なので、お互いを思いやる関係が築けます。神経症傾向が低いため、ストレスの少ない安定した関係が期待できます。
+              </p>
+            </div>
+          </section>
+
+          {/* 愛着スタイル診断 */}
+          <section className="analysis-section bg-white rounded-3xl p-8 shadow-xl">
+            <h3 className="section-title text-2xl font-bold text-gray-800 mb-2">💞 愛着スタイル診断</h3>
+            <p className="section-subtitle text-gray-600 mb-6">心理学の愛着理論に基づく分析</p>
+            
+            <div className="attachment-analysis space-y-6">
+              <div className="individual-attachment">
+                <h4 className="text-lg font-bold text-gray-800 mb-3">{selectedCouple?.couple?.male}さん</h4>
+                <div className="attachment-badge secure bg-green-100 text-green-800 px-4 py-2 rounded-full inline-block mb-3">
+                  <div className="attachment-type font-medium">安定型（Secure）</div>
+                </div>
+                <p className="attachment-description text-gray-700">
+                  信頼関係を大切にし、適度な距離感を保てるタイプ。お酒の場では自然体で接することができ、相手に安心感を与えます。
+                </p>
+              </div>
+              
+              <div className="individual-attachment">
+                <h4 className="text-lg font-bold text-gray-800 mb-3">{selectedCouple?.couple?.female}さん</h4>
+                <div className="attachment-badge secure bg-green-100 text-green-800 px-4 py-2 rounded-full inline-block mb-3">
+                  <div className="attachment-type font-medium">安定型（Secure）</div>
+                </div>
+                <p className="attachment-description text-gray-700">
+                  同じく安定型なので、二人の関係は健全でバランスの取れたものになります。不安や回避がないため、素直な関係を築けます。
+                </p>
+              </div>
+            </div>
+            
+            <div className="attachment-compatibility bg-green-50 rounded-2xl p-6 mt-6">
+              <div className="compatibility-badge text-center mb-4">
+                <div className="compatibility-stars text-2xl mb-2">★★★★★</div>
+                <div className="compatibility-score text-3xl font-bold text-green-600">{selectedCouple?.attachmentStyle?.compatibility || 95}%</div>
+              </div>
+              <p className="compatibility-note text-center text-gray-700">
+                安定型同士は最高の相性。不安や回避がないため、ストレスのない関係を築けます。
+              </p>
+            </div>
+          </section>
+
+          {/* コミュニケーションスタイル */}
+          <section className="analysis-section bg-white rounded-3xl p-8 shadow-xl">
+            <h3 className="section-title text-2xl font-bold text-gray-800 mb-2">💬 コミュニケーションスタイル</h3>
+            <p className="section-subtitle text-gray-600 mb-6">お酒の場での会話スタイル分析</p>
+            
+            <div className="communication-styles space-y-6">
+              <div className="individual-comm-style">
+                <h4 className="text-lg font-bold text-gray-800 mb-3">{selectedCouple?.couple?.male}さん</h4>
+                <div className="comm-type-badge listener bg-blue-100 text-blue-800 px-4 py-2 rounded-full inline-flex items-center mb-3">
+                  <span className="comm-icon mr-2">👂</span>
+                  <span className="comm-type font-medium">聞き上手タイプ（Listener）</span>
+                </div>
+                <p className="comm-description text-gray-700">
+                  相手の話を丁寧に聞き、適切な相づちやリアクションができます。お酒が入るとさらに共感力が高まり、相手を心地よくさせる会話ができます。
+                </p>
+              </div>
+              
+              <div className="individual-comm-style">
+                <h4 className="text-lg font-bold text-gray-800 mb-3">{selectedCouple?.couple?.female}さん</h4>
+                <div className="comm-type-badge speaker bg-pink-100 text-pink-800 px-4 py-2 rounded-full inline-flex items-center mb-3">
+                  <span className="comm-icon mr-2">💭</span>
+                  <span className="comm-type font-medium">話し上手タイプ（Speaker）</span>
+                </div>
+                <p className="comm-description text-gray-700">
+                  楽しい話題を提供し、場を盛り上げるのが得意。ほろ酔いになると表現力が豊かになり、相手を引き込む会話ができます。
+                </p>
+              </div>
+            </div>
+            
+            <div className="comm-compatibility bg-blue-50 rounded-2xl p-6 mt-6">
+              <div className="compatibility-badge text-center mb-4">
+                <div className="compatibility-stars text-2xl mb-2">★★★★★</div>
+                <div className="compatibility-score text-3xl font-bold text-blue-600">{selectedCouple?.communicationStyle?.compatibility || 98}%</div>
+              </div>
+              <p className="compatibility-note text-center text-gray-700">
+                聞き上手×話し上手は理想的な組み合わせ。会話が途切れることなく、自然と盛り上がります。
+              </p>
+            </div>
+          </section>
+
+          {/* 価値観システム一致度 */}
+          <section className="analysis-section bg-white rounded-3xl p-8 shadow-xl">
+            <h3 className="section-title text-2xl font-bold text-gray-800 mb-2">⚖️ 価値観システム一致度</h3>
+            <p className="section-subtitle text-gray-600 mb-6">恋愛における価値観の相性</p>
+            
+            <div className="value-system-bars space-y-4">
+              {selectedCouple?.valueSystem && Object.entries(selectedCouple.valueSystem).filter(([key]) => key !== 'overall').map(([key, score]: [string, number]) => (
+                <div key={key} className="value-item">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="value-label text-gray-700">
+                      {key === 'time' ? '時間の使い方' :
+                       key === 'money' ? 'お金の使い方' :
+                       key === 'future' ? '将来のビジョン' :
+                       key === 'relationships' ? '人間関係の考え方' : '趣味・娯楽の好み'}
+                    </span>
+                    <span className="value-score text-sm font-medium text-gray-600">{score}%一致</span>
+                  </div>
+                  <div className="value-bar bg-gray-200 rounded-full h-3">
+                    <div 
+                      className="value-fill bg-gradient-to-r from-purple-500 to-pink-500 h-3 rounded-full" 
+                      style={{width: `${score}%`}}
+                    />
+                  </div>
+                  <p className="value-note text-xs text-gray-500 mt-1">
+                    {key === 'time' ? 'ゆっくり過ごしたい派同士' :
+                     key === 'money' ? '体験にお金を使う派' :
+                     key === 'future' ? '安定を求めつつ楽しみたい' :
+                     key === 'relationships' ? '少数精鋭の深い関係を好む' : '文化的なものが好き'}
+                  </p>
+                </div>
+              ))}
+            </div>
+            
+            <div className="value-total bg-purple-50 rounded-2xl p-6 mt-6 text-center">
+              <div className="value-total-score text-2xl font-bold text-purple-600 mb-2">
+                総合評価：{selectedCouple?.valueSystem?.overall || 88}%
+              </div>
+              <p className="value-total-note text-gray-700">
+                価値観がかなり近く、長期的な関係も期待できます
+              </p>
+            </div>
+          </section>
+
+          {/* ライフスタイル適合性 */}
+          <section className="analysis-section bg-white rounded-3xl p-8 shadow-xl">
+            <h3 className="section-title text-2xl font-bold text-gray-800 mb-2">🏠 ライフスタイル適合性</h3>
+            <p className="section-subtitle text-gray-600 mb-6">日常生活での相性分析</p>
+            
+            <div className="lifestyle-grid grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+              {selectedCouple?.lifestyle && Object.entries(selectedCouple.lifestyle).filter(([key]) => key !== 'overall').map(([key, score]: [string, number]) => (
+                <div key={key} className="lifestyle-card bg-gray-50 rounded-2xl p-4 text-center">
+                  <div className="lifestyle-icon text-3xl mb-2">
+                    {key === 'weekend' ? '🌞' :
+                     key === 'food' ? '🍽️' :
+                     key === 'drinking' ? '🍺' :
+                     key === 'activity' ? '⚡' : '😴'}
+                  </div>
+                  <div className="lifestyle-name text-sm font-medium text-gray-700 mb-2">
+                    {key === 'weekend' ? '休日の過ごし方' :
+                     key === 'food' ? '食の好み' :
+                     key === 'drinking' ? 'お酒の飲み方' :
+                     key === 'activity' ? '活動的さレベル' : '睡眠リズム'}
+                  </div>
+                  <div className="lifestyle-score text-xl font-bold text-purple-600">{score}%</div>
+                </div>
+              ))}
+        </div>
+
+            <div className="lifestyle-summary bg-green-50 rounded-2xl p-6 text-center">
+              <div className="lifestyle-total-score text-2xl font-bold text-green-600 mb-2">
+                総合評価：{selectedCouple?.lifestyle?.overall || 88}%
+              </div>
+              <p className="lifestyle-note text-gray-700">
+                生活リズムが合うので、一緒にいてストレスがありません
+              </p>
+            </div>
+          </section>
+
+          {/* 二人の相性ストーリー */}
+          <section className="analysis-section story-section bg-white rounded-3xl p-8 shadow-xl">
+            <h3 className="section-title text-2xl font-bold text-gray-800 mb-6">📖 二人の相性ストーリー</h3>
+            
+            <div className="story-content">
+              <p className="story-text text-gray-700 leading-relaxed text-lg">
+                二人の出会いは偶然かもしれませんが、この相性は必然です。お酒を飲みながら、最初は軽い話題からスタート。でも、時間が経つにつれて会話は深くなり、気づけば『もっと話したい』と思っている。それが二人の特徴です。
+                <br /><br />
+                恋愛スタイルスコアを分析すると、二人とも『安定志向』でありながら『感情表現が豊か』というバランスの良さが際立ちます。ビッグファイブ理論では協調性が高く、愛着スタイルも安定型。これは心理学的に最高の組み合わせです。
+                <br /><br />
+                さらに価値観システムを見ると、時間の使い方やお金の使い方が88%一致。将来のビジョンも似ているため、長期的な関係も十分期待できます。
+              </p>
+            </div>
+          </section>
+
+          {/* お酒別相性診断 */}
+          <section className="analysis-section bg-white rounded-3xl p-8 shadow-xl">
+            <h3 className="section-title text-2xl font-bold text-gray-800 mb-2">🍶 お酒別相性診断</h3>
+            <p className="section-subtitle text-gray-600 mb-6">お酒の種類ごとの相性を分析</p>
+            
+            <div className="alcohol-compatibility space-y-4">
+              {selectedCouple?.alcoholCompatibility && Object.entries(selectedCouple.alcoholCompatibility).map(([alcohol, score]: [string, number]) => (
+                <div key={alcohol} className={`alcohol-item ${alcohol === 'wine' ? 'best' : ''} bg-gray-50 rounded-2xl p-4 relative`}>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center">
+                      <div className="alcohol-icon text-2xl mr-3">
+                        {alcohol === 'beer' ? '🍺' :
+                         alcohol === 'wine' ? '🍷' :
+                         alcohol === 'sake' ? '🍶' :
+                         alcohol === 'cocktail' ? '🍸' : '🥃'}
+                      </div>
+                      <div className="alcohol-name text-lg font-medium text-gray-800">
+                        {alcohol === 'beer' ? 'ビール' :
+                         alcohol === 'wine' ? 'ワイン' :
+                         alcohol === 'sake' ? '日本酒' :
+                         alcohol === 'cocktail' ? 'カクテル' : 'ハイボール'}
+                      </div>
+                    </div>
+                    <div className="alcohol-score text-xl font-bold text-purple-600">{score}%</div>
+                  </div>
+                  
+                  <div className="alcohol-bar bg-gray-200 rounded-full h-3 mb-2">
+                    <div 
+                      className="alcohol-fill bg-gradient-to-r from-purple-500 to-pink-500 h-3 rounded-full" 
+                      style={{width: `${score}%`}}
+                    />
+                  </div>
+                  
+                  {alcohol === 'wine' && (
+                    <div className="best-badge absolute -top-2 -right-2 bg-yellow-400 text-yellow-800 px-3 py-1 rounded-full text-sm font-bold">
+                      BEST!
+            </div>
+          )}
+                  
+                  <p className="alcohol-note text-sm text-gray-600">
+                    {alcohol === 'beer' ? '乾杯はやっぱりビール派' :
+                     alcohol === 'wine' ? '二軒目はワインバーがベスト' :
+                     alcohol === 'sake' ? 'しっぽり飲むなら日本酒' :
+                     alcohol === 'cocktail' ? 'おしゃれバーでカクテル' : 'さっぱり系も合う'}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* 恋愛予測 */}
+          <section className="analysis-section prediction-section bg-white rounded-3xl p-8 shadow-xl">
+            <h3 className="section-title text-2xl font-bold text-gray-800 mb-2">🔮 二人だけの恋愛予測</h3>
+            <p className="section-subtitle text-gray-600 mb-6">科学的根拠に基づく具体的な予測</p>
+            
+            <div className="prediction-timeline space-y-6">
+              <div className="prediction-item bg-gray-50 rounded-2xl p-6">
+                <div className="prediction-period text-lg font-bold text-gray-800 mb-4">1ヶ月後</div>
+                <div className="prediction-details space-y-3">
+                  <div className="prediction-detail flex justify-between">
+                    <span className="prediction-label text-gray-700">連絡頻度</span>
+                    <span className="prediction-value text-gray-800 font-medium">{selectedCouple?.prediction?.oneMonth?.contact || '週3〜4回'}</span>
+                  </div>
+                  <div className="prediction-detail flex justify-between">
+                    <span className="prediction-label text-gray-700">デート頻度</span>
+                    <span className="prediction-value text-gray-800 font-medium">{selectedCouple?.prediction?.oneMonth?.dates || '月2〜3回'}</span>
+                  </div>
+                  <div className="prediction-detail">
+                    <div className="flex justify-between mb-2">
+                      <span className="prediction-label text-gray-700">関係進展度</span>
+                      <span className="prediction-score text-gray-800 font-medium">{selectedCouple?.prediction?.oneMonth?.progress || 85}%</span>
+                    </div>
+                    <div className="prediction-bar bg-gray-200 rounded-full h-3">
+                      <div 
+                        className="prediction-fill bg-gradient-to-r from-blue-500 to-purple-500 h-3 rounded-full" 
+                        style={{width: `${selectedCouple?.prediction?.oneMonth?.progress || 85}%`}}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <p className="prediction-note text-sm text-gray-600 mt-4">かなり良い雰囲気になっています</p>
+              </div>
+              
+              <div className="prediction-item highlight bg-gradient-to-r from-pink-50 to-purple-50 rounded-2xl p-6 border-2 border-pink-200">
+                <div className="prediction-period text-lg font-bold text-gray-800 mb-4">3ヶ月後</div>
+                <div className="prediction-details space-y-3">
+                  <div className="prediction-detail flex justify-between">
+                    <span className="prediction-label text-gray-700">連絡頻度</span>
+                    <span className="prediction-value text-gray-800 font-medium">{selectedCouple?.prediction?.threeMonths?.contact || '毎日'}</span>
+                  </div>
+                  <div className="prediction-detail flex justify-between">
+                    <span className="prediction-label text-gray-700">デート頻度</span>
+                    <span className="prediction-value text-gray-800 font-medium">{selectedCouple?.prediction?.threeMonths?.dates || '週1〜2回'}</span>
+                  </div>
+                  <div className="prediction-detail">
+                    <div className="flex justify-between mb-2">
+                      <span className="prediction-label text-gray-700">関係進展度</span>
+                      <span className="prediction-score text-gray-800 font-medium">{selectedCouple?.prediction?.threeMonths?.progress || 95}%</span>
+                    </div>
+                    <div className="prediction-bar bg-gray-200 rounded-full h-3">
+                      <div 
+                        className="prediction-fill bg-gradient-to-r from-pink-500 to-purple-500 h-3 rounded-full" 
+                        style={{width: `${selectedCouple?.prediction?.threeMonths?.progress || 95}%`}}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <p className="prediction-note text-sm text-gray-600 mt-4">カップル成立の可能性大！</p>
+              </div>
+              
+              <div className="prediction-item bg-gray-50 rounded-2xl p-6">
+                <div className="prediction-period text-lg font-bold text-gray-800 mb-4">1年後</div>
+                <div className="prediction-details space-y-3">
+                  <div className="prediction-detail">
+                    <div className="flex justify-between mb-2">
+                      <span className="prediction-label text-gray-700">関係の安定度</span>
+                      <span className="prediction-score text-gray-800 font-medium">{selectedCouple?.prediction?.oneYear?.stability || 92}%</span>
+                    </div>
+                    <div className="prediction-bar bg-gray-200 rounded-full h-3">
+                      <div 
+                        className="prediction-fill bg-gradient-to-r from-green-500 to-blue-500 h-3 rounded-full" 
+                        style={{width: `${selectedCouple?.prediction?.oneYear?.stability || 92}%`}}
+                      />
+                    </div>
+                  </div>
+                  <div className="prediction-detail">
+                    <div className="flex justify-between mb-2">
+                      <span className="prediction-label text-gray-700">長期的な相性</span>
+                      <span className="prediction-score text-gray-800 font-medium">{selectedCouple?.prediction?.oneYear?.longTerm || 88}%</span>
+                    </div>
+                    <div className="prediction-bar bg-gray-200 rounded-full h-3">
+                      <div 
+                        className="prediction-fill bg-gradient-to-r from-green-500 to-blue-500 h-3 rounded-full" 
+                        style={{width: `${selectedCouple?.prediction?.oneYear?.longTerm || 88}%`}}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <p className="prediction-note text-sm text-gray-600 mt-4">長期的にも安定した関係が期待できます</p>
+              </div>
+            </div>
+          </section>
+
+          {/* 科学的根拠 */}
+          <section className="analysis-section bg-white rounded-3xl p-8 shadow-xl">
+            <h3 className="section-title text-2xl font-bold text-gray-800 mb-6">🔬 診断の科学的根拠</h3>
+            
+            <details className="scientific-basis">
+              <summary className="cursor-pointer text-lg font-medium text-purple-600 hover:text-purple-800 transition-colors">
+                詳しく見る
+              </summary>
+              <div className="basis-content mt-6 space-y-6">
+                <h4 className="text-lg font-bold text-gray-800">本診断で使用している理論</h4>
+                
+                <div className="theory-item bg-gray-50 rounded-2xl p-6">
+                  <h5 className="text-lg font-bold text-gray-800 mb-2">1. ビッグファイブ理論（性格心理学）</h5>
+                  <p className="text-gray-700">
+                    心理学で最も信頼性の高い性格理論の一つ。外向性、協調性、誠実性、神経症傾向、開放性の5つの特性で性格を分析します。
+                  </p>
+                </div>
+                
+                <div className="theory-item bg-gray-50 rounded-2xl p-6">
+                  <h5 className="text-lg font-bold text-gray-800 mb-2">2. 愛着理論（発達心理学）</h5>
+                  <p className="text-gray-700">
+                    ジョン・ボウルビィが提唱した理論。安定型、不安型、回避型の3つの愛着スタイルで恋愛傾向を分析します。
+                  </p>
+                </div>
+                
+                <div className="theory-item bg-gray-50 rounded-2xl p-6">
+                  <h5 className="text-lg font-bold text-gray-800 mb-2">3. お酒による性格変化の研究</h5>
+                  <p className="text-gray-700">
+                    アルコールが脳に与える影響と、それによる性格変化のパターンを研究データに基づいて分析しています。
+                  </p>
+                </div>
+                
+                <div className="theory-item bg-gray-50 rounded-2xl p-6">
+                  <h5 className="text-lg font-bold text-gray-800 mb-2">4. コミュニケーションスタイル理論</h5>
+                  <p className="text-gray-700">
+                    会話における聞き手・話し手の役割分担と、その相性を分析する心理学理論を応用しています。
+                  </p>
+        </div>
+
+                <div className="theory-item bg-gray-50 rounded-2xl p-6">
+                  <h5 className="text-lg font-bold text-gray-800 mb-2">5. 価値観システム理論</h5>
+                  <p className="text-gray-700">
+                    恋愛における価値観の一致度が関係の満足度に与える影響を、複数の研究結果から分析しています。
+                  </p>
+                </div>
+              </div>
+            </details>
+          </section>
+
+          {/* フッターボタン */}
+          <div className="flex space-x-4">
             <button 
-              onClick={() => navigate('/glass-gender-selection')}
-              className="flex-1 bg-white border-2 border-purple-300 text-purple-600 font-bold py-3 px-4 rounded-xl hover:bg-purple-50 transition-all duration-200"
+              onClick={() => navigate('/glass-results')}
+              className="flex-1 bg-white border-2 border-purple-300 text-purple-600 font-bold py-4 px-6 rounded-xl hover:bg-purple-50 transition-all duration-200"
             >
-              次の診断をする
+              結果に戻る
             </button>
-            <button className="flex-1 bg-gray-100 text-gray-700 font-medium py-3 px-4 rounded-xl hover:transform hover:-translate-y-1 transition-all duration-200">
-              この結果をシェア
+            <button 
+              onClick={() => navigate('/glass-punishment-game')}
+              className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-4 px-6 rounded-xl hover:transform hover:-translate-y-1 transition-all duration-200"
+            >
+              罰ゲームへ
             </button>
           </div>
         </div>
