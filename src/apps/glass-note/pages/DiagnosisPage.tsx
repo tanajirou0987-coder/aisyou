@@ -273,7 +273,7 @@ export function DiagnosisPage() {
             <div className="inline-block px-4 py-2 bg-purple-500 text-white font-bold rounded-lg mb-4">
               Q{currentQuestionIndex + 1}
             </div>
-            <h2 className="text-xl font-bold text-gray-800 leading-relaxed">
+            <h2 className="question-text text-xl font-bold text-gray-800 leading-relaxed">
               {currentQuestion.text}
             </h2>
           </div>
@@ -294,7 +294,7 @@ export function DiagnosisPage() {
                   {selectedAnswer === option.id && (
                     <CheckCircle className="w-5 h-5 flex-shrink-0" />
                   )}
-                  <span className="flex-1">{option.text}</span>
+                  <span className="answer-text flex-1">{option.text}</span>
                 </div>
               </button>
             ))}

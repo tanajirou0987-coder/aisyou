@@ -1,5 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Bangers&family=Fredoka+One&family=M+PLUS+Rounded+1c:wght@700;800;900&family=Noto+Sans+JP:wght@500;700;900&family=Comic+Neue:wght@300;400;700&family=Fredoka:wght@300;400;500;600;700&display=swap');
 
+/* グラスノオト専用フォント設定 */
+@import './styles/fonts.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

@@ -491,10 +491,10 @@ export function ResultsPage() {
     <div className="min-h-screen bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center p-4">
       <div id="diagnosis-results" className="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-purple-600 mb-2">
+          <h1 className="app-title text-2xl font-bold text-purple-600 mb-2">
             🍻 グラスノオト
           </h1>
-          <div className="text-sm text-gray-500 mb-6">
+          <div className="subtitle text-sm text-gray-500 mb-6">
             今夜の診断結果
           </div>
           
@@ -515,7 +515,7 @@ export function ResultsPage() {
 
           {/* 今夜のランキング */}
           <div className="mb-8">
-            <h2 className="text-lg font-bold text-gray-800 mb-4">
+            <h2 className="section-title text-lg font-bold text-gray-800 mb-4">
               🏆 今夜のランキング
             </h2>
             <div className="space-y-3">
@@ -530,18 +530,18 @@ export function ResultsPage() {
                       <div className="text-2xl">
                         {index === 0 ? '👑' : index === 1 ? '⭐' : '💪'}
                       </div>
-                      <div className="text-sm font-bold text-gray-800">
+                      <div className="couple-names text-sm font-bold text-gray-800">
                         {result.couple.male} & {result.couple.female}
                       </div>
                     </div>
-                    <div className="text-2xl font-bold text-pink-600">
+                    <div className="score-number text-2xl font-bold text-pink-600">
                       {result.score}%
                     </div>
                   </div>
-                  <div className="text-xs text-gray-600 mb-1">
+                  <div className="character-name text-xs text-gray-600 mb-1">
                     {result.character}
                   </div>
-                  <div className="text-xs text-purple-600 tracking-widest">
+                  <div className="type-code text-xs text-purple-600 tracking-widest">
                     {result.type}
                   </div>
                   <div className="text-xs text-gray-500 mt-2">

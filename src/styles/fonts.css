@@ -1,0 +1,392 @@
+/* ==============================================
+グラスノオト 共通フォント設定
+============================================== */
+
+/* LINE Seed JPフォントの読み込み */
+@font-face {
+  font-family: 'LINE Seed JP';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/naverfont_01@1.0/LINESeedJP_OTF_Rg.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap; /* 読み込み中もテキストを表示 */
+}
+
+@font-face {
+  font-family: 'LINE Seed JP';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/naverfont_01@1.0/LINESeedJP_OTF_Bd.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* 数字・英数字用フォント */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700;800;900&display=swap');
+
+/* ==============================================
+グローバル設定
+============================================== */
+
+* {
+  -webkit-font-smoothing: antialiased; /* iOS・macOSで文字を滑らかに */
+  -moz-osx-font-smoothing: grayscale; /* Firefox for macOS */
+}
+
+/* ==============================================
+ベーススタイル
+============================================== */
+
+body {
+  font-family: 'LINE Seed JP', -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.75;
+  letter-spacing: 0.02em;
+}
+
+/* ==============================================
+見出し
+============================================== */
+
+h1 {
+  font-family: 'LINE Seed JP', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  line-height: 1.4;
+}
+
+h2 {
+  font-family: 'LINE Seed JP', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  line-height: 1.5;
+}
+
+h3 {
+  font-family: 'LINE Seed JP', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  line-height: 1.5;
+}
+
+h4 {
+  font-family: 'LINE Seed JP', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+/* ==============================================
+本文・段落
+============================================== */
+
+p {
+  font-family: 'LINE Seed JP', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.75;
+  letter-spacing: 0.02em;
+}
+
+/* ==============================================
+アプリタイトル・ブランド名
+============================================== */
+
+.app-title,
+.brand-name {
+  font-family: 'LINE Seed JP', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+/* ==============================================
+キャラクター名・診断タイプ名
+============================================== */
+
+.character-name {
+  font-family: 'LINE Seed JP', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+/* ==============================================
+タイプコード（CAPO等）
+============================================== */
+
+.type-code {
+  font-family: 'Poppins', 'LINE Seed JP', sans-serif;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  font-feature-settings: 'tnum'; /* 数字の幅を揃える */
+}
+
+/* ==============================================
+相性度・スコア（数字）
+============================================== */
+
+.score-number,
+.compatibility-score,
+.percentage,
+.score-value {
+  font-family: 'Poppins', 'LINE Seed JP', sans-serif;
+  font-weight: 800;
+  font-feature-settings: 'tnum';
+}
+
+/* 大きな相性度表示 */
+.score-number-large {
+  font-family: 'Poppins', sans-serif;
+  font-size: 64px;
+  font-weight: 900;
+}
+
+/* ==============================================
+ボタン
+============================================== */
+
+button,
+.btn,
+.primary-btn,
+.secondary-btn,
+.success-btn,
+.danger-btn {
+  font-family: 'LINE Seed JP', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+/* ==============================================
+バッジ・タグ
+============================================== */
+
+.badge,
+.tag,
+.label {
+  font-family: 'LINE Seed JP', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+/* ==============================================
+フォーム要素
+============================================== */
+
+input,
+textarea,
+select {
+  font-family: 'LINE Seed JP', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+input::placeholder,
+textarea::placeholder {
+  font-family: 'LINE Seed JP', sans-serif;
+  font-weight: 400;
+}
+
+/* ==============================================
+リスト
+============================================== */
+
+ul, ol {
+  font-family: 'LINE Seed JP', sans-serif;
+}
+
+li {
+  font-family: 'LINE Seed JP', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.75;
+}
+
+/* ==============================================
+リンク
+============================================== */
+
+a {
+  font-family: 'LINE Seed JP', sans-serif;
+  font-weight: 400;
+}
+
+a.link-bold {
+  font-weight: 700;
+}
+
+/* ==============================================
+テーブル
+============================================== */
+
+table {
+  font-family: 'LINE Seed JP', sans-serif;
+}
+
+th {
+  font-weight: 700;
+}
+
+td {
+  font-weight: 400;
+}
+
+/* ==============================================
+強調・太字
+============================================== */
+
+strong,
+b,
+.emphasis,
+.bold {
+  font-family: 'LINE Seed JP', sans-serif;
+  font-weight: 700;
+}
+
+/* ==============================================
+キャッチフレーズ・サブタイトル
+============================================== */
+
+.catchphrase,
+.subtitle,
+.section-subtitle {
+  font-family: 'LINE Seed JP', sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+}
+
+/* ==============================================
+質問画面専用
+============================================== */
+
+.question-text {
+  font-family: 'LINE Seed JP', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.6;
+  letter-spacing: 0.03em;
+}
+
+.answer-text {
+  font-family: 'LINE Seed JP', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+/* ==============================================
+結果画面専用
+============================================== */
+
+.couple-names {
+  font-family: 'LINE Seed JP', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.result-description {
+  font-family: 'LINE Seed JP', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.75;
+}
+
+/* ==============================================
+詳細分析画面専用
+============================================== */
+
+.section-title {
+  font-family: 'LINE Seed JP', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.analysis-text {
+  font-family: 'LINE Seed JP', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.8;
+}
+
+/* ストーリー風の長文 */
+.story-text {
+  font-family: 'LINE Seed JP', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.9; /* 長文は行間を広めに */
+  letter-spacing: 0.03em;
+}
+
+/* ==============================================
+罰ゲーム画面専用
+============================================== */
+
+.penalty-text {
+  font-family: 'LINE Seed JP', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.7;
+  letter-spacing: 0.03em;
+}
+
+/* ==============================================
+その他共通要素
+============================================== */
+
+.note,
+.caption,
+.small-text {
+  font-family: 'LINE Seed JP', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.error-message,
+.warning-text {
+  font-family: 'LINE Seed JP', sans-serif;
+  font-weight: 400;
+}
+
+/* ==============================================
+レスポンシブ対応
+============================================== */
+
+/* 小さい画面（iPhone SE等）*/
+@media (max-width: 375px) {
+  body {
+    font-size: 15px;
+  }
+
+  h1 {
+    font-size: 22px;
+  }
+
+  h2 {
+    font-size: 18px;
+  }
+
+  .score-number-large {
+    font-size: 56px;
+  }
+}
+
+/* 大きい画面（iPad等）*/
+@media (min-width: 768px) {
+  body {
+    font-size: 17px;
+  }
+
+  h1 {
+    font-size: 28px;
+  }
+
+  h2 {
+    font-size: 24px;
+  }
+
+  .score-number-large {
+    font-size: 72px;
+  }
+}

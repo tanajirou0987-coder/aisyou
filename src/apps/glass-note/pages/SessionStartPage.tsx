@@ -145,8 +145,8 @@ export function SessionStartPage() {
           </div>
           
           <div className="bg-white rounded-3xl p-6 shadow-lg border-2 border-purple-200">
-            <h1 className="text-3xl font-bold text-purple-600 mb-2">🍻 グラスノオト</h1>
-            <p className="text-lg text-gray-600 mb-4">お酒の場で楽しむ相性診断</p>
+            <h1 className="app-title text-3xl font-bold text-purple-600 mb-2">🍻 グラスノオト</h1>
+            <p className="subtitle text-lg text-gray-600 mb-4">お酒の場で楽しむ相性診断</p>
             <div className="bg-purple-50 rounded-2xl p-4">
               <p className="text-sm text-gray-700 mb-2">参加する人の名前と性別を入力してください</p>
               <p className="text-xs text-purple-600 font-semibold">※男女の全組み合わせを診断します</p>
@@ -158,7 +158,7 @@ export function SessionStartPage() {
         <div className="space-y-6 mb-8">
           {/* 男性参加者 */}
           <div className="bg-white rounded-2xl p-6 shadow-lg border-2 border-blue-200">
-            <h3 className="text-xl font-bold text-blue-600 mb-4 flex items-center gap-2">
+            <h3 className="section-title text-xl font-bold text-blue-600 mb-4 flex items-center gap-2">
               👨 男性参加者
             </h3>
             <div className="space-y-3">

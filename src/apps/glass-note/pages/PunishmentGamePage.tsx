@@ -161,17 +161,17 @@ export function PunishmentGamePage() {
     <div className="min-h-screen bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center p-4">
       <div className="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-purple-600 mb-2">
+          <h1 className="app-title text-2xl font-bold text-purple-600 mb-2">
             🍻 グラスノオト
           </h1>
-          <h2 className="text-xl font-bold text-gray-800 mb-6">
+          <h2 className="penalty-text text-xl font-bold text-gray-800 mb-6">
             🎲 罰ゲームタイム！
           </h2>
 
           {/* 相性度表示 */}
           <div className="bg-gradient-to-r from-orange-200 to-pink-300 rounded-xl p-4 mb-6">
             <div className="text-sm text-gray-600 mb-1">あなたたちの相性度</div>
-            <div className="text-3xl font-bold text-pink-600">
+            <div className="score-number text-3xl font-bold text-pink-600">
               {compatibilityScore}%
             </div>
             <div className="text-xs text-gray-600 mt-1">
