@@ -3,6 +3,9 @@
 /* グラスノオト専用フォント設定 */
 @import './styles/fonts.css';
 
+/* 回答者切り替え画面のアニメーション */
+@import './styles/person-change-animations.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

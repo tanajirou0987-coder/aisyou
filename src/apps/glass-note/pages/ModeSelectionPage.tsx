@@ -86,7 +86,7 @@ export function ModeSelectionPage() {
       
       console.log('Saving session data for single device:', updatedSessionData) // デバッグ用
       localStorage.setItem('glassSessionData', JSON.stringify(updatedSessionData))
-      navigate('/glass-diagnosis')
+      navigate('/glass-all-questions-diagnosis')
     } else {
       // QRコードで各自回答モード
       navigate('/glass-multi-device-session-start', { 

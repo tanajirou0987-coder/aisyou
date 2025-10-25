@@ -10,6 +10,7 @@ import {
   CoupleRegistrationPage as GlassCoupleRegistrationPage,
   ModeSelectionPage as GlassModeSelectionPage,
   DiagnosisPage as GlassDiagnosisPage,
+  AllQuestionsDiagnosisPage as GlassAllQuestionsDiagnosisPage,
   CompletionWaitingPage as GlassCompletionWaitingPage,
   ResultsPage as GlassResultsPage,
   PairDetailsPage as GlassPairDetailsPage,
@@ -54,6 +55,7 @@ function App() {
             <Route path="/glass-quick-diagnosis/:sessionId/:userId" element={<GlassQuickDiagnosisPage />} />
             <Route path="/glass-dev-quick-diagnosis" element={<GlassDevQuickDiagnosisPage />} />
             <Route path="/glass-diagnosis" element={<GlassDiagnosisPage />} />
+            <Route path="/glass-all-questions-diagnosis" element={<GlassAllQuestionsDiagnosisPage />} />
             <Route path="/glass-completion-waiting" element={<GlassCompletionWaitingPage />} />
             <Route path="/glass-results" element={<GlassResultsPage />} />
             <Route path="/glass-pair-details" element={<GlassPairDetailsPage />} />

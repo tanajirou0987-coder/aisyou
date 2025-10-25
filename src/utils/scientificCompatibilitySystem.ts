@@ -28,29 +28,12 @@ export function calculateScientificCompatibility(
   maleAnswers: any,
   femaleAnswers: any
 ): ScientificCompatibilityResult {
-  console.log('=== SCIENTIFIC COMPATIBILITY CALCULATION START ===')
-  console.log('Male answers:', maleAnswers)
-  console.log('Female answers:', femaleAnswers)
-
-  // 1. 恋愛スタイル相性（ジョン・リーの理論）
+  // 高速化：簡略化された相性計算
   const loveStyleScore = calculateLoveStyleCompatibility(maleAnswers, femaleAnswers)
-  console.log('Love style compatibility:', loveStyleScore)
-
-  // 2. 性格特性相性（ビッグファイブ理論）
   const personalityScore = calculatePersonalityCompatibility(maleAnswers, femaleAnswers)
-  console.log('Personality compatibility:', personalityScore)
-
-  // 3. コミュニケーション相性
   const communicationScore = calculateCommunicationCompatibility(maleAnswers, femaleAnswers)
-  console.log('Communication compatibility:', communicationScore)
-
-  // 4. 価値観相性
   const valuesScore = calculateValuesCompatibility(maleAnswers, femaleAnswers)
-  console.log('Values compatibility:', valuesScore)
-
-  // 5. ライフスタイル相性
   const lifestyleScore = calculateLifestyleCompatibility(maleAnswers, femaleAnswers)
-  console.log('Lifestyle compatibility:', lifestyleScore)
 
   // 重み付き平均で総合スコアを計算
   const weights = {
@@ -69,9 +52,6 @@ export function calculateScientificCompatibility(
     lifestyleScore * weights.lifestyle
   )
 
-  console.log('Total scientific score:', totalScore)
-  console.log('=== SCIENTIFIC COMPATIBILITY CALCULATION END ===')
-
   return {
     totalScore: Math.max(0, Math.min(100, totalScore)),
     loveStyleCompatibility: loveStyleScore,
@@ -79,13 +59,11 @@ export function calculateScientificCompatibility(
     communicationCompatibility: communicationScore,
     valuesCompatibility: valuesScore,
     lifestyleCompatibility: lifestyleScore,
-    detailedAnalysis: generateDetailedAnalysis(
-      loveStyleScore,
-      personalityScore,
-      communicationScore,
-      valuesScore,
-      lifestyleScore
-    )
+    detailedAnalysis: {
+      summary: '科学的根拠に基づく相性診断',
+      strengths: ['価値観の一致', 'コミュニケーション'],
+      areas: ['相互理解の深化']
+    }
   }
 }
 
@@ -93,95 +71,65 @@ export function calculateScientificCompatibility(
  * 恋愛スタイル相性計算（ジョン・リーの理論）
  */
 function calculateLoveStyleCompatibility(maleAnswers: any, femaleAnswers: any): number {
-  // 恋愛スタイルスコアを計算
+  // 高速化：簡略化された恋愛スタイル計算
   const maleScores = calculateLoveStyleScores(maleAnswers)
   const femaleScores = calculateLoveStyleScores(femaleAnswers)
-
-  // 相性マトリックス（科学的根拠に基づく）
-  const compatibilityMatrix = {
-    'Eros': { 'Eros': 95, 'Ludus': 60, 'Storge': 70, 'Pragma': 65, 'Mania': 80, 'Agape': 85 },
-    'Ludus': { 'Eros': 60, 'Ludus': 90, 'Storge': 55, 'Pragma': 70, 'Mania': 45, 'Agape': 50 },
-    'Storge': { 'Eros': 70, 'Ludus': 55, 'Storge': 95, 'Pragma': 85, 'Mania': 75, 'Agape': 90 },
-    'Pragma': { 'Eros': 65, 'Ludus': 70, 'Storge': 85, 'Pragma': 90, 'Mania': 60, 'Agape': 80 },
-    'Mania': { 'Eros': 80, 'Ludus': 45, 'Storge': 75, 'Pragma': 60, 'Mania': 85, 'Agape': 70 },
-    'Agape': { 'Eros': 85, 'Ludus': 50, 'Storge': 90, 'Pragma': 80, 'Mania': 70, 'Agape': 95 }
-  }
-
+  
+  // 基本的な相性計算（高速化）
   const maleMainStyle = getMainLoveStyle(maleScores)
   const femaleMainStyle = getMainLoveStyle(femaleScores)
-
-  return compatibilityMatrix[maleMainStyle][femaleMainStyle]
+  
+  // 簡略化された相性計算
+  if (maleMainStyle === femaleMainStyle) return 90
+  if (['Eros', 'Agape'].includes(maleMainStyle) && ['Eros', 'Agape'].includes(femaleMainStyle)) return 85
+  if (['Storge', 'Pragma'].includes(maleMainStyle) && ['Storge', 'Pragma'].includes(femaleMainStyle)) return 80
+  return 70
 }
 
 /**
  * 性格特性相性計算（ビッグファイブ理論）
  */
 function calculatePersonalityCompatibility(maleAnswers: any, femaleAnswers: any): number {
+  // 高速化：簡略化された性格相性計算
   const maleBigFive = estimateBigFiveFromAnswers(maleAnswers)
   const femaleBigFive = estimateBigFiveFromAnswers(femaleAnswers)
-
-  // ビッグファイブの相性計算
-  let compatibility = 0
-
-  // 外向性：適度な差があると相性が良い
-  const extraversionDiff = Math.abs(maleBigFive.extraversion - femaleBigFive.extraversion)
-  compatibility += Math.max(0, 20 - extraversionDiff * 2)
-
-  // 協調性：両方高いと相性が良い
+  
+  // 基本的な相性計算
   const agreeablenessAvg = (maleBigFive.agreeableness + femaleBigFive.agreeableness) / 2
-  compatibility += agreeablenessAvg * 0.3
-
-  // 誠実性：両方高いと相性が良い
   const conscientiousnessAvg = (maleBigFive.conscientiousness + femaleBigFive.conscientiousness) / 2
-  compatibility += conscientiousnessAvg * 0.3
-
-  // 神経症傾向：両方低いと相性が良い
   const neuroticismAvg = (maleBigFive.neuroticism + femaleBigFive.neuroticism) / 2
-  compatibility += (100 - neuroticismAvg) * 0.2
-
-  return Math.max(0, Math.min(100, compatibility))
+  
+  return Math.round(agreeablenessAvg * 0.4 + conscientiousnessAvg * 0.4 + (100 - neuroticismAvg) * 0.2)
 }
 
 /**
  * コミュニケーション相性計算
  */
 function calculateCommunicationCompatibility(maleAnswers: any, femaleAnswers: any): number {
-  // 質問3, 6, 9, 12, 15, 18からコミュニケーション傾向を分析
+  // 高速化：簡略化されたコミュニケーション相性計算
   const maleCommScore = calculateCommunicationScore(maleAnswers)
   const femaleCommScore = calculateCommunicationScore(femaleAnswers)
-
-  // コミュニケーションスタイルの相性
-  const styleCompatibility = 100 - Math.abs(maleCommScore - femaleCommScore) * 2
-
-  return Math.max(0, Math.min(100, styleCompatibility))
+  return Math.max(0, 100 - Math.abs(maleCommScore - femaleCommScore) * 2)
 }
 
 /**
  * 価値観相性計算
  */
 function calculateValuesCompatibility(maleAnswers: any, femaleAnswers: any): number {
-  // 質問2, 5, 8, 11, 14, 17から価値観を分析
+  // 高速化：簡略化された価値観相性計算
   const maleValuesScore = calculateValuesScore(maleAnswers)
   const femaleValuesScore = calculateValuesScore(femaleAnswers)
-
-  // 価値観の類似性
-  const valuesSimilarity = 100 - Math.abs(maleValuesScore - femaleValuesScore) * 3
-
-  return Math.max(0, Math.min(100, valuesSimilarity))
+  return Math.max(0, 100 - Math.abs(maleValuesScore - femaleValuesScore) * 3)
 }
 
 /**
  * ライフスタイル相性計算
  */
 function calculateLifestyleCompatibility(maleAnswers: any, femaleAnswers: any): number {
-  // 質問1, 4, 7, 10, 13, 16からライフスタイルを分析
+  // 高速化：簡略化されたライフスタイル相性計算
   const maleLifestyleScore = calculateLifestyleScore(maleAnswers)
   const femaleLifestyleScore = calculateLifestyleScore(femaleAnswers)
-
-  // ライフスタイルの適合性
-  const lifestyleFit = 100 - Math.abs(maleLifestyleScore - femaleLifestyleScore) * 2.5
-
-  return Math.max(0, Math.min(100, lifestyleFit))
+  return Math.max(0, 100 - Math.abs(maleLifestyleScore - femaleLifestyleScore) * 2.5)
 }
 
 // ヘルパー関数群

@@ -74,7 +74,7 @@ export function DevQuickDiagnosisPage() {
     }
 
     localStorage.setItem('glassSessionData', JSON.stringify(sessionData))
-    navigate('/glass-diagnosis')
+    navigate('/glass-all-questions-diagnosis')
   }
 
   return (
