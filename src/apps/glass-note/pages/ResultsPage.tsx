@@ -148,32 +148,9 @@ export function ResultsPage() {
   const generateDiagnosisResults = (data: any) => {
     console.log('Generating diagnosis results for:', data) // デバッグ用
     
-    // 既に計算済みの結果があるかチェック（一貫性を保つため）
-    if (data.diagnosisResults && data.diagnosisResults.length > 0) {
-      console.log('Using cached diagnosis results for consistency')
-      setDiagnosisResults(data.diagnosisResults)
-      return
-    }
-    
-    // セッションデータに診断結果が保存されているかチェック
-    const savedResults = localStorage.getItem('glassDiagnosisResults')
-    if (savedResults) {
-      try {
-        const parsedResults = JSON.parse(savedResults)
-        console.log('Using saved diagnosis results from localStorage')
-        setDiagnosisResults(parsedResults)
-        
-        // セッションデータにも保存
-        const updatedSessionData = {
-          ...data,
-          diagnosisResults: parsedResults
-        }
-        localStorage.setItem('glassSessionData', JSON.stringify(updatedSessionData))
-        return
-      } catch (error) {
-        console.error('Error parsing saved results:', error)
-      }
-    }
+    // デバッグ用：常に新しい診断結果を生成するように変更
+    // 既存の診断結果は使用せず、常に組み合わせから新しく生成
+    console.log('Generating fresh diagnosis results from combinations')
     
     let combinations = []
     
@@ -193,51 +170,73 @@ export function ResultsPage() {
     }
 
     console.log('Combinations to analyze:', combinations) // デバッグ用
+    console.log('Total combinations found:', combinations.length) // デバッグ用
 
     // 各組み合わせの診断結果を生成
     const results = combinations.map((combo: any, index: number) => {
-      // 実際の相性計算を使用（セッションデータを渡す）
-      const score = calculateRealCompatibilityScore(combo.male, combo.female, data)
-      console.log('Calculated score for', combo.male, '&', combo.female, ':', score)
-      const types = ['CAPO', 'BEST', 'COOL', 'HOT', 'SWEET']
-      const characters = [
-        'ほろ酔いロマンチスト',
-        '今夜の主役カップル',
-        'クールな大人カップル',
-        '情熱的なカップル',
-        '甘い雰囲気のカップル'
-      ]
-      
-      return {
-        id: index + 1,
-        couple: { male: combo.male, female: combo.female },
-        score: score,
-        type: types[index % types.length],
-        character: characters[index % characters.length],
-        points: [
-          'お互いの魅力を引き出す',
-          '今夜は特別な時間を',
-          '自然な距離感で楽しめる'
-        ],
-        detailedAnalysis: {
-          personalityType: `${combo.male}さんと${combo.female}さんの相性は${score}%！今夜の雰囲気では特に良い相性を見せています。`,
-          compatibilityReasons: [
+      console.log(`Processing combination ${index + 1}/${combinations.length}:`, combo) // デバッグ用
+      try {
+        // 実際の相性計算を使用（セッションデータを渡す）
+        const score = calculateRealCompatibilityScore(combo.male, combo.female, data)
+        console.log('Calculated score for', combo.male, '&', combo.female, ':', score)
+        const types = ['CAPO', 'BEST', 'COOL', 'HOT', 'SWEET']
+        const characters = [
+          'ほろ酔いロマンチスト',
+          '今夜の主役カップル',
+          'クールな大人カップル',
+          '情熱的なカップル',
+          '甘い雰囲気のカップル'
+        ]
+        
+        return {
+          id: index + 1,
+          couple: { male: combo.male, female: combo.female },
+          score: score,
+          type: types[index % types.length],
+          character: characters[index % characters.length],
+          points: [
             'お互いの魅力を引き出す',
             '今夜は特別な時間を',
-            '自然な距離感で楽しめる',
-            'お酒の場での相性が良い',
-            'リラックスした雰囲気で楽しめる'
+            '自然な距離感で楽しめる'
           ],
-          datePlans: [
-            { emoji: '🌃', title: '夜景の見えるバーで語り合う', description: '静かな雰囲気で深い話ができる' },
-            { emoji: '☕', title: '静かなカフェでまったりデート', description: '落ち着いた空間でリラックス' },
-            { emoji: '🌅', title: '夕暮れの公園で散歩', description: '自然の中で二人の時間を楽しむ' }
-          ],
-          warnings: [
-            '酔いすぎると甘えすぎ注意',
-            '静かな場所で二人の時間を',
-            '次の約束は今夜のうちに'
-          ]
+          detailedAnalysis: {
+            personalityType: `${combo.male}さんと${combo.female}さんの相性は${score}%！今夜の雰囲気では特に良い相性を見せています。`,
+            compatibilityReasons: [
+              'お互いの魅力を引き出す',
+              '今夜は特別な時間を',
+              '自然な距離感で楽しめる',
+              'お酒の場での相性が良い',
+              'リラックスした雰囲気で楽しめる'
+            ],
+            datePlans: [
+              { emoji: '🌃', title: '夜景の見えるバーで語り合う', description: '静かな雰囲気で深い話ができる' },
+              { emoji: '☕', title: '静かなカフェでまったりデート', description: '落ち着いた空間でリラックス' },
+              { emoji: '🌅', title: '夕暮れの公園で散歩', description: '自然の中で二人の時間を楽しむ' }
+            ],
+            warnings: [
+              '酔いすぎると甘えすぎ注意',
+              '静かな場所で二人の時間を',
+              '次の約束は今夜のうちに'
+            ]
+          }
+        }
+      } catch (error) {
+        console.error(`Error processing combination ${combo.male} & ${combo.female}:`, error)
+        // エラーが発生した場合はフォールバックスコアを使用
+        const fallbackScore = calculateFallbackScore(combo.male, combo.female)
+        return {
+          id: index + 1,
+          couple: { male: combo.male, female: combo.female },
+          score: fallbackScore,
+          type: 'ERROR',
+          character: 'エラーが発生したカップル',
+          points: ['診断中にエラーが発生しました'],
+          detailedAnalysis: {
+            personalityType: '診断中にエラーが発生しました。',
+            compatibilityReasons: ['エラーが発生しました'],
+            datePlans: [],
+            warnings: ['診断を再実行してください']
+          }
         }
       }
     })
@@ -256,6 +255,8 @@ export function ResultsPage() {
     setDiagnosisResults(results)
     
     console.log('Generated diagnosis results:', results) // デバッグ用
+    console.log('Total results generated:', results.length) // デバッグ用
+    console.log('Results summary:', results.map(r => `${r.couple.male}&${r.couple.female}:${r.score}%`)) // デバッグ用
   }
 
   // モックデータ（フォールバック用）
@@ -363,6 +364,17 @@ export function ResultsPage() {
 
   // 表示する結果を決定（実際の診断結果があればそれを使用、なければモックデータ）
   const displayResults = diagnosisResults.length > 0 ? diagnosisResults : mockResults
+  
+  // デバッグ用：診断結果の詳細をログ出力
+  console.log('ResultsPage - Final display results:', {
+    diagnosisResultsLength: diagnosisResults.length,
+    displayResultsLength: displayResults.length,
+    sessionDataCombinations: sessionData?.combinations?.length || 0,
+    participants: {
+      males: sessionData?.participants?.males?.length || 0,
+      females: sessionData?.participants?.females?.length || 0
+    }
+  })
 
   // 最高相性ペアを取得
   const highestScore = Math.max(...displayResults.map(r => r.score))
@@ -506,12 +518,17 @@ export function ResultsPage() {
             />
           </div>
           
-          {/* デバッグ情報（開発時のみ表示） */}
-          {process.env.NODE_ENV === 'development' && (
-            <div className="text-xs text-gray-400 mb-2">
-              診断結果数: {displayResults.length} | セッションデータ: {sessionData ? 'あり' : 'なし'}
-            </div>
-          )}
+          {/* 診断結果情報（常に表示） */}
+          <div className="text-xs text-gray-400 mb-2 bg-gray-100 p-2 rounded">
+            <div className="font-bold text-gray-600 mb-1">診断結果情報</div>
+            診断結果数: {displayResults.length} | セッションデータ: {sessionData ? 'あり' : 'なし'}
+            <br />
+            組み合わせ数: {sessionData?.combinations?.length || 0} | 参加者: {sessionData?.participants?.males?.length || 0}男 {sessionData?.participants?.females?.length || 0}女
+            <br />
+            実際の組み合わせ: {sessionData?.combinations?.map(c => `${c.male}&${c.female}`).join(', ') || 'なし'}
+            <br />
+            表示中の結果: {displayResults.map(r => `${r.couple.male}&${r.couple.female}`).join(', ') || 'なし'}
+          </div>
 
           {/* 今夜のランキング */}
           <div className="mb-8">
